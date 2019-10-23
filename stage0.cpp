@@ -14,7 +14,7 @@ enum storeType {INTEGER, BOOLEAN, PROG_NAME, UNKNOWN};
 enum allocation {YES, NO};
 enum modes {VARIABLE, CONSTANT};
 
-const string names = "Aspen Wills";
+const string names = "Aspen Wills, Jason Watson";
 
 struct entry
 {
@@ -66,4 +66,10 @@ int main(int argc, char **argv)
  printSymbolTable();
 
  return 0;
+}
+
+void createListingHeader()
+{
+   cout<< "STAGE0:" << names << ctime(&currentT) << "\n";
+	cout << "LINE NO:" << setw(14) << "SOURCE STATEMENT";
 }
