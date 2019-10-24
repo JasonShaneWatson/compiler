@@ -55,16 +55,16 @@ int main(int argc, char **argv)
     exit(EXIT_FAILURE);
   }
 
-  createListingHeader();
-  parser();
-  createListingTrailer();
-  printSymbolTable();
+  func::createListingHeader();
+  func::parser();
+  func::createListingTrailer();
+  func::printSymbolTable();
 
   sourceFile.close();
   return 0;
 }
 
-void createListingHeader()
+void func::createListingHeader()
 {
   cout<< "STAGE0:" << names << ctime(&currentT) << "\n";
 	cout << "LINE NO:" << setw(14) << "SOURCE STATEMENT";
