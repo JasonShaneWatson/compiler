@@ -2,8 +2,6 @@
 #include <iomanip>
 #include <ctime>
 #include <string>
-#include <vector>
-#include <fstream>
 
 using namespace std; 
 
@@ -16,19 +14,6 @@ enum storeType {INTEGER, BOOLEAN, PROG_NAME, UNKNOWN};
 enum allocation {YES, NO};
 enum modes {VARIABLE, CONSTANT};
 
-void createListingHeader();
-void parser();
-void createListingTrailer();
-void printSymbolTable();
-void prog();
-void progStmt();
-void consts();
-void constStmts();
-void vars();
-void varStmts();
-void initKeywords();
-void beginEndStmt();
-void insert(string externalName, storeType inType, modes inMode, string inValue, allocation inAlloc, int inUnits);
 
 struct entry
 {
