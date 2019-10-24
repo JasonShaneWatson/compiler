@@ -55,10 +55,10 @@ int main(int argc, char **argv)
     exit(EXIT_FAILURE);
   }
 
-  func::createListingHeader();
-  func::parser();
-  func::createListingTrailer();
-  func::printSymbolTable();
+  createListingHeader();
+  parser();
+  createListingTrailer();
+  printSymbolTable();
 
   sourceFile.close();
   return 0;
