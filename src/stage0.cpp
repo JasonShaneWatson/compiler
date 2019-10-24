@@ -2,23 +2,14 @@
 #include <iomanip>
 #include <ctime>
 #include <string>
+#include <vector>
+#include <fstream>
 
 using namespace std; 
 
-struct entry
-{
-   string internalName;
-   string externalName;
-   storeType dataType;
-   modes mode;
-   string value;
-   allocation alloc;
-   int units;
-};
-
 const string names = "Aspen Wills, Jason Watson";
 const int MAX_SYMBOL_TABLE_SIZE = 256;
-const char END_OF_FILE = ’$’; // arbitrary choice
+const char END_OF_FILE = '$'; // arbitrary choice
 const time_t currentT = time (NULL);
 
 enum storeType {INTEGER, BOOLEAN, PROG_NAME, UNKNOWN};
@@ -38,6 +29,17 @@ void varStmts();
 void initKeywords();
 void beginEndStmt();
 void insert(string externalName, storeType inType, modes inMode, string inValue, allocation inAlloc, int inUnits);
+
+struct entry
+{
+   string internalName;
+   string externalName;
+   storeType dataType;
+   modes mode;
+   string value;
+   allocation alloc;
+   int units;
+};
 
 vector<entry> symbolTable;
 ifstream sourceFile;
@@ -80,4 +82,19 @@ void createListingHeader()
 {
   cout<< "STAGE0:" << names << ctime(&currentT) << "\n";
 	cout << "LINE NO:" << setw(14) << "SOURCE STATEMENT";
+}
+
+void parser()
+{
+
+}
+
+void createListingTrailer()
+{
+
+}
+
+void printSymbolTable()
+{
+
 }
