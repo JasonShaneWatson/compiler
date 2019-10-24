@@ -2,6 +2,9 @@
 #include <iomanip>
 #include <ctime>
 #include <string>
+#include <vector>
+#include <fstream>
+#include <stage0.h>
 
 using namespace std; 
 
