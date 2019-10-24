@@ -59,6 +59,12 @@ int main(int argc, char **argv)
  //this program is the stage0 compiler for Pascallite. It will accept
  //input from argv[1], generating a listing to argv[2], and object code to
  //argv[3]
+ //
+ //if(argc != 4)
+ //{
+ // cerr<< "Usage: " << *argv << " <input file> <listing file> < object file>" << endl;
+ // exit(EXIT_FAILURE); 
+ //}
  createListingHeader();
  parser();
  createListingTrailer();
