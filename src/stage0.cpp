@@ -64,7 +64,7 @@ int main(int argc, char **argv)
   return 0;
 }
 
-void func::createListingHeader()
+void createListingHeader()
 {
   cout<< "STAGE0:" << names << ctime(&currentT) << "\n";
 	cout << "LINE NO:" << setw(14) << "SOURCE STATEMENT";
