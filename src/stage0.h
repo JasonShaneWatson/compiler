@@ -9,6 +9,28 @@
 using namespace std;
 
 
+
+enum storeType {INTEGER, BOOLEAN, PROG_NAME, UNKNOWN};
+enum allocation {YES, NO};
+enum modes {VARIABLE, CONSTANT};
+
+const string names = "Aspen Wills, Jason Watson";
+const int MAX_SYMBOL_TABLE_SIZE = 256;
+const char END_OF_FILE = '$'; // arbitrary choice
+const time_t currentT = time (NULL);
+
+
+struct entry
+{
+   string internalName;
+   string externalName;
+   storeType dataType;
+   modes mode;
+   string value;
+   allocation alloc;
+   int units;
+};
+
 void createListingHeader();
 void parser();
 void createListingTrailer();
