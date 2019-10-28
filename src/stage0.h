@@ -31,6 +31,8 @@ struct entry
    int units;
 };
 
+
+bool Key_Id(string s);
 void createListingHeader();
 void parser();
 void createListingTrailer();
