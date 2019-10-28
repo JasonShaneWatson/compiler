@@ -21,7 +21,7 @@ void parser()
 
 void createListingTrailer()
 {
-
+cout << "COMPILATION TERMINATED      0 ERRORS ENCOUNTERED";
 }
 
 void printSymbolTable()
@@ -42,4 +42,26 @@ bool Key_Id(string s)
 	}
 	
 	return true;
+}
+
+
+void progStmt()
+{
+	string x;
+	if (token != "program")
+	{
+		//error
+	}
+	x = nextToken();
+	if (token != NON_KEY_ID)
+	{
+		//error
+	}
+	if (nextToken() != ';')
+	{
+		//error
+	}
+	nextToken();
+	insert(x, PROG_NAME, CONSTANT, x, NO, 0);
+	
 }
