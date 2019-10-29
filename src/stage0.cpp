@@ -1,12 +1,8 @@
 #include <iostream>
 #include <iomanip>
-#include <stage0.h>
-
-
+#include "stage0.h"
+#include "stage0main.C"
 using namespace std; 
-
-
-
 
 void createListingHeader()
 {
@@ -28,7 +24,7 @@ void printSymbolTable()
 {
 
 }
-bool Key_Id(string s)
+bool Key_Id(string token)
 {
 	string key[] = {"Program", "begin", "end", "var", "conts", "integer", "boolean", "true", "false", "not"};
 	
@@ -47,21 +43,26 @@ bool Key_Id(string s)
 
 void progStmt()
 {
-	string x;
+	string token;
 	if (token != "program")
 	{
 		//error
 	}
-	x = nextToken();
+	string x = nextToken();
+  string NON_KEY_ID; // this should be a function or something to test. maybe the if below could be an attempt to insert into map. 
 	if (token != NON_KEY_ID)
 	{
 		//error
 	}
-	if (nextToken() != ';')
+	if (x != ";")
 	{
 		//error
 	}
 	nextToken();
-	insert(x, PROG_NAME, CONSTANT, x, NO, 0);
-	
+	//insert(x, PROG_NAME, CONSTANT, x, NO, 0);
+}
+
+string nextToken()
+{
+  return "a token";
 }

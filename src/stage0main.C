@@ -1,8 +1,8 @@
 #include <iostream>
 #include <iomanip>
-
-#include <stage0.h>
-
+#include <vector>
+#include "stage0.h"
+#include <fstream>
 
 using namespace std;
 

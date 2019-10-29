@@ -47,7 +47,7 @@ void initKeywords();
 string ids();
 void beginEndStmt();
 void insert(string externalName, storeType inType, modes inMode, string inValue, allocation inAlloc, int inUnits);
-
+string nextToken();
 
 
 
