@@ -44,10 +44,13 @@ void constStmts();
 void vars();
 void varStmts();
 void initKeywords();
+void error(string);
 string ids();
 void beginEndStmt();
 void insert(string externalName, storeType inType, modes inMode, string inValue, allocation inAlloc, int inUnits);
+char nextChar();
 string nextToken();
+bool isInt();
 
 
 
