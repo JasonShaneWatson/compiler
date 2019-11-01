@@ -193,14 +193,114 @@ void error( string err)
 
 void consts()
 {
+if (token != "const")
+{
+	//error
+}
+nextToken();
+if (Key_Id(token) == true)
+{
+	//error
+}
+constStmts();
+}
 
+void constStmts()
+{
+	string x, y;
+	if (Key_Id(token) == true)
+	{
+		//error
+	}
+	x = token;
+	if (nextToken() != "=")
+	{
+		//error
+	}
+	y = nextToken();
+	if (y != "=" || "-" || "not" || Key_Id(y) || "true" || "false", "INTEGER")
+	{
+		//error 
+	}
+	if ( y == "+" || "-")
+	{
+		if (nextToken() != "INTEGER")
+		{
+			// error
+		}
+		y = y + token;
+	}
+	if ( y == "not")
+	{
+		if (nextToken() != "BOOLEAN")
+		{
+			//error
+		}
+		if (token == "true")
+		{
+			y = "false";
+		}
+		if (token == "false")
+		{
+			y = "true";
+		}
+	}
+	if (nextToken() != ";")
+	{
+		//error
+	}
+	//insert(x, WhichType(y), CONSTANT, WhichValue(y), YES, 1);
+	if (nextToken() != "begin" || "var" || Key_Id(token))
+	{
+		//error
+	}
+	if (Key_Id(token)== true)
+		constStmts();
 }
 
 void vars()
 {
-
+	if (token != "var")
+	{
+		//error
+	}
+	if (Key_Id(token)== false)
+	{
+		//error	
+	}
+	varStmts();
 }
-
+void varStmts()
+{
+	string x, y;
+	if (token != NON_KEY_ID)
+	{
+		//error
+	}
+	x = Ids();
+	if(token != ":")
+	{
+		//error
+	}
+	if (nextToken() != "integer" || "boolean")
+	{
+		//error
+	}
+	y = token;
+	if (nextToken() != ";")
+	{
+		// error
+	}
+	insert(x, y, VARIABLE, "", YES, 1);
+	if (nextToken() != "begin" || NON_KEY_ID)
+	{
+		//error
+	}
+	if (token != NON_KEY_ID)
+	{
+		varStmts();
+	}
+}
 void beginEndStmt()
 {
 
