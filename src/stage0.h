@@ -47,7 +47,7 @@ void initKeywords();
 void error(string);
 string ids();
 void beginEndStmt();
-void insert(string externalName, storeType inType, modes inMode, string inValue, allocation inAlloc, int inUnits);
+void insert(string externalName, string type, modes inMode, string inValue, allocation inAlloc, int inUnits); 
 char nextChar();
 string nextToken();
 bool isInt();

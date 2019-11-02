@@ -9,7 +9,7 @@ BUILD_DIR=$(BUILD_ROOT)/build
 TEST_DIR=$(BUILD_ROOT)/test
 
 $(BUILD_DIR)/stage0: stage0.cpp
-	$(CXX) -o $(BUILD_DIR)/stage0 $(CFLAGS) stage0.cpp	
+	$(CXX) -o $(BUILD_DIR)/stage0 $(CFLAGS) stage0.cpp 
 
 clean:
 	rm -f $(BUILD_DIR)/stage0

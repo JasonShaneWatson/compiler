@@ -60,8 +60,8 @@ void prog()
 
   progStmt();
   
-  if(token == "const") { consts(); }
-  if (token == "var")  { vars();   }
+  if (token == "const") { consts(); }
+  if (token == "var"  ) { vars();   }
   if (token != "begin")
   {
     error("keyword 'begin' expected");
@@ -86,7 +86,7 @@ void progStmt()
   string NON_KEY_ID; // this should be a function or something to test. maybe the if below could be an attempt to insert into map. 
 	if (token != NON_KEY_ID)
 	{
-		error("process error: program name expected")
+		error("process error: program name expected");
 	}
 	if (x != ";")
 	{
@@ -104,7 +104,7 @@ void progStmt()
 //multipfly defined symbol. I think we can do by attempting to insert the value into a map. 
 //we check for uppercase because eventually we will be assigning the sum / product of two variables to a temp space like T0,T1,T2....
 //in another function y needs to be checked to make sure it is the correct type before inserting 
-void insert() // we need to add params and stuff
+void insert(string externalName, string type, modes inMode, string inValue, allocation inAlloc, int inUnits) // we need to add params and stuff
 {
 //vvvvvvvvv SUDO CODE FROM HANDOUT vvvvvvvvvv
  //void Insert(string externalName,storeType inType, modes inMode, string inValue,allocation inAlloc, int inUnits)
@@ -195,12 +195,12 @@ void consts()
 {
 if (token != "const")
 {
-	error("process error: keyword 'const' expected")
+	error("process error: keyword 'const' expected");
 }
 nextToken();
 if (Key_Id(token) == true)
 {
-	error("process error: non-keyword identifier must follow 'const'")
+	error("process error: non-keyword identifier must follow 'const'");
 }
 constStmts();
 }
@@ -210,7 +210,7 @@ void constStmts()
 	string x, y;
 	if (Key_Id(token) == true)
 	{
-		error("process error: non-keyword identifier must follow 'const'")
+		error("process error: non-keyword identifier must follow 'const'");
 	}
 	x = token;
 	if (nextToken() != "=")
@@ -283,7 +283,7 @@ void varStmts()
 	{
 		error("process error: non-keyword identifier expected");
 	}
-	x = Ids();
+	x = ids();
 	if(token != ":")
 	{
 		error("process error: ':' expected");
@@ -302,7 +302,7 @@ void varStmts()
 	{
 		if (Key_Id(token) == true)
 		{
-			error("process error: 'begin' or non Key identifier expected"");
+			error("process error: 'begin' or non Key identifier expected");
 		}
 	}
 	if (Key_Id(token) == false)
@@ -310,6 +310,12 @@ void varStmts()
 		varStmts();
 	}
 }
+
+string ids()
+{
+	return "code me";
+}
+
 void beginEndStmt()
 {
 	if (token != "begin") 
