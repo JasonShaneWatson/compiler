@@ -80,13 +80,13 @@ void progStmt()
 	string token;
 	if (token != "program")
 	{
-		//error
+		error("process error: keyword 'program' expected");
 	}
 	string x = nextToken();
   string NON_KEY_ID; // this should be a function or something to test. maybe the if below could be an attempt to insert into map. 
 	if (token != NON_KEY_ID)
 	{
-		//error
+		error("process error: program name expected")
 	}
 	if (x != ";")
 	{
@@ -195,12 +195,12 @@ void consts()
 {
 if (token != "const")
 {
-	//error
+	error("process error: keyword 'const' expected")
 }
 nextToken();
 if (Key_Id(token) == true)
 {
-	//error
+	error("process error: non-keyword identifier must follow 'const'")
 }
 constStmts();
 }
@@ -210,23 +210,25 @@ void constStmts()
 	string x, y;
 	if (Key_Id(token) == true)
 	{
-		//error
+		error("process error: non-keyword identifier must follow 'const'")
 	}
 	x = token;
 	if (nextToken() != "=")
 	{
-		//error
+		error("process error: '=' expected");
 	}
 	y = nextToken();
-	if (y != "=" || "-" || "not" || Key_Id(y) || "true" || "false", "INTEGER")
+	if (y != "=" || "-" || "not"  || "true" || "false", "INTEGER")
 	{
-		//error 
+		if (Key_Id(token) == true)
+		error("process error: illegal type follows ':'");
 	}
+	
 	if ( y == "+" || "-")
 	{
 		if (nextToken() != "INTEGER")
 		{
-			// error
+			error("process error: illegal type follows '+' or '-'");
 		}
 		y = y + token;
 	}
@@ -234,7 +236,7 @@ void constStmts()
 	{
 		if (nextToken() != "BOOLEAN")
 		{
-			//error
+			error("process error: illegal type follows '='");
 		}
 		if (token == "true")
 		{
@@ -247,14 +249,18 @@ void constStmts()
 	}
 	if (nextToken() != ";")
 	{
-		//error
+		error("process error: semicolon expected");
 	}
 	//insert(x, WhichType(y), CONSTANT, WhichValue(y), YES, 1);
-	if (nextToken() != "begin" || "var" || Key_Id(token))
+	if (nextToken() != "begin" || "var")
 	{
-		//error
+		error("process error: 'begin' or 'var' expected");
 	}
-	if (Key_Id(token)== true)
+	else if (Key_Id(token) == true)
+	{
+		error("process error: Non-Key-Identifier expected");	
+	}
+	if (Key_Id(token)== false)
 		constStmts();
 }
 
@@ -262,46 +268,64 @@ void vars()
 {
 	if (token != "var")
 	{
-		//error
+		error("process error: keyword 'var' expected");
 	}
-	if (Key_Id(token)== false)
+	if (Key_Id(token)== true)
 	{
-		//error	
+		error("process error: non-keyword identifier expected");
 	}
 	varStmts();
 }
 void varStmts()
 {
 	string x, y;
-	if (token != NON_KEY_ID)
+	if (Key_Id(token) == true)
 	{
-		//error
+		error("process error: non-keyword identifier expected");
 	}
 	x = Ids();
 	if(token != ":")
 	{
-		//error
+		error("process error: ':' expected");
 	}
-	if (nextToken() != "integer" || "boolean")
+	if (nextToken() != "INTEGER" || "BOOLEAN")
 	{
-		//error
+		error("process error: illegal type follows ':'");
 	}
 	y = token;
 	if (nextToken() != ";")
 	{
-		// error
+		error("process error: semicolon expected");
 	}
 	insert(x, y, VARIABLE, "", YES, 1);
-	if (nextToken() != "begin" || NON_KEY_ID)
+	if (nextToken() != "begin")
 	{
-		//error
+		if (Key_Id(token) == true)
+		{
+			error("process error: 'begin' or non Key identifier expected"");
+		}
 	}
-	if (token != NON_KEY_ID)
+	if (Key_Id(token) == false)
 	{
 		varStmts();
 	}
 }
 void beginEndStmt()
 {
+	if (token != "begin") 
+	{
+		error("process error: 'begin' expected");
+	}
 
+	if (nextToken() != "end") 
+	{
+	error("process error: 'end' expected");
+	}
+
+	if (nextToken() != ".") 
+	{
+		error("process error: '.' expected");
+	}
+	nextToken();	
 }
+
