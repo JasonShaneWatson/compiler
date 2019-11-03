@@ -30,6 +30,7 @@ struct entry
 //https://www.geeksforgeeks.org/unordered_map-in-cpp-stl/  << unordered_map description 
 unordered_map<string,entry> symbolTable;
 bool Key_Id(string s);
+
 void createListingHeader();
 void parser();
 void createListingTrailer();
@@ -48,12 +49,10 @@ void insert(string externalName, storeType inType, modes inMode, string inValue,
 char nextChar();
 string nextToken();
 bool isInt();
-<<<<<<< HEAD
 string ids();
 string token;
 char charac;
-=======
 string genInternalName(storeType);
->>>>>>> 934c36691ed8e6f2cd3144bf0b213a5dab06f212
+
 
 #endif

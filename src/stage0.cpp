@@ -61,18 +61,8 @@ bool non_Key_Id()
 	// If key not found in map iterator to end is returned 
   if (symbolTable.find(token)!= symbolTable.end())//we found a key, so return true
 	{
-<<<<<<< HEAD
     return true; 
   }
-=======
-		if (key[i] == token)
-		{
-			//error
-			return true;
-		}
-	}
->>>>>>> 934c36691ed8e6f2cd3144bf0b213a5dab06f212
-	
 	return false;
 }
 
@@ -454,17 +444,17 @@ string ids()
 
 	if (Key_Id(token) == true)
 	{
-		Error("process error: non-keyword identifier expected");
+		error("process error: non-keyword identifier expected");
 	}
 	tempString = token;
 	temp = token;
 
-	NextToken();
+	nextToken();
 	if (Key_Id(token) == true)
 	{
-		Error("process error: non-keyword identifier expected");
+		error("process error: non-keyword identifier expected");
 	}
-	tempString = temp + "," + Ids();
+	tempString = temp + "," + ids();
 	return tempString;
 }
 
