@@ -335,3 +335,34 @@ void beginEndStmt()
 	nextToken();	
 }
 
+/*
+
+string genInternalName(storeType inType){
+	static int internalNI = 0;
+	static int internalNB = 0;
+	static bool newProg = true;
+    string I = ""; 
+	
+	if(inType == INTEGER){
+		I += "I";
+		string a = tostring(internalNI);
+		I += a ;
+		internalI++;
+	}else if(inType == BOOLEAN){
+		I += "I";
+		string b = tostring(internalBI);
+		string I += b ;
+		internalB++;
+	}else if (inType == PROG_NAME){
+		if (progFound == true){
+			I += "P0";
+			progFound = false;
+		}else{
+			Error("Can not have more than one program name");
+		}
+	}
+	return I;
+}
+
+*/
+
