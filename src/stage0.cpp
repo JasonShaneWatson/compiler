@@ -44,7 +44,21 @@ void createListingTrailer()
 
 void printSymbolTable()
 {
-
+/*	objectFile << "STAGE0:" << names << ctime(&currentT) << "\n";
+	vector<entry>::iterator Print;
+	
+	for (Print = symbolTable.begin(); Print < symbolTable.end(); Print++)
+	{
+		objectFile << left << setw(17) << Print->externalName;
+		objectFile << left << setw(6) << Print->internalName;
+		objectFile << setw(11) << Print->dataType;
+		objectFile << setw(10) << Print->mode;
+		objectFile << setw(17) << Print->value;
+		objectFile << setw(5) << Print->alloc;
+		objectFile << setw(1) << Print->units;
+		objectFile << "\n";
+	}
+*/
 }
 
 //check if string is a reserved keyword 
@@ -143,6 +157,56 @@ void insert(string externalName, storeType inType, modes inMode, string inValue,
  //       else
  //         symbolTable[name]=(GenInternalName(inType),inType,inMode,inValue,inAlloc,inUnits)
  //     }
+	
+/*
+// I could be way off on this if we do use it we would have to change it to check the map 
+// for if the name is used before or not instead of using a symbolTable vector.
+    string name;
+    auto eNend = externalName.cend();
+    for (auto x = externalName.cbegin(); x < externalName.cend(); x++){
+        name = ""; //initialize a new name
+		for( auto i = externalName.cbegin(); i > eNend; i++)
+		{
+			if (*i != ',')
+			{
+				name += *i;
+			}
+		}
+		if(name.size() >15)
+		{
+			name = name.substr(0,15);
+		}
+		for ( uint i = 0; i < symbolTable.size(); i++)
+		{
+			if (symbolTable[i].externalName == name)
+			{
+				Error("process error: multiple name definition");
+			}
+			
+		}
+		if ( Key_Id(name) == true)
+			{
+				Error("process error: illegal use of keyword");
+			}
+		entry New;
+		New.externalName = name;
+		if (isupper(name[0]))
+		{
+			New.internalName = name;
+		}
+		else
+		{
+			New.internalName = genInternalName(inType);
+		}	
+		New.dataType = inType;
+		New.mode = inMode;
+		New.value = inValue;
+		New.alloc = inAlloc;
+		New.units = inUnits;
+		
+		symbolTable.push_back(New);
+
+*/
 }
 
 //get next token and store in global variable 'token'
