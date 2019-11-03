@@ -61,8 +61,17 @@ bool non_Key_Id()
 	// If key not found in map iterator to end is returned 
   if (symbolTable.find(token)!= symbolTable.end())//we found a key, so return true
 	{
+<<<<<<< HEAD
     return true; 
   }
+=======
+		if (key[i] == token)
+		{
+			//error
+			return true;
+		}
+	}
+>>>>>>> 934c36691ed8e6f2cd3144bf0b213a5dab06f212
 	
 	return false;
 }
@@ -441,7 +450,22 @@ void varStmts()
 
 string ids()
 {
-	return "code me";
+	string temp,tempString;
+
+	if (Key_Id(token) == true)
+	{
+		Error("process error: non-keyword identifier expected");
+	}
+	tempString = token;
+	temp = token;
+
+	NextToken();
+	if (Key_Id(token) == true)
+	{
+		Error("process error: non-keyword identifier expected");
+	}
+	tempString = temp + "," + Ids();
+	return tempString;
 }
 
 void beginEndStmt()
@@ -462,4 +486,35 @@ void beginEndStmt()
 	}
 	nextToken();	
 }
+
+/*
+
+string genInternalName(storeType inType){
+	static int internalNI = 0;
+	static int internalNB = 0;
+	static bool newProg = true;
+    string I = ""; 
+	
+	if(inType == INTEGER){
+		I += "I";
+		string a = tostring(internalNI);
+		I += a ;
+		internalI++;
+	}else if(inType == BOOLEAN){
+		I += "I";
+		string b = tostring(internalBI);
+		string I += b ;
+		internalB++;
+	}else if (inType == PROG_NAME){
+		if (progFound == true){
+			I += "P0";
+			progFound = false;
+		}else{
+			Error("Can not have more than one program name");
+		}
+	}
+	return I;
+}
+
+*/
 
