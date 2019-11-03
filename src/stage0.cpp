@@ -1,8 +1,6 @@
-#include <iostream>
-#include <iomanip>
 #include "stage0.h"
 #include "stage0main.C"
-using namespace std; 
+#include <unordered_map>
 
 void createListingHeader()
 {
@@ -12,8 +10,22 @@ void createListingHeader()
 
 void parser()
 {
-  nextChar();
+  //uncomment below code if we want to reserve keywords in our symbol table 
+  /*entry reserved;
+  symbolTable["program"] = reserved;
+  symbolTable["begin"] = reserved;
+  symbolTable["end"] = reserved;
+  symbolTable["var"] = reserved;
+  symbolTable["conts"] = reserved;
+  symbolTable["boolean"] = reserved;
+  symbolTable["true"] = reserved;
+  symbolTable["false"] = reserved;
+  symbolTable["not"] = reserved;
+  */
+  
   //charac must be initialized to the first character of the source file
+  nextChar();
+  
   if(nextToken() != "program")
        error("keyword 'program' expected");
     //a call to NextToken() has two effects
@@ -35,20 +47,24 @@ void printSymbolTable()
 
 }
 
+//check if string is a reserved keyword 
 bool Key_Id(string token)
 {
-	string key[] = {"Program", "begin", "end", "var", "conts", "integer", "boolean", "true", "false", "not"};
-	
-	for (uint i = 0; i <= sizeof(key); i++)
+  return (token == "program" || token == "begin" || token == "end" || 
+          token == "var" || token == "const" || token == "integer" || 
+          token == "boolean" || token == "true" || token == "false" || token == "not");
+}
+
+//check if token is already a non key id
+bool non_Key_Id()
+{
+	// If key not found in map iterator to end is returned 
+  if (symbolTable.find(token)!= symbolTable.end())//we found a key, so return true
 	{
-		if (key[i] == token)
-		{
-			//error
-			return false;
-		}
-	}
+    return true; 
+  }
 	
-	return true;
+	return false;
 }
 
 void prog()
@@ -77,23 +93,25 @@ void prog()
 
 void progStmt()
 {
-	string token;
 	if (token != "program")
 	{
-		error("process error: keyword 'program' expected");
+		error("keyword 'program' expected in first");
 	}
-	string x = nextToken();
-  string NON_KEY_ID; // this should be a function or something to test. maybe the if below could be an attempt to insert into map. 
-	if (token != NON_KEY_ID)
+
+  string x = nextToken();
+	// If key not found in map iterator to end is returned 
+  if (symbolTable.find(token)!= symbolTable.end())//we found a key, we want token to be a a new key so error out 
 	{
-		error("process error: program name expected");
+		error("program name expected");
 	}
-	if (x != ";")
+  
+  nextToken();
+	if (token != ";")
 	{
-		//error
+		error("expected ';' after program name");
 	}
 	nextToken();
-	//insert(x, PROG_NAME, CONSTANT, x, NO, 0);
+	insert(x, PROG_NAME, CONSTANT, x, NO, 0);
 }
 
 //example from class:
@@ -104,7 +122,7 @@ void progStmt()
 //multipfly defined symbol. I think we can do by attempting to insert the value into a map. 
 //we check for uppercase because eventually we will be assigning the sum / product of two variables to a temp space like T0,T1,T2....
 //in another function y needs to be checked to make sure it is the correct type before inserting 
-void insert(string externalName, string type, modes inMode, string inValue, allocation inAlloc, int inUnits) // we need to add params and stuff
+void insert(string externalName, storeType inType, modes inMode, string inValue, allocation inAlloc, int inUnits)
 {
 //vvvvvvvvv SUDO CODE FROM HANDOUT vvvvvvvvvv
  //void Insert(string externalName,storeType inType, modes inMode, string inValue,allocation inAlloc, int inUnits)
@@ -128,12 +146,100 @@ void insert(string externalName, string type, modes inMode, string inValue, allo
  //     }
 }
 
-//in case 'letter' we check if the last character is an underscore but we will aslso need to check if the token has two underscores in a row
+//get next token and store in global variable 'token'
 string nextToken()
 {
   token = "";
+  while(token == "")
+  {
+    if(charac == '{')// comment section starting
+    {  
+      nextChar();
+      while(charac != '}')//ignore everything until we find }
+      {
+        if(charac == END_OF_FILE)
+        {
+          error("unexpected end of file");
+        }
+        else
+        {
+          nextChar();
+        }
+      }
+      nextChar();
+      cout << "breaking out of {" << endl;
+    }
     
-  return "a token";
+    else if (charac == '}')
+    {
+      error("'}' cannot begin token");
+    }
+    
+    else if (charac == '_')
+    {
+      error("'_' cannot start an identifier");
+    }
+    
+    else if (isspace(charac))
+    {
+      nextChar();
+    }
+    
+    else if( 
+              charac == '=' ||
+              charac == ':' ||
+              charac == ',' ||
+              charac == ';' ||
+              charac == '.' ||
+              charac == '+' ||
+              charac == '-'
+            )
+    {
+      token = charac;
+      nextChar();
+    }
+    
+    else if(isalpha(charac))
+    {
+      token = charac;
+      nextChar();
+      while(islower(charac) || isdigit(charac) || charac == '_')
+      {
+        if(token.back()  == '_')
+        {
+          error(("illegal use of consecutive underscore: " + token + '_'));
+        }
+        token += charac;
+        nextChar();
+      }
+      if(token.back()  == '_')
+      {
+        error(("'_' cannot end token: " + token));
+      }
+    }
+    
+    else if (isdigit(charac))
+    {
+      token = charac;
+      nextChar();
+      while(isdigit(charac))
+      {
+        token += charac;
+        nextChar();
+      }
+    }
+    
+    else if(charac == END_OF_FILE)
+    {
+      token = charac;
+    }
+    
+    else
+    {
+      error(("illegal symbol: " + charac));
+    }
+  }
+  return token;
 }
 
 bool isInt()
@@ -154,7 +260,7 @@ char nextChar()
   static char prevCh;
   static int lineNumber = 0;
   sourceFile.get(nextCh);
-  
+  cout << prevCh << endl;
   //if we reached the end of the source file. Set char to reflect
   if(sourceFile.eof())
   {
@@ -184,7 +290,7 @@ char nextChar()
 //TODO
 void error( string err)
 {
-  listingFile << "Error: " << err << "\n";
+  listingFile << "\n\nError: " << err << "\n";
   sourceFile.close();
   listingFile.close();
   objectFile.close();
@@ -195,12 +301,13 @@ void consts()
 {
 if (token != "const")
 {
-	error("process error: keyword 'const' expected");
+	error("keyword 'const' expected");
 }
 nextToken();
-if (Key_Id(token) == true)
+if (Key_Id(token))
 {
-	error("process error: non-keyword identifier must follow 'const'");
+  cout << token << endl;
+	error("non-keyword identifier must follow 'const'");
 }
 constStmts();
 }
@@ -210,25 +317,34 @@ void constStmts()
 	string x, y;
 	if (Key_Id(token) == true)
 	{
-		error("process error: non-keyword identifier must follow 'const'");
+		error("non-keyword identifier must follow 'const'");
 	}
 	x = token;
 	if (nextToken() != "=")
 	{
-		error("process error: '=' expected");
+		error("'=' expected");
 	}
 	y = nextToken();
-	if (y != "=" || "-" || "not"  || "true" || "false", "INTEGER")
+	if ( 
+        token != "="     && 
+        token != "-"     &&
+        token != "+"     &&
+        token != "not"   &&
+        token != "true"  && 
+        token != "false" &&
+        !non_Key_Id()    &&
+        !isInt()
+      )
 	{
 		if (Key_Id(token) == true)
-		error("process error: illegal type follows ':'");
+		error(("illegal type with value '" + token + "' follows ':'"));
 	}
 	
-	if ( y == "+" || "-")
+	if ( y == "+" || y == "-")
 	{
 		if (nextToken() != "INTEGER")
 		{
-			error("process error: illegal type follows '+' or '-'");
+			error("illegal type follows '+' or '-'");
 		}
 		y = y + token;
 	}
@@ -236,7 +352,7 @@ void constStmts()
 	{
 		if (nextToken() != "BOOLEAN")
 		{
-			error("process error: illegal type follows '='");
+			error("illegal type follows '='");
 		}
 		if (token == "true")
 		{
@@ -249,16 +365,16 @@ void constStmts()
 	}
 	if (nextToken() != ";")
 	{
-		error("process error: semicolon expected");
+		error("semicolon expected");
 	}
 	//insert(x, WhichType(y), CONSTANT, WhichValue(y), YES, 1);
 	if (nextToken() != "begin" || "var")
 	{
-		error("process error: 'begin' or 'var' expected");
+		error("'begin' or 'var' expected");
 	}
 	else if (Key_Id(token) == true)
 	{
-		error("process error: Non-Key-Identifier expected");	
+		error("Non-Key-Identifier expected");	
 	}
 	if (Key_Id(token)== false)
 		constStmts();
@@ -268,11 +384,11 @@ void vars()
 {
 	if (token != "var")
 	{
-		error("process error: keyword 'var' expected");
+		error("keyword 'var' expected");
 	}
 	if (Key_Id(token)== true)
 	{
-		error("process error: non-keyword identifier expected");
+		error("non-keyword identifier expected");
 	}
 	varStmts();
 }
@@ -281,28 +397,40 @@ void varStmts()
 	string x, y;
 	if (Key_Id(token) == true)
 	{
-		error("process error: non-keyword identifier expected");
+		error("non-keyword identifier expected");
 	}
 	x = ids();
 	if(token != ":")
 	{
-		error("process error: ':' expected");
+		error("':' expected");
 	}
-	if (nextToken() != "INTEGER" || "BOOLEAN")
+  //input from program is lowercased 
+	if (nextToken() != "integer" || "boolean")
 	{
-		error("process error: illegal type follows ':'");
+		error("illegal type follows ':'");
 	}
 	y = token;
 	if (nextToken() != ";")
 	{
-		error("process error: semicolon expected");
+		error("semicolon expected");
 	}
-	insert(x, y, VARIABLE, "", YES, 1);
-	if (nextToken() != "begin")
+	
+  //insert token into symbolTable wtih associated storeType
+  if (y == "integer")
+  {
+    insert(x, INTEGER, VARIABLE, "", YES, 1);
+	}
+  else if (y == "boolean")
+	{	
+    insert(x, BOOLEAN, VARIABLE, "", YES, 1);
+  }
+  ////////////////////////////////
+	
+  if (nextToken() != "begin")
 	{
 		if (Key_Id(token) == true)
 		{
-			error("process error: 'begin' or non Key identifier expected");
+			error("'begin' or non Key identifier expected");
 		}
 	}
 	if (Key_Id(token) == false)
@@ -320,17 +448,17 @@ void beginEndStmt()
 {
 	if (token != "begin") 
 	{
-		error("process error: 'begin' expected");
+		error("'begin' expected");
 	}
 
 	if (nextToken() != "end") 
 	{
-	error("process error: 'end' expected");
+	error("'end' expected");
 	}
 
 	if (nextToken() != ".") 
 	{
-		error("process error: '.' expected");
+		error("'.' expected");
 	}
 	nextToken();	
 }

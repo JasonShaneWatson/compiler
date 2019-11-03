@@ -1,17 +1,8 @@
-#include <iostream>
-#include <iomanip>
-#include <vector>
 #include <fstream>
 #include "stage0.h"
 
-using namespace std;
-
-vector<entry> symbolTable;
 ifstream sourceFile;
 ofstream listingFile,objectFile;
-string ids();
-string token;
-char charac;
 
 //this program is the stage0 compiler for Pascallite. It will accept
 //input from argv[1], generating a listing to argv[2], and object code to
