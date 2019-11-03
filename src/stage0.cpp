@@ -4,8 +4,8 @@
 
 void createListingHeader()
 {
-  cout<< "STAGE0:" << names << ctime(&currentT) << "\n";
-	cout << "LINE NO:" << setw(14) << "SOURCE STATEMENT";
+  listingFile << "STAGE0:  " << names << "       "<< ctime(&currentT) << "\n";
+	listingFile <<  left << setw(22) << "LINE NO." << "SOURCE STATEMENT\n\n" << right;
 }
 
 void parser()
@@ -69,15 +69,25 @@ bool Key_Id(string token)
           token == "boolean" || token == "true" || token == "false" || token == "not");
 }
 
-//check if token is already a non key id
+//returns true if token is a valid NON_KEY_ID
+//this means that token is properly formatted and not a key in the symbol table 
 bool non_Key_Id()
 {
 	// If key not found in map iterator to end is returned 
-  if (symbolTable.find(token)!= symbolTable.end())//we found a key, so return true
-	{
-    return true; 
-  }
-	return false;
+  if (symbolTable.find(token)!= symbolTable.end())//we found a key with value of token, return false
+    return false; 
+  
+  //first character of token must be a lowercased leter
+  if(!islower(token[0]))
+    return false;
+  
+  //next token should prevent this from happening, but lets make sure its a good token.
+  //capital letters will have already been rejected in nextToken. 
+  for(uint x = 0; x < token.length(); x++)
+    if(!isalnum(token[x]) && token[x] != '_')
+      return false; 
+      
+	return true;
 }
 
 void prog()
@@ -230,7 +240,6 @@ string nextToken()
         }
       }
       nextChar();
-      cout << "breaking out of {" << endl;
     }
     
     else if (charac == '}')
@@ -323,7 +332,6 @@ char nextChar()
   static char prevCh;
   static int lineNumber = 0;
   sourceFile.get(nextCh);
-  cout << prevCh << endl;
   //if we reached the end of the source file. Set char to reflect
   if(sourceFile.eof())
   {
@@ -369,7 +377,6 @@ if (token != "const")
 nextToken();
 if (Key_Id(token))
 {
-  cout << token << endl;
 	error("non-keyword identifier must follow 'const'");
 }
 constStmts();
@@ -433,7 +440,8 @@ void constStmts()
 		error("semicolon expected");
 	}
 	//insert(x, WhichType(y), CONSTANT, WhichValue(y), YES, 1);
-	if (nextToken() != "begin" || "var")
+	nextToken();
+  if (token != "begin" && token != "var")
 	{
 		if(Key_Id(token) == true)
 		{
@@ -450,7 +458,7 @@ void vars()
 	{
 		error("keyword 'var' expected");
 	}
-	if (Key_Id(token)== true)
+	if (!non_Key_Id())
 	{
 		error("non-keyword identifier expected");
 	}
@@ -459,7 +467,7 @@ void vars()
 void varStmts()
 {
 	string x, y;
-	if (Key_Id(token) == true)
+	if (!non_Key_Id())
 	{
 		error("non-keyword identifier expected");
 	}
@@ -507,20 +515,25 @@ string ids()
 {
 	string temp,tempString;
 
-	if (Key_Id(token) == true)
+	if (!non_Key_Id())
 	{
-		error("process error: non-keyword identifier expected");
+		error("non-keyword identifier expected");
 	}
 	tempString = token;
 	temp = token;
 
 	nextToken();
-	if (Key_Id(token) == true)
-	{
-		error("process error: non-keyword identifier expected");
+  if(token == ",")
+  {
+    cout << "entered ids with ," << endl;
+    nextToken();
+    if (!non_Key_Id())
+    {
+      error("non-keyword identifier expected");
+    }
+    tempString = temp + "," + ids();
 	}
-	tempString = temp + "," + ids();
-	return tempString;
+  return tempString;
 }
 
 void beginEndStmt()
