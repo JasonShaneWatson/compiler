@@ -341,7 +341,8 @@ void constStmts()
 	
 	if ( y == "+" || y == "-")
 	{
-		if (nextToken() != "INTEGER")
+		nextToken();
+		if (!isdigit(token[0]))
 		{
 			error("illegal type follows '+' or '-'");
 		}
@@ -349,9 +350,10 @@ void constStmts()
 	}
 	if ( y == "not")
 	{
-		if (nextToken() != "BOOLEAN")
+		nextToken();
+		if (token != "true" && token != "false")
 		{
-			error("illegal type follows '='");
+			error("illegal type follows 'not'");
 		}
 		if (token == "true")
 		{
