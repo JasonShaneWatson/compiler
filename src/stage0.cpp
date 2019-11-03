@@ -44,11 +44,11 @@ bool Key_Id(string token)
 		if (key[i] == token)
 		{
 			//error
-			return false;
+			return true;
 		}
 	}
 	
-	return true;
+	return false;
 }
 
 void prog()
