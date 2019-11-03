@@ -51,6 +51,7 @@ void insert(string externalName, string type, modes inMode, string inValue, allo
 char nextChar();
 string nextToken();
 bool isInt();
+string genInternalName(storeType);
 
 
 
