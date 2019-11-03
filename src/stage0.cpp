@@ -371,11 +371,10 @@ void constStmts()
 	//insert(x, WhichType(y), CONSTANT, WhichValue(y), YES, 1);
 	if (nextToken() != "begin" || "var")
 	{
-		error("'begin' or 'var' expected");
-	}
-	else if (Key_Id(token) == true)
-	{
-		error("Non-Key-Identifier expected");	
+		if(Key_Id(token) == true)
+		{
+			error("'begin' or 'var' expected");
+		}
 	}
 	if (Key_Id(token)== false)
 		constStmts();
