@@ -313,7 +313,22 @@ void varStmts()
 
 string ids()
 {
-	return "code me";
+	string temp,tempString;
+
+	if (Key_Id(token) == true)
+	{
+		Error("process error: non-keyword identifier expected");
+	}
+	tempString = token;
+	temp = token;
+
+	NextToken();
+	if (Key_Id(token) == true)
+	{
+		Error("process error: non-keyword identifier expected");
+	}
+	tempString = temp + "," + Ids();
+	return tempString;
 }
 
 void beginEndStmt()
