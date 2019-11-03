@@ -214,7 +214,7 @@ void insert(string externalName, storeType inType, modes inMode, string inValue,
 		New.alloc = inAlloc;
 		New.units = inUnits;
 		
-		symbolTable.push_back(New);
+		symbolTable[name] = New;
 
 */
 }
