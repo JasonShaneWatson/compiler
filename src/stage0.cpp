@@ -39,7 +39,7 @@ void parser()
 
 void createListingTrailer()
 {
-  cout << "COMPILATION TERMINATED      0 ERRORS ENCOUNTERED";
+  listingFile << "\nCOMPILATION TERMINATED      0 ERRORS ENCOUNTERED\n";
 }
 
 void printSymbolTable()
@@ -214,7 +214,7 @@ void insert(string externalName, storeType inType, modes inMode, string inValue,
 		New.alloc = inAlloc;
 		New.units = inUnits;
 		
-		symbolTable[name] = New;
+		symbolTable.push_back(New);
 
 */
 }
@@ -458,6 +458,7 @@ void vars()
 	{
 		error("keyword 'var' expected");
 	}
+  nextToken();
 	if (!non_Key_Id())
 	{
 		error("non-keyword identifier expected");
@@ -476,8 +477,9 @@ void varStmts()
 	{
 		error("':' expected");
 	}
-  //input from program is lowercased 
-	if (nextToken() != "integer" || "boolean")
+  //input from program is lowercased
+  nextToken();
+	if (token != "integer" && token != "boolean")
 	{
 		error("illegal type follows ':'");
 	}
@@ -521,8 +523,7 @@ string ids()
 	}
 	tempString = token;
 	temp = token;
-
-	nextToken();
+  nextToken();
   if(token == ",")
   {
     cout << "entered ids with ," << endl;
