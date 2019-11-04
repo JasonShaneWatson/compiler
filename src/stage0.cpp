@@ -416,7 +416,7 @@ constStmts();
 void constStmts()
 {	
 	string x, y;
-	if (!non_Key_Id())
+	if (Key_Id(token) == true)
 	{
 		error("non-keyword identifier must follow 'const'");
 	}
@@ -437,7 +437,7 @@ void constStmts()
         !isInt()
       )
 	{
-		if (!non_Key_Id())
+		if (Key_Id(token) == true)
 		error(("illegal type with value '" + token + "' follows ':'"));
 	}
 	
@@ -472,14 +472,15 @@ void constStmts()
 	}
 	insert(x, whichType(y), CONSTANT, whichValue(y), YES, 1);
 	nextToken();
-    if (token != "begin" || token != "var" || !non_Key_Id())
+  if (token != "begin" && token != "var")
 	{
-		error("'begin' or 'var' or non-Keyword expected");
+		if(Key_Id(token) == true)
+		{
+			error("'begin' or 'var' expected");
+		}
 	}
-	if (non_Key_Id())
-	{
+	if (Key_Id(token)== false)
 		constStmts();
-	}
 }
 
 string whichValue(string name)
