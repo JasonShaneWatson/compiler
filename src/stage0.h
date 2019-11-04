@@ -5,12 +5,18 @@
 #include <iomanip>
 #include <unordered_map>
 #include <ctime>
+#include <string>
 
 using namespace std;
-
+ 
 enum storeType {INTEGER, BOOLEAN, PROG_NAME, UNKNOWN, RESERVED};
+string storeTypeString[] = {"INTEGER", "BOOLEAN", "PROG_NAME", "UNKNOWN", "RESERVED"};
+
 enum allocation {YES, NO};
+string allocationString[] = {"YES", "NO"};
+
 enum modes {VARIABLE, CONSTANT};
+string modesString[] = {"VARIABLE", "CONSTANT"};
 
 const string names = "Aspen Wills, Jason Watson";
 const int MAX_SYMBOL_TABLE_SIZE = 256;
@@ -26,6 +32,7 @@ struct entry
    string value;
    allocation alloc;
    int units;
+   int position;
 };
 //https://www.geeksforgeeks.org/unordered_map-in-cpp-stl/  << unordered_map description 
 unordered_map<string,entry> symbolTable;

@@ -1,6 +1,7 @@
 #include "stage0.h"
 #include "stage0main.C"
 #include <unordered_map>
+#include <cstring>
 
 void createListingHeader()
 {
@@ -10,19 +11,6 @@ void createListingHeader()
 
 void parser()
 {
-  //uncomment below code if we want to reserve keywords in our symbol table 
-  /*entry reserved;
-  symbolTable["program"] = reserved;
-  symbolTable["begin"] = reserved;
-  symbolTable["end"] = reserved;
-  symbolTable["var"] = reserved;
-  symbolTable["conts"] = reserved;
-  symbolTable["boolean"] = reserved;
-  symbolTable["true"] = reserved;
-  symbolTable["false"] = reserved;
-  symbolTable["not"] = reserved;
-  */
-  
   //charac must be initialized to the first character of the source file
   nextChar();
   
@@ -44,21 +32,26 @@ void createListingTrailer()
 
 void printSymbolTable()
 {
-/*	objectFile << "STAGE0:" << names << ctime(&currentT) << "\n";
-	vector<entry>::iterator Print;
-	
-	for (Print = symbolTable.begin(); Print < symbolTable.end(); Print++)
-	{
-		objectFile << left << setw(17) << Print->externalName;
-		objectFile << left << setw(6) << Print->internalName;
-		objectFile << setw(11) << Print->dataType;
-		objectFile << setw(10) << Print->mode;
-		objectFile << setw(17) << Print->value;
-		objectFile << setw(5) << Print->alloc;
-		objectFile << setw(1) << Print->units;
-		objectFile << "\n";
-	}
-*/
+	objectFile << "STAGE0:  " << names << "       " << ctime(&currentT) << "\n";
+  int currentElement = 0;
+  for (auto x = symbolTable.cbegin(); x != symbolTable.cend(); ++x) 
+  {
+    for (auto y = symbolTable.cbegin(); y != symbolTable.cend(); ++y)
+    {
+      if(y->second.position == currentElement)
+      {
+        objectFile << left << setw(17) << y->second.externalName;
+        objectFile << left << setw(6) << y->second.internalName;
+        objectFile << setw(11) << storeTypeString[y->second.dataType];
+        objectFile << setw(10) << modesString[y->second.mode];
+        objectFile << setw(17) << y->second.value;
+        objectFile << setw(5) << allocationString[y->second.alloc];
+        objectFile << setw(1) << y->second.units;
+        objectFile << "\n";
+        currentElement += 1;
+      }
+    }
+  }
 }
 
 //check if string is a reserved keyword 
@@ -137,38 +130,75 @@ void progStmt()
 	insert(x, PROG_NAME, CONSTANT, x, NO, 0);
 }
 
-//example from class:
-//Insert("a,b","integer",VARIABLE,"",YES,1)
-//insert should split apart the list like "a,b" on the commas. there is a function that can do this "stringtok"
-//this function will return the position of the next comma. then we can take a substring from current position to the position
-//returned by the stringtok function. so the first would be substr from 0 to 1. that would return 'a' we then want to check if it is a
-//multipfly defined symbol. I think we can do by attempting to insert the value into a map. 
-//we check for uppercase because eventually we will be assigning the sum / product of two variables to a temp space like T0,T1,T2....
-//in another function y needs to be checked to make sure it is the correct type before inserting 
+//insert a unique entry into the symbolTable
 void insert(string externalName, storeType inType, modes inMode, string inValue, allocation inAlloc, int inUnits)
 {
-//vvvvvvvvv SUDO CODE FROM HANDOUT vvvvvvvvvv
- //void Insert(string externalName,storeType inType, modes inMode, string inValue,allocation inAlloc, int inUnits)
- //
- //create symbol table entry for each identifier in list of external names
- //Multiply inserted names are illegal
- // 
- //  string name;
- //   while (name broken from list of external names and put into name != "")
- //   {
- //     if symbolTable[name] is defined
- //       process error: multiple name definition
- //     else if name is a keyword
- //       process error: illegal use of keyword
- //     else //create table entry
- //     {
- //       if name begins with uppercase then
- //         symbolTable[name]=(name,inType,inMode,inValue,inAlloc,inUnits)
- //       else
- //         symbolTable[name]=(GenInternalName(inType),inType,inMode,inValue,inAlloc,inUnits)
- //     }
+  static int position = 0; 
+  char name[externalName.size()+1];
+  
+  // create copy of externalName as a char *
+  strcpy(name, externalName.c_str());  
+  
+  // find first token in string that could consist of multiple values like "a,b,c"
+  char *token_in_string = strtok(name,","); 
+  
+  //loop through the char * and find each individuall value seperated by a ','
+  while(token_in_string != NULL)
+  {
+    string nameToken = string(token_in_string);
+    //external names are only allowed to be 15 characters long 
+    if(nameToken.length() > 15)
+    {
+      nameToken = nameToken.substr(0,15);
+    }
+    
+    if(symbolTable.find(nameToken) != symbolTable.end())
+    {
+      error(nameToken + "is defined multiple times");
+    }
+    else if (Key_Id(nameToken))
+    {
+      error("illegal use of keyword '" + nameToken + "'");
+    }
+    else //insert the value
+    {
+      entry New;
+      New.externalName = nameToken;
+      if(isupper(nameToken[0]))
+      {
+        New.internalName = nameToken;
+      }
+      else
+      {
+        New.internalName = genInternalName(inType);
+      }
+      New.dataType = inType;
+      New.mode = inMode;
+      New.value = inValue;
+      New.alloc = inAlloc;
+      New.units = inUnits;
+      New.position = position;
+      position += 1;
+      symbolTable[nameToken] = New;
+    }
+    token_in_string = strtok(NULL, ",");
+  }
+
+ /* while (name broken from list of external names and put into name != "")
+  {
+    if symbolTable[name] is defined
+      process error: multiple name definition
+    else if name is a keyword
+      process error: illegal use of keyword
+    else //create table entry
+    {
+      if name begins with uppercase then
+        symbolTable[name]=(name,inType,inMode,inValue,inAlloc,inUnits)
+      else
+        symbolTable[name]=(GenInternalName(inType),inType,inMode,inValue,inAlloc,inUnits)
+    }
+  }
 	
-/*
 // I could be way off on this if we do use it we would have to change it to check the map 
 // for if the name is used before or not instead of using a symbolTable vector.
     string name;
@@ -439,7 +469,7 @@ void constStmts()
 	{
 		error("semicolon expected");
 	}
-	//insert(x, WhichType(y), CONSTANT, WhichValue(y), YES, 1);
+	insert(x, WhichType(y), CONSTANT, WhichValue(y), YES, 1);
 	nextToken();
   if (token != "begin" && token != "var")
 	{
@@ -526,7 +556,6 @@ string ids()
   nextToken();
   if(token == ",")
   {
-    cout << "entered ids with ," << endl;
     nextToken();
     if (!non_Key_Id())
     {
@@ -537,7 +566,7 @@ string ids()
   return tempString;
 }
 
-void beginEndStmt()
+void beginEndStmt() 
 {
 	if (token != "begin") 
 	{
@@ -556,34 +585,37 @@ void beginEndStmt()
 	nextToken();	
 }
 
-/*
-
 string genInternalName(storeType inType){
 	static int internalNI = 0;
 	static int internalNB = 0;
 	static bool newProg = true;
     string I = ""; 
-	
-	if(inType == INTEGER){
+
+	if(inType == INTEGER)
+  {
 		I += "I";
-		string a = tostring(internalNI);
-		I += a ;
-		internalI++;
-	}else if(inType == BOOLEAN){
-		I += "I";
-		string b = tostring(internalBI);
-		string I += b ;
-		internalB++;
-	}else if (inType == PROG_NAME){
-		if (progFound == true){
+		string a = to_string(internalNI);
+		I += a;
+		internalNI++;
+	}
+  else if(inType == BOOLEAN)
+  {
+		I += "B";
+		string b = to_string(internalNB);
+		I += b;
+		internalNB++;
+	}
+  else if(inType == PROG_NAME)
+  {
+		if(newProg)
+    {
 			I += "P0";
-			progFound = false;
-		}else{
-			Error("Can not have more than one program name");
+			newProg = false;
+		}
+    else
+    {
+			error("Can not have more than one program name");
 		}
 	}
 	return I;
 }
-
-*/
-
