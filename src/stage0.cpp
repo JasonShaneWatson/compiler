@@ -414,7 +414,8 @@ constStmts();
 }
 
 void constStmts()
-{string x, y;
+{	
+	string x, y;
 	if (!non_Key_Id())
 	{
 		error("non-keyword identifier must follow 'const'");
@@ -469,11 +470,11 @@ void constStmts()
 	{
 		error("semicolon expected");
 	}
-	insert(x, WhichType(y), CONSTANT, WhichValue(y), YES, 1
+	insert(x, whichType(y), CONSTANT, whichValue(y), YES, 1);
 	nextToken();
-	if (token != "begin" ||token != "var" || !non_Key_Id())
+    if (token != "begin" || token != "var" || !non_Key_Id())
 	{
-		error("'begin', 'var', or non-keyword expected");
+		error("'begin' or 'var' or non-Keyword expected");
 	}
 	if (non_Key_Id())
 	{
