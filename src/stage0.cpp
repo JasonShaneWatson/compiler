@@ -414,9 +414,8 @@ constStmts();
 }
 
 void constStmts()
-{
-	string x, y;
-	if (Key_Id(token) == true)
+{string x, y;
+	if (!non_Key_Id())
 	{
 		error("non-keyword identifier must follow 'const'");
 	}
@@ -437,7 +436,7 @@ void constStmts()
         !isInt()
       )
 	{
-		if (Key_Id(token) == true)
+		if (!non_Key_Id())
 		error(("illegal type with value '" + token + "' follows ':'"));
 	}
 	
@@ -470,17 +469,16 @@ void constStmts()
 	{
 		error("semicolon expected");
 	}
-	insert(x, whichType(y), CONSTANT, whichValue(y), YES, 1);
+	insert(x, WhichType(y), CONSTANT, WhichValue(y), YES, 1
 	nextToken();
-  if (token != "begin" && token != "var")
+	if (token != "begin" ||token != "var" || !non_Key_Id())
 	{
-		if(Key_Id(token) == true)
-		{
-			error("'begin' or 'var' expected");
-		}
+		error("'begin', 'var', or non-keyword expected");
 	}
-	if (Key_Id(token)== false)
+	if (non_Key_Id())
+	{
 		constStmts();
+	}
 }
 
 string whichValue(string name)
