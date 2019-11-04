@@ -33,6 +33,7 @@ void createListingTrailer()
 void printSymbolTable()
 {
 	objectFile << "STAGE0:  " << names << "       " << ctime(&currentT) << "\n";
+  objectFile << "Symbol Table\n\n";
   int currentElement = 0;
   for (auto x = symbolTable.cbegin(); x != symbolTable.cend(); ++x) 
   {
@@ -42,11 +43,11 @@ void printSymbolTable()
       {
         objectFile << left << setw(17) << y->second.externalName;
         objectFile << left << setw(6) << y->second.internalName;
-        objectFile << setw(11) << storeTypeString[y->second.dataType];
+        objectFile << right <<setw(9) << storeTypeString[y->second.dataType];
         objectFile << setw(10) << modesString[y->second.mode];
-        objectFile << setw(17) << y->second.value;
-        objectFile << setw(5) << allocationString[y->second.alloc];
-        objectFile << setw(1) << y->second.units;
+        objectFile << right << setw(17) << y->second.value;
+        objectFile << right << setw(5) << allocationString[y->second.alloc];
+        objectFile << setw(3) << y->second.units;
         objectFile << "\n";
         currentElement += 1;
       }
@@ -469,7 +470,7 @@ void constStmts()
 	{
 		error("semicolon expected");
 	}
-	insert(x, WhichType(y), CONSTANT, WhichValue(y), YES, 1);
+	insert(x, whichType(y), CONSTANT, whichValue(y), YES, 1);
 	nextToken();
   if (token != "begin" && token != "var")
 	{
@@ -480,6 +481,69 @@ void constStmts()
 	}
 	if (Key_Id(token)== false)
 		constStmts();
+}
+
+string whichValue(string name)
+{
+  if(name == "true")
+    return "1";
+  else if (name == "false")
+    return "0";
+  
+  bool isLiteral = true;
+  if(isdigit(name[0]) || name[0] == '-' || name[0] == '+')
+  {
+    if(name.length() < 2 && !isdigit(name[0]))
+      isLiteral = false;
+    
+    for(uint x = 1; x < name.length(); x++)
+    {
+      if(!isdigit(name[x]))
+        isLiteral = false;
+    }
+    if(isLiteral)
+      return name;
+  }
+  else
+  {
+    auto tableValue = symbolTable.find(name);
+    if(tableValue != symbolTable.end()) //we found an entry in the symbolTable
+    {
+      return tableValue->second.value;
+    }
+  }
+  error("reference to undefined constant");
+  return ""; // wont run, just to stop the compiler from complaining  
+}
+
+storeType whichType(string name)
+{
+  if(name == "true" || name == "false")
+    return BOOLEAN;
+   
+  //if name is an INTEGER, check and make sure it is correctly formatted
+  if(isdigit(name[0]) || name[0] == '-' || name[0] == '+')
+  {
+    if(name.length() < 2 && !isdigit(name[0]))
+      error("expected a number to follow " + name);
+    
+    for(uint x = 1; x < name.length(); x++)
+    {
+      if(!isdigit(name[x]))
+        error("invalid character in'" + name + "'");
+    }
+    return INTEGER;
+  }
+  else
+  {
+    auto tableValue = symbolTable.find(name);
+    if(tableValue != symbolTable.end()) //we found an entry in the symbolTable
+    {
+      return tableValue->second.dataType;
+    }
+  }
+  error("reference to undefined constant");
+  return UNKNOWN; // wont run, just to stop the compiler from complaining 
 }
 
 void vars()
@@ -495,6 +559,7 @@ void vars()
 	}
 	varStmts();
 }
+
 void varStmts()
 {
 	string x, y;
@@ -586,6 +651,7 @@ void beginEndStmt()
 }
 
 string genInternalName(storeType inType){
+
 	static int internalNI = 0;
 	static int internalNB = 0;
 	static bool newProg = true;

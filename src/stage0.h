@@ -60,6 +60,6 @@ string ids();
 string token;
 char charac;
 string genInternalName(storeType);
-
-
+storeType whichType(string name);
+string whichValue(string name);
 #endif
