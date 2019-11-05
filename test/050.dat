@@ -5,6 +5,7 @@ program    stage0no050;
             b = a;
             c = stage0no050; {data type of token on the right-hand side must be INTEGER or BOOLEAN}
             d = 3;
+            d = 5;
      var
             yes,no,maybe:boolean;
             smallnum,bignum,biggernum:integer;

@@ -69,7 +69,7 @@ bool non_Key_Id()
 {
 	// If key not found in map iterator to end is returned 
   if (symbolTable.find(token)!= symbolTable.end())//we found a key with value of token, return false
-    return false;
+    error("symbol \"" + token + "\" defined more than once");
   
   //first character of token must be a lowercased leter
   if(isupper(token[0]))
@@ -121,7 +121,10 @@ void progStmt()
   string x = nextToken();
 	// If key not found in map iterator to end is returned 
 	//check token to make sure it is a valid non_Key_Id()
-	non_Key_Id();
+	
+	for(uint x = 0; x < token.length(); x++)
+    if(!isalnum(token[x]) && token[x] != '_')
+      error("expected program name");
   
   nextToken();
 	if (token != ";")
@@ -136,7 +139,7 @@ void progStmt()
 void insert(string externalName, storeType inType, modes inMode, string inValue, allocation inAlloc, int inUnits)
 {
   static int position = 0;
-	
+	static bool hasPrgName = false;
 	if(symbolTable.size() == 256)
 	{
 		error("symbol table overflow. exceded 256 entries ");
@@ -182,7 +185,15 @@ void insert(string externalName, storeType inType, modes inMode, string inValue,
       }
       else
       {
-        New.internalName = genInternalName(inType);
+				if(inType == 2 && !hasPrgName)//prg_name
+				{
+					hasPrgName = true;
+					New.internalName = "P0";
+				}
+				else
+				{
+					New.internalName = genInternalName(inType);
+				}
       }
       New.dataType = inType;
       New.mode = inMode;
@@ -437,12 +448,13 @@ void constStmts()
 	}
 	insert(x, whichType(y), CONSTANT, whichValue(y), YES, 1);
 	nextToken();
-	if (token != "begin" && token != "var" && !non_Key_Id())
+	if (token != "begin" && token != "var")
 	{
-		error("non-keyword identifier, \"begin\" or \"var\" expected");
+		for(uint x = 0; x < token.length(); x++)
+			if(!isalnum(token[x]) && token[x] != '_')
+				error("non-keyword identifier, \"begin\" or \"var\" expected");
 	}
-		cout << "before non_Key_Id " << token << endl;
-	//cout << "after nextToken " << token << endl;
+
 	if(token == "var" || token == "begin")
 			return;
 	if (non_Key_Id())
@@ -615,8 +627,8 @@ string genInternalName(storeType inType){
 
 	static int internalNI = 0;
 	static int internalNB = 0;
-	static bool newProg = true;
-    string I = ""; 
+
+  string I = ""; 
 
 	if(inType == INTEGER)
   {
@@ -632,17 +644,9 @@ string genInternalName(storeType inType){
 		I += b;
 		internalNB++;
 	}
-  else if(inType == PROG_NAME)
+  else
   {
-		if(newProg)
-    {
-			I += "P0";
-			newProg = false;
-		}
-    else
-    {
-			error("Can not have more than one program name");
-		}
+		error("data type of token must be INTEGER or BOOLEAN");
 	}
 	return I;
 }
