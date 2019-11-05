@@ -240,16 +240,24 @@ string nextToken()
     
     else if(isalpha(charac))
     {
-      token = charac;
+      token += charac;
       nextChar();
       while(islower(charac) || isdigit(charac) || charac == '_')
       {
-        if(token.back()  == '_')
-        {
-          error(("illegal use of consecutive underscore: " + token + '_'));
-        }
         token += charac;
-        nextChar();
+        if(token.back() == '_')
+				{
+					nextChar();
+					if(charac == '_')
+					{
+						error(("illegal use of consecutive underscore: " + token + '_'));
+					}
+					else
+					{
+						token += charac;
+					}
+				}
+				nextChar();
       }
       if(token.back()  == '_')
       {
