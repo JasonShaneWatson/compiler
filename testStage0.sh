@@ -8,5 +8,5 @@ echo
 
 
 echo -e "\n-- Begin listing file output -- \n~"
-cat my.obj
+cat my.lst
 echo -e "~\n-- End of listing File --\n"
