@@ -353,14 +353,14 @@ constStmts();
 void constStmts()
 {	
 	string x, y;
-	if (!non_Key_Id())
+	if (Key_Id(token) == true)
 	{
-		error("non-keyword identifier must follow \"const\"");
+		error("non-keyword identifier must follow 'const'");
 	}
 	x = token;
 	if (nextToken() != "=")
 	{
-		error("\"=\" expected");
+		error("'=' expected");
 	}
 	y = nextToken();
 	if ( 
@@ -374,8 +374,8 @@ void constStmts()
         !isInt()
       )
 	{
-		if (!non_Key_Id())
-		error(("illegal type with value \"" + token + "\" follows \":\""));
+		if (Key_Id(token) == true)
+		error(("illegal type with value '" + token + "' follows ':'"));
 	}
 	
 	if ( y == "+" || y == "-")
@@ -383,7 +383,7 @@ void constStmts()
 		nextToken();
 		if (!isdigit(token[0]))
 		{
-			error("illegal type follows \"+\" or \"-\"");
+			error("illegal type follows '+' or '-'");
 		}
 		y = y + token;
 	}
@@ -392,7 +392,7 @@ void constStmts()
 		nextToken();
 		if (token != "true" && token != "false")
 		{
-			error("illegal type follows \"not\"");
+			error("illegal type follows 'not'");
 		}
 		if (token == "true")
 		{
@@ -409,14 +409,15 @@ void constStmts()
 	}
 	insert(x, whichType(y), CONSTANT, whichValue(y), YES, 1);
 	nextToken();
-    if (token != "begin" || token != "var" || !non_Key_Id())
+	if (token != "begin" && token != "var")
 	{
-		error("\"begin\" or \"var\" or non-Keyword expected");
+		if(Key_Id(token) == true)
+		{
+			error("'begin' or 'var' expected");
+		}
 	}
-	if (non_Key_Id())
-	{
+	if (Key_Id(token)== false)
 		constStmts();
-	}
 }
 
 string whichValue(string name)

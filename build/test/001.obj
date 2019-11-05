@@ -1,0 +1,9 @@
+STAGE0:  Aspen Wills, Jason Watson       Mon Nov  4 18:17:44 2019
+
+LINE NO.              SOURCE STATEMENT
+
+    1|program    stage0no001;   {here is a comment}
+    2|     const yes=true;no=
+Error: Line 2: "begin" or "var" or non-Keyword expected
+
+COMPILATION TERMINATED      1 ERRORS ENCOUNTERED
