@@ -73,7 +73,7 @@ bool non_Key_Id()
   
   //first character of token must be a lowercased leter
   if(isupper(token[0]))
-    error("token must begin with a lowercased character");
+    error("token must begin with a lowercased character invalid input");
   
   //next token should prevent this from happening, but lets make sure its a good token.
   //capital letters will have already been rejected in nextToken. 
@@ -263,8 +263,7 @@ string nextToken()
     else if(isalpha(charac))
     {
       token += charac;
-			if(isupper(charac))
-				error("illegal use of uppercase letter");
+
 			
       nextChar();
       while(islower(charac) || isdigit(charac) || charac == '_')
@@ -273,13 +272,13 @@ string nextToken()
         if(token.back() == '_')
 				{
 					nextChar();
-					if(!islower(charac) && !isdigit(charac))
-					{
-							error("token cannot end in an '_'");
-					}
 					if(charac == '_')
 					{
 						error(("illegal use of consecutive underscore: " + token + '_'));
+					}
+					if(!islower(charac) && !isdigit(charac))
+					{
+							error("token cannot end in an '_'");
 					}
 					else
 					{
@@ -292,8 +291,7 @@ string nextToken()
       {
         error(("\"_\" cannot end token: " + token));
       }
-			if(isupper(charac))
-				error("illegal use of uppercase letter");
+
     }
     
     else if (isdigit(charac))
@@ -399,7 +397,7 @@ void constStmts()
 	x = token;
 	if (nextToken() != "=")
 	{
-		error("'=' expected");
+		error("'=' expected after " + x);
 	}
 	y = nextToken();
 	if ( 
@@ -414,7 +412,7 @@ void constStmts()
       )
 	{
 		if (Key_Id(token) == true)
-		error(("illegal type with value '" + token + "' follows ':'"));
+		error(("illegal type with value '" + token + "' follows '='"));
 	}
 	
 	if ( y == "+" || y == "-")
@@ -426,7 +424,7 @@ void constStmts()
 		}
 		y = y + token;
 	}
-	if ( y == "not")
+	else if ( y == "not")
 	{
 		nextToken();
 		if (token != "true" && token != "false")
@@ -442,9 +440,14 @@ void constStmts()
 			y = "true";
 		}
 	}
+	if (token == ";")
+	{
+		error("identifier " + x + " has no value");
+	}
+	string z = token;
 	if (nextToken() != ";")
 	{
-		error("semicolon expected");
+		error("semicolon expected after " + z );
 	}
 	insert(x, whichType(y), CONSTANT, whichValue(y), YES, 1);
 	nextToken();
@@ -490,7 +493,7 @@ string whichValue(string name)
       return tableValue->second.value;
     }
   }
-  error("reference to undefined constant");
+  error("reference to undefined constant " + name);
   return ""; // wont run, just to stop the compiler from complaining  
 }
 
@@ -541,24 +544,25 @@ void vars()
 
 void varStmts()
 {
-	string x, y;
+	string x, y, z;
+	z = token;
 	//check token to make sure it is a valid non_Key_Id()
 	non_Key_Id();
 	x = ids();
 	if(token != ":")
 	{
-		error("\":\" expected");
+		error("\":\" expected after " + z );
 	}
   //input from program is lowercased
   nextToken();
 	if (token != "integer" && token != "boolean")
 	{
-		error("illegal type follows \":\"");
+		error("illegal type follows \":\" must be integer or boolean");
 	}
 	y = token;
 	if (nextToken() != ";")
 	{
-		error("semicolon expected");
+		error("semicolon expected after " + y);
 	}
 	
   //insert token into symbolTable wtih associated storeType
@@ -618,7 +622,7 @@ void beginEndStmt()
 
 	if (nextToken() != ".") 
 	{
-		error("\".\" expected");
+		error("\".\" expected after end");
 	}
 	nextToken();	
 }
