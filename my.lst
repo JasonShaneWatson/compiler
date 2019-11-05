@@ -1,14 +1,9 @@
-STAGE0:  Aspen Wills, Jason Watson       Mon Nov  4 18:58:43 2019
+STAGE0:  Aspen Wills, Jason Watson       Mon Nov  4 21:41:28 2019
 
 LINE NO.              SOURCE STATEMENT
 
-    1|program stage0no002;
-    2|      {illustrate erroneous use of Pascallite features:}
-    3|	    {odd vs. even length in comment okay          }
-    4|        {should find z+ as illegal name              }
-    5|
-    6|   var x: integer;     
-    7|       z+:
-Error: Line 7: ":" expected
+    1|program ;
+
+Error: Line 1: invalid character in token
 
 COMPILATION TERMINATED      1 ERRORS ENCOUNTERED

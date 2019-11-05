@@ -69,17 +69,20 @@ bool non_Key_Id()
 {
 	// If key not found in map iterator to end is returned 
   if (symbolTable.find(token)!= symbolTable.end())//we found a key with value of token, return false
-    return false; 
+    return false;
   
   //first character of token must be a lowercased leter
-  if(!islower(token[0]))
-    return false;
+  if(isupper(token[0]))
+    error("token must begin with a lowercased character");
   
   //next token should prevent this from happening, but lets make sure its a good token.
   //capital letters will have already been rejected in nextToken. 
   for(uint x = 0; x < token.length(); x++)
     if(!isalnum(token[x]) && token[x] != '_')
-      return false; 
+      error("invalid character in token"); 
+		
+	if(Key_Id(token))
+			error("reserved keyword '" + token + "' cannot be redefined");
       
 	return true;
 }
@@ -117,10 +120,8 @@ void progStmt()
 
   string x = nextToken();
 	// If key not found in map iterator to end is returned 
-  if (symbolTable.find(token)!= symbolTable.end())//we found a key, we want token to be a a new key so error out 
-	{
-		error("program name expected");
-	}
+	//check token to make sure it is a valid non_Key_Id()
+	non_Key_Id();
   
   nextToken();
 	if (token != ";")
@@ -134,7 +135,13 @@ void progStmt()
 //insert a unique entry into the symbolTable
 void insert(string externalName, storeType inType, modes inMode, string inValue, allocation inAlloc, int inUnits)
 {
-  static int position = 0; 
+  static int position = 0;
+	
+	if(symbolTable.size() == 256)
+	{
+		error("symbol table overflow. exceded 256 entries ");
+	}
+	
   char name[externalName.size()+1];
   
   // create copy of externalName as a char *
@@ -146,6 +153,10 @@ void insert(string externalName, storeType inType, modes inMode, string inValue,
   //loop through the char * and find each individuall value seperated by a ','
   while(token_in_string != NULL)
   {
+		if(symbolTable.size() == 256)
+		{
+			error("symbol table overflow. exceded 256 entries ");
+		}
     string nameToken = string(token_in_string);
     //external names are only allowed to be 15 characters long 
     if(nameToken.length() > 15)
@@ -155,7 +166,7 @@ void insert(string externalName, storeType inType, modes inMode, string inValue,
     
     if(symbolTable.find(nameToken) != symbolTable.end())
     {
-      error(nameToken + "is defined multiple times");
+      error("'" + nameToken + "'" + " is defined multiple times");
     }
     else if (Key_Id(nameToken))
     {
@@ -241,6 +252,9 @@ string nextToken()
     else if(isalpha(charac))
     {
       token += charac;
+			if(isupper(charac))
+				error("illegal use of uppercase letter");
+			
       nextChar();
       while(islower(charac) || isdigit(charac) || charac == '_')
       {
@@ -248,6 +262,10 @@ string nextToken()
         if(token.back() == '_')
 				{
 					nextChar();
+					if(!islower(charac) && !isdigit(charac))
+					{
+							error("token cannot end in an '_'");
+					}
 					if(charac == '_')
 					{
 						error(("illegal use of consecutive underscore: " + token + '_'));
@@ -263,6 +281,8 @@ string nextToken()
       {
         error(("\"_\" cannot end token: " + token));
       }
+			if(isupper(charac))
+				error("illegal use of uppercase letter");
     }
     
     else if (isdigit(charac))
@@ -361,10 +381,10 @@ constStmts();
 void constStmts()
 {	
 	string x, y;
-	if (Key_Id(token) == true)
-	{
-		error("non-keyword identifier must follow 'const'");
-	}
+	
+	//check token to make sure it is a valid non_Key_Id()
+	non_Key_Id();
+	
 	x = token;
 	if (nextToken() != "=")
 	{
@@ -378,7 +398,7 @@ void constStmts()
         token != "not"   &&
         token != "true"  && 
         token != "false" &&
-        !non_Key_Id()    &&
+        !(symbolTable.find(token) != symbolTable.end())   && // look for a value in symbol table and not the expression. basically !(isInSymbolTable(token))
         !isInt()
       )
 	{
@@ -417,14 +437,15 @@ void constStmts()
 	}
 	insert(x, whichType(y), CONSTANT, whichValue(y), YES, 1);
 	nextToken();
-	if (token != "begin" && token != "var")
+	if (token != "begin" && token != "var" && !non_Key_Id())
 	{
-		if(Key_Id(token) == true)
-		{
-			error("'begin' or 'var' expected");
-		}
+		error("non-keyword identifier, \"begin\" or \"var\" expected");
 	}
-	if (Key_Id(token)== false)
+		cout << "before non_Key_Id " << token << endl;
+	//cout << "after nextToken " << token << endl;
+	if(token == "var" || token == "begin")
+			return;
+	if (non_Key_Id())
 		constStmts();
 }
 
@@ -497,21 +518,20 @@ void vars()
 	{
 		error("keyword \"var\" expected");
 	}
+
   nextToken();
-	if (!non_Key_Id())
-	{
-		error("non-keyword identifier expected");
-	}
+	
+	//check token to make sure it is a valid non_Key_Id()
+	non_Key_Id();
+	
 	varStmts();
 }
 
 void varStmts()
 {
 	string x, y;
-	if (!non_Key_Id())
-	{
-		error("non-keyword identifier expected");
-	}
+	//check token to make sure it is a valid non_Key_Id()
+	non_Key_Id();
 	x = ids();
 	if(token != ":")
 	{
@@ -557,20 +577,16 @@ string ids()
 {
 	string temp,tempString;
 
-	if (!non_Key_Id())
-	{
-		error("non-keyword identifier expected");
-	}
+	//check token to make sure it is a valid non_Key_Id()
+	non_Key_Id();
 	tempString = token;
 	temp = token;
   nextToken();
   if(token == ",")
   {
     nextToken();
-    if (!non_Key_Id())
-    {
-      error("non-keyword identifier expected");
-    }
+	//check token to make sure it is a valid non_Key_Id()
+	non_Key_Id();
     tempString = temp + "," + ids();
 	}
   return tempString;
