@@ -372,7 +372,7 @@ void error( string err)
   sourceFile.close();
   listingFile.close();
   objectFile.close();
-  exit(EXIT_FAILURE);// might need to exit another way  
+  exit(0);// might need to exit another way  
 }
 
 void consts()
