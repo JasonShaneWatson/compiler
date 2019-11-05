@@ -15,7 +15,7 @@ void parser()
   nextChar();
   
   if(nextToken() != "program")
-       error("keyword 'program' expected");
+       error("keyword \"program\" expected");
     //a call to NextToken() has two effects
     // (1) the variable, token, is assigned the value of the next token
     // (2) the next token is read from the source file in order to make
@@ -88,7 +88,7 @@ void prog()
 {
   if (token != "program")
   {
-      error("keyword 'program' expected");
+      error("keyword \"program\" expected");
   }
 
   progStmt();
@@ -97,7 +97,7 @@ void prog()
   if (token == "var"  ) { vars();   }
   if (token != "begin")
   {
-    error("keyword 'begin' expected");
+    error("keyword \"begin\" expected");
   }
  
   beginEndStmt();
@@ -112,7 +112,7 @@ void progStmt()
 {
 	if (token != "program")
 	{
-		error("keyword 'program' expected in first");
+		error("keyword \"program\" expected in first");
 	}
 
   string x = nextToken();
@@ -125,7 +125,7 @@ void progStmt()
   nextToken();
 	if (token != ";")
 	{
-		error("expected ';' after program name");
+		error("expected \";\" after program name");
 	}
 	nextToken();
 	insert(x, PROG_NAME, CONSTANT, x, NO, 0);
@@ -159,7 +159,7 @@ void insert(string externalName, storeType inType, modes inMode, string inValue,
     }
     else if (Key_Id(nameToken))
     {
-      error("illegal use of keyword '" + nameToken + "'");
+      error("illegal use of keyword \"" + nameToken + "\"");
     }
     else //insert the value
     {
@@ -184,70 +184,6 @@ void insert(string externalName, storeType inType, modes inMode, string inValue,
     }
     token_in_string = strtok(NULL, ",");
   }
-
- /* while (name broken from list of external names and put into name != "")
-  {
-    if symbolTable[name] is defined
-      process error: multiple name definition
-    else if name is a keyword
-      process error: illegal use of keyword
-    else //create table entry
-    {
-      if name begins with uppercase then
-        symbolTable[name]=(name,inType,inMode,inValue,inAlloc,inUnits)
-      else
-        symbolTable[name]=(GenInternalName(inType),inType,inMode,inValue,inAlloc,inUnits)
-    }
-  }
-	
-// I could be way off on this if we do use it we would have to change it to check the map 
-// for if the name is used before or not instead of using a symbolTable vector.
-    string name;
-    auto eNend = externalName.cend();
-    for (auto x = externalName.cbegin(); x < externalName.cend(); x++){
-        name = ""; //initialize a new name
-		for( auto i = externalName.cbegin(); i > eNend; i++)
-		{
-			if (*i != ',')
-			{
-				name += *i;
-			}
-		}
-		if(name.size() >15)
-		{
-			name = name.substr(0,15);
-		}
-		for ( uint i = 0; i < symbolTable.size(); i++)
-		{
-			if (symbolTable[i].externalName == name)
-			{
-				Error("process error: multiple name definition");
-			}
-			
-		}
-		if ( Key_Id(name) == true)
-			{
-				Error("process error: illegal use of keyword");
-			}
-		entry New;
-		New.externalName = name;
-		if (isupper(name[0]))
-		{
-			New.internalName = name;
-		}
-		else
-		{
-			New.internalName = genInternalName(inType);
-		}	
-		New.dataType = inType;
-		New.mode = inMode;
-		New.value = inValue;
-		New.alloc = inAlloc;
-		New.units = inUnits;
-		
-		symbolTable.push_back(New);
-
-*/
 }
 
 //get next token and store in global variable 'token'
@@ -275,12 +211,12 @@ string nextToken()
     
     else if (charac == '}')
     {
-      error("'}' cannot begin token");
+      error("\"}\" cannot begin token");
     }
     
     else if (charac == '_')
     {
-      error("'_' cannot start an identifier");
+      error("\"_\" cannot start an identifier");
     }
     
     else if (isspace(charac))
@@ -317,7 +253,7 @@ string nextToken()
       }
       if(token.back()  == '_')
       {
-        error(("'_' cannot end token: " + token));
+        error(("\"_\" cannot end token: " + token));
       }
     }
     
@@ -361,7 +297,7 @@ char nextChar()
 {
   char nextCh;
   static char prevCh;
-  static int lineNumber = 0;
+  //static int lineNumber = 0;
   sourceFile.get(nextCh);
   //if we reached the end of the source file. Set char to reflect
   if(sourceFile.eof())
@@ -392,7 +328,8 @@ char nextChar()
 //TODO
 void error( string err)
 {
-  listingFile << "\n\nError: " << err << "\n";
+  listingFile << "\nError: Line " << lineNumber << ": " << err << "\n";
+  listingFile << "\nCOMPILATION TERMINATED      1 ERRORS ENCOUNTERED\n";
   sourceFile.close();
   listingFile.close();
   objectFile.close();
@@ -403,12 +340,12 @@ void consts()
 {
 if (token != "const")
 {
-	error("keyword 'const' expected");
+	error("keyword \"const\" expected");
 }
 nextToken();
 if (Key_Id(token))
 {
-	error("non-keyword identifier must follow 'const'");
+	error("non-keyword identifier must follow \"const\"");
 }
 constStmts();
 }
@@ -416,14 +353,14 @@ constStmts();
 void constStmts()
 {	
 	string x, y;
-	if (Key_Id(token) == true)
+	if (!non_Key_Id())
 	{
-		error("non-keyword identifier must follow 'const'");
+		error("non-keyword identifier must follow \"const\"");
 	}
 	x = token;
 	if (nextToken() != "=")
 	{
-		error("'=' expected");
+		error("\"=\" expected");
 	}
 	y = nextToken();
 	if ( 
@@ -437,8 +374,8 @@ void constStmts()
         !isInt()
       )
 	{
-		if (Key_Id(token) == true)
-		error(("illegal type with value '" + token + "' follows ':'"));
+		if (!non_Key_Id())
+		error(("illegal type with value \"" + token + "\" follows \":\""));
 	}
 	
 	if ( y == "+" || y == "-")
@@ -446,7 +383,7 @@ void constStmts()
 		nextToken();
 		if (!isdigit(token[0]))
 		{
-			error("illegal type follows '+' or '-'");
+			error("illegal type follows \"+\" or \"-\"");
 		}
 		y = y + token;
 	}
@@ -455,7 +392,7 @@ void constStmts()
 		nextToken();
 		if (token != "true" && token != "false")
 		{
-			error("illegal type follows 'not'");
+			error("illegal type follows \"not\"");
 		}
 		if (token == "true")
 		{
@@ -472,15 +409,14 @@ void constStmts()
 	}
 	insert(x, whichType(y), CONSTANT, whichValue(y), YES, 1);
 	nextToken();
-  if (token != "begin" && token != "var")
+    if (token != "begin" || token != "var" || !non_Key_Id())
 	{
-		if(Key_Id(token) == true)
-		{
-			error("'begin' or 'var' expected");
-		}
+		error("\"begin\" or \"var\" or non-Keyword expected");
 	}
-	if (Key_Id(token)== false)
+	if (non_Key_Id())
+	{
 		constStmts();
+	}
 }
 
 string whichValue(string name)
@@ -530,7 +466,7 @@ storeType whichType(string name)
     for(uint x = 1; x < name.length(); x++)
     {
       if(!isdigit(name[x]))
-        error("invalid character in'" + name + "'");
+        error("invalid character in\"" + name + "\"");
     }
     return INTEGER;
   }
@@ -550,7 +486,7 @@ void vars()
 {
 	if (token != "var")
 	{
-		error("keyword 'var' expected");
+		error("keyword \"var\" expected");
 	}
   nextToken();
 	if (!non_Key_Id())
@@ -570,13 +506,13 @@ void varStmts()
 	x = ids();
 	if(token != ":")
 	{
-		error("':' expected");
+		error("\":\" expected");
 	}
   //input from program is lowercased
   nextToken();
 	if (token != "integer" && token != "boolean")
 	{
-		error("illegal type follows ':'");
+		error("illegal type follows \":\"");
 	}
 	y = token;
 	if (nextToken() != ";")
@@ -599,7 +535,7 @@ void varStmts()
 	{
 		if (Key_Id(token) == true)
 		{
-			error("'begin' or non Key identifier expected");
+			error("\"begin\" or non Key identifier expected");
 		}
 	}
 	if (Key_Id(token) == false)
@@ -635,17 +571,17 @@ void beginEndStmt()
 {
 	if (token != "begin") 
 	{
-		error("'begin' expected");
+		error("\"begin\" expected");
 	}
 
 	if (nextToken() != "end") 
 	{
-	error("'end' expected");
+	error("\"end\" expected");
 	}
 
 	if (nextToken() != ".") 
 	{
-		error("'.' expected");
+		error("\".\" expected");
 	}
 	nextToken();	
 }

@@ -59,6 +59,7 @@ bool isInt();
 string ids();
 string token;
 char charac;
+int lineNumber = 0;
 string genInternalName(storeType);
 storeType whichType(string name);
 string whichValue(string name);
