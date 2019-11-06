@@ -1,0 +1,11 @@
+STAGE0:  Aspen Wills, Jason Watson       Tue Nov  5 20:26:49 2019
+
+LINE NO.              SOURCE STATEMENT
+
+    1|program stage0no040
+    2|      {semicolon expected after program name}
+    3|
+    4|   var 
+Error: Line 4: expected ";" after program name
+
+COMPILATION TERMINATED      1 ERRORS ENCOUNTERED

@@ -1,0 +1,14 @@
+STAGE0:  Aspen Wills, Jason Watson       Tue Nov  5 20:26:49 2019
+
+LINE NO.              SOURCE STATEMENT
+
+    1|program stage0no007;
+    2|      {illustrate erroneous use of Pascallite features.}
+    3|      {program should end with a period, not a semicolon}
+    4|
+    5|    const help = 32;
+    6|          ram = 3;
+    7|    begin end; 
+Error: Line 7: "." expected after end
+
+COMPILATION TERMINATED      1 ERRORS ENCOUNTERED

@@ -69,11 +69,11 @@ bool non_Key_Id()
 {
 	// If key not found in map iterator to end is returned 
   if (symbolTable.find(token)!= symbolTable.end())//we found a key with value of token, return false
-    error("symbol \"" + token + "\" defined more than once");
+    error("multiple name definition");
   
   //first character of token must be a lowercased leter
   if(isupper(token[0]))
-    error("token must begin with a lowercased character invalid input");
+    error("invalid input, token must begin with a lowercased character");
   
   //next token should prevent this from happening, but lets make sure its a good token.
   //capital letters will have already been rejected in nextToken. 
@@ -125,6 +125,11 @@ void progStmt()
 	for(uint x = 0; x < token.length(); x++)
     if(!isalnum(token[x]) && token[x] != '_')
       error("expected program name");
+  
+  if(x.length() > 15)
+  {
+    x = x.substr(0,15);
+  }
   
   nextToken();
 	if (token != ";")
@@ -442,7 +447,7 @@ void constStmts()
 	}
 	if (token == ";")
 	{
-		error("identifier " + x + " has no value");
+		error("expected value for identifier \"" + x + "\" after the '=' sign");
 	}
 	string z = token;
 	if (nextToken() != ";")
@@ -548,16 +553,17 @@ void varStmts()
 	z = token;
 	//check token to make sure it is a valid non_Key_Id()
 	non_Key_Id();
+  
 	x = ids();
 	if(token != ":")
 	{
-		error("\":\" expected after " + z );
+		error("\":\" expected");
 	}
   //input from program is lowercased
   nextToken();
 	if (token != "integer" && token != "boolean")
 	{
-		error("illegal type follows \":\" must be integer or boolean");
+		error("illegal type follows \":\"");
 	}
 	y = token;
 	if (nextToken() != ";")

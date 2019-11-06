@@ -1,0 +1,10 @@
+STAGE0:  Aspen Wills, Jason Watson       Tue Nov  5 20:26:49 2019
+
+LINE NO.              SOURCE STATEMENT
+
+    1|program stage0no023;
+    2|		 { No caps for us at all, not even for reserved words}
+    3|    CO
+Error: Line 3: keyword "begin" expected
+
+COMPILATION TERMINATED      1 ERRORS ENCOUNTERED

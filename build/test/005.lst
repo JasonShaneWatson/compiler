@@ -1,0 +1,13 @@
+STAGE0:  Aspen Wills, Jason Watson       Tue Nov  5 20:26:49 2019
+
+LINE NO.              SOURCE STATEMENT
+
+    1|program stage0no005;
+    2|      {illustrate erroneous use of Pascallite features.}
+    3|      {const must come before var}
+    4|
+    5|		 var y:integer;
+    6|    const 
+Error: Line 6: "begin" or non Key identifier expected
+
+COMPILATION TERMINATED      1 ERRORS ENCOUNTERED

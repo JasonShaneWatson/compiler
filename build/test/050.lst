@@ -1,0 +1,13 @@
+STAGE0:  Aspen Wills, Jason Watson       Tue Nov  5 20:26:49 2019
+
+LINE NO.              SOURCE STATEMENT
+
+    1|{contributed by Zachary Deere & Ryan Dennis, 29-Oct-2018}
+    2|program    stage0no050;
+    3|     const
+    4|            a = 1;
+    5|            b = a;
+    6|            c = stage0no050; 
+Error: Line 6: data type of token must be INTEGER or BOOLEAN
+
+COMPILATION TERMINATED      1 ERRORS ENCOUNTERED

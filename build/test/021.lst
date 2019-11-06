@@ -1,0 +1,10 @@
+STAGE0:  Aspen Wills, Jason Watson       Tue Nov  5 20:26:49 2019
+
+LINE NO.              SOURCE STATEMENT
+
+    1|program stage0no021;
+    2|		 { No caps for us at all}
+    3|    const Yes 
+Error: Line 3: invalid input, token must begin with a lowercased character
+
+COMPILATION TERMINATED      1 ERRORS ENCOUNTERED

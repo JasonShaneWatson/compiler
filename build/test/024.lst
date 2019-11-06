@@ -1,0 +1,9 @@
+STAGE0:  Aspen Wills, Jason Watson       Tue Nov  5 20:26:49 2019
+
+LINE NO.              SOURCE STATEMENT
+
+    1|program ;
+
+Error: Line 1: expected program name
+
+COMPILATION TERMINATED      1 ERRORS ENCOUNTERED
