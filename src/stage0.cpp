@@ -258,7 +258,16 @@ string nextToken()
               charac == ';' ||
               charac == '.' ||
               charac == '+' ||
-              charac == '-'
+              charac == '-' ||
+              charac == ':=' ||
+              charac == '*' ||
+              charac == '(' ||
+              charac == ')' ||
+              charac == '<>'||
+              charac == '<' ||
+              charac == '<=' ||
+              charac == '>=' ||
+              charac == '>' 
             )
     {
       token = charac;

@@ -63,4 +63,22 @@ int lineNumber = 0;
 string genInternalName(storeType);
 storeType whichType(string name);
 string whichValue(string name);
+void ExecStmt();
+void ExecStmts();
+void AssignStmt();
+void ReadStmt();
+void WriteStmt();
+void Express();
+void Expresses();
+void Term();
+void Terms();
+void Factor();
+void Factors();
+void Part();
+void PushOperator(string);
+void PushOperand(string);
+string PopOperand();
+string PopOperator();
+
+
 #endif
