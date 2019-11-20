@@ -6,7 +6,6 @@
 
 void createListingHeader()
 {
-  exec_stmts();
   listingFile << "STAGE0:  " << names << "       "<< ctime(&currentT) << "\n";
 	listingFile <<  left << setw(22) << "LINE NO." << "SOURCE STATEMENT\n\n" << right;
 }
