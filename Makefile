@@ -11,7 +11,7 @@ TEST_DIR=$(BUILD_ROOT)/test
 stage0:
 	$(MAKE) --no-print-directory -C $(SRC_DIR)
 
-test: stage0
+test: stage1
 	cd $(TEST_DIR); ./test.sh
 	
 clean:

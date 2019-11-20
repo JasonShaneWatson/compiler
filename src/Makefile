@@ -8,8 +8,8 @@ SRC_DIR=$(BUILD_ROOT)/src
 BUILD_DIR=$(BUILD_ROOT)/build
 TEST_DIR=$(BUILD_ROOT)/test
 
-$(BUILD_DIR)/stage0: stage0.cpp
-	$(CXX) -o $(BUILD_DIR)/stage0 $(CFLAGS) stage0.cpp 
+$(BUILD_DIR)/stage0: stage1.cpp
+	$(CXX) -o $(BUILD_DIR)/stage1 $(CFLAGS) stage1.cpp 
 
 clean:
-	rm -f $(BUILD_DIR)/stage0
+	rm -f $(BUILD_DIR)/stage1
