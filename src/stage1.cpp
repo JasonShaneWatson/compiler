@@ -1,4 +1,4 @@
-#include "stage0.h"
+#include "stage1.h"
 #include "stage0main.C"
 #include "exec_stmts.cpp"
 #include <unordered_map>
@@ -637,10 +637,12 @@ void beginEndStmt()
 	{
 		error("\"begin\" expected");
 	}
-
-	if (nextToken() != "end") 
+  
+  execStmts();
+  
+	if (token != "end") 
 	{
-	error("\"end\" expected");
+	error("\"end\" expected but recieved " + token);
 	}
 
 	if (nextToken() != ".") 

@@ -1,6 +1,11 @@
-#include "stage0.h"
+#include "stage1.h"
 
-void exec_stmts() 
+void execStmts() 
 {
-  cout << endl << "its working" << endl;
+  nextToken();
+  if(token == "end")
+    return;
+  
+  //recurse until 
+  execStmts();
 }

@@ -1,5 +1,5 @@
 #include <fstream>
-#include "stage0.h"
+#include "stage1.h"
 
 ifstream sourceFile;
 ofstream listingFile,objectFile;

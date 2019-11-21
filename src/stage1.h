@@ -1,5 +1,5 @@
-#ifndef STAGE0_H
-#define STAGE0_H
+#ifndef STAGE1_H
+#define STAGE1_H
 
 #include <iostream>
 #include <iomanip>
@@ -63,8 +63,8 @@ int lineNumber = 0;
 string genInternalName(storeType);
 storeType whichType(string name);
 string whichValue(string name);
-void ExecStmt();
-void ExecStmts();
+void execStmt();
+void execStmts();
 void AssignStmt();
 void ReadStmt();
 void WriteStmt();
