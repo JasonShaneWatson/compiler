@@ -4,6 +4,19 @@
 #include <unordered_map>
 #include <cstring>
 
+bool isInt();
+char nextChar();
+storeType whichType(string name);
+string genInternalName(storeType);
+string whichValue(string name);
+void beginEndStmt();
+void consts();
+void constStmts();
+void prog();
+void progStmt();
+void vars();
+void varStmts();
+
 void createListingHeader()
 {
   listingFile << "STAGE0:  " << names << "       "<< ctime(&currentT) << "\n";

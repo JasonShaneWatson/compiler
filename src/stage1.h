@@ -48,45 +48,16 @@ int lineNumber = 0;
 /*
 * prototypes
 */
-bool isInt();
 bool Key_Id(string s);
 bool non_Key_Id();
-char nextChar();
-storeType whichType(string name);
 string ids();
-string genInternalName(storeType);
 string nextToken();
-string PopOperand();
-string PopOperator();
-string whichValue(string name);
 unordered_map<string,entry> symbolTable; //https://www.geeksforgeeks.org/unordered_map-in-cpp-stl/
-void AssignStmt();
-void beginEndStmt();
-void consts();
-void constStmts();
 void createListingHeader();
 void createListingTrailer();
 void error(string);
-void execStmt();
-void execStmts();
-void Express();
-void Expresses();
-void Factor();
-void Factors();
-void initKeywords();
 void insert(string externalName, storeType inType, modes inMode, string inValue, allocation inAlloc, int inUnits); 
 void parser();
-void Part();
 void printSymbolTable();
-void prog();
-void progStmt();
-void PushOperand(string);
-void PushOperator(string);
-void ReadStmt();
-void Term();
-void Terms();
-void vars();
-void varStmts();
-void WriteStmt();
 
 #endif
