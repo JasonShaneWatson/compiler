@@ -8,7 +8,10 @@
 #include <string>
 
 using namespace std;
- 
+
+/*
+* Constants
+*/ 
 enum storeType {INTEGER, BOOLEAN, PROG_NAME, UNKNOWN, RESERVED};
 string storeTypeString[] = {"INTEGER", "BOOLEAN", "PROG_NAME", "UNKNOWN", "RESERVED"};
 
@@ -34,51 +37,56 @@ struct entry
    int units;
    int position;
 };
-//https://www.geeksforgeeks.org/unordered_map-in-cpp-stl/  << unordered_map description 
-unordered_map<string,entry> symbolTable;
-bool Key_Id(string s);
 
-void createListingHeader();
-void parser();
-void createListingTrailer();
-void printSymbolTable();
-void prog();
-void progStmt();
-void consts();
-void constStmts();
-void vars();
-void varStmts();
-void initKeywords();
-void error(string);
-string ids();
-void beginEndStmt();
-void insert(string externalName, storeType inType, modes inMode, string inValue, allocation inAlloc, int inUnits); 
-char nextChar();
-string nextToken();
-bool isInt();
-string ids();
+/*
+* variables
+*/
 string token;
 char charac;
 int lineNumber = 0;
-string genInternalName(storeType);
+
+/*
+* prototypes
+*/
+bool isInt();
+bool Key_Id(string s);
+bool non_Key_Id();
+char nextChar();
 storeType whichType(string name);
-string whichValue(string name);
-void execStmt();
-void execStmts();
-void AssignStmt();
-void ReadStmt();
-void WriteStmt();
-void Express();
-void Expresses();
-void Term();
-void Terms();
-void Factor();
-void Factors();
-void Part();
-void PushOperator(string);
-void PushOperand(string);
+string ids();
+string genInternalName(storeType);
+string nextToken();
 string PopOperand();
 string PopOperator();
-
+string whichValue(string name);
+unordered_map<string,entry> symbolTable; //https://www.geeksforgeeks.org/unordered_map-in-cpp-stl/
+void AssignStmt();
+void beginEndStmt();
+void consts();
+void constStmts();
+void createListingHeader();
+void createListingTrailer();
+void error(string);
+void execStmt();
+void execStmts();
+void Express();
+void Expresses();
+void Factor();
+void Factors();
+void initKeywords();
+void insert(string externalName, storeType inType, modes inMode, string inValue, allocation inAlloc, int inUnits); 
+void parser();
+void Part();
+void printSymbolTable();
+void prog();
+void progStmt();
+void PushOperand(string);
+void PushOperator(string);
+void ReadStmt();
+void Term();
+void Terms();
+void vars();
+void varStmts();
+void WriteStmt();
 
 #endif
