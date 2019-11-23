@@ -1,8 +1,7 @@
 #include <fstream>
 #include "stage1.h"
 
-ifstream sourceFile;
-ofstream listingFile,objectFile;
+
 
 //this program is the stage0 compiler for Pascallite. It will accept
 //input from argv[1], generating a listing to argv[2], and object code to

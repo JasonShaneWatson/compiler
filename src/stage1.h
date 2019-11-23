@@ -7,12 +7,17 @@
 #include <ctime>
 #include <string>
 #include <stack>
+#include <fstream>
 
 using namespace std;
 
 /*
 * Constants
 */ 
+
+ifstream sourceFile;
+ofstream listingFile,objectFile;
+
 enum storeType {INTEGER, BOOLEAN, PROG_NAME, UNKNOWN, RESERVED};
 string storeTypeString[] = {"INTEGER", "BOOLEAN", "PROG_NAME", "UNKNOWN", "RESERVED"};
 
@@ -54,6 +59,8 @@ char charac;
 int lineNumber = 0;
 string oprnd;
 string oprtr; 
+
+string Areg = "";
 
 
 /*
