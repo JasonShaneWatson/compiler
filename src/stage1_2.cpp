@@ -4,24 +4,39 @@
 /*
 * variables
 */
-static int currentTempNo = 0;
+static int currentTempNo = -1;
 int maxTempNo = 256;
-
+static int currentLabelNo = -1;
+int maxLabelNo = 256;
 
 /*
 * prototypes
 */
-void PushOperator(string);
-void PushOperand(string);
-string PopOperand();
-string PopOperator();
-void free_Temp();
-string get_Temp();
-void EmitAdditionCode(string operand1,string operand2);
-void EmitSubtractionCode(string operand1,string operand2);
-void EmitAndCode(string operand1,string operand2);
-void EmitMultiplicationCode(string operand1,string operand2);
-void EmitNegationCode(string operand1);
+void PushOperator(string);//d
+void PushOperand(string);//d
+string PopOperand();//d
+string PopOperator();//d
+void free_Temp();//d
+string get_Temp();//d
+string get_Label();//d
+void ReadStmt();
+void WriteStmt();
+void EmitAdditionCode(string, string); //d
+void EmitSubtractionCode(string, string);//d
+void EmitNegationCode(string);//d
+void EmitNotCode(string);//d
+void EmitMultiplicationCode(string, string);//d
+void EmitDivisionCode(string, string);
+void EmitModuloCode(string, string);
+void EmitAndCode(string, string);//d
+void EmitOrCode(string, string);
+void EmitEqualsCode(string, string);
+void EmitLTCode(string, string);
+void EmitGTCode(string, string);
+void EmitGTOECode(string, string);
+void EmitLTOECode(string, string);
+void EmitDNECode(string, string);
+void EmitAssignCode(string, string);
 
 
 void PushOperator(string oprtr)
@@ -88,6 +103,18 @@ string get_Temp()
 	 {
 		 insert(temp, UNKNOWN, VARIABLE, "", NO, 1);
 		 maxTempNo++;
+	 }
+	 return temp;
+}
+string get_Label()
+{
+	string temp;
+	 currentLabelNo++;
+	 temp = "L" + to_string(currentLabelNo);
+	 if (currentLabelNo > maxLabelNo)
+	 {
+		 insert(temp, UNKNOWN, VARIABLE, "", NO, 1);
+		 maxLabelNo++;
 	 }
 	 return temp;
 }
@@ -465,13 +492,13 @@ void EmitNegationCode(string operand1)
 	// if register has operand1 multiply by op2
 	else if (Areg == operand1 )
 	{
-		auto tableValue2 = symbolTable.find("ZERO");
+		auto tableValue2 = symbolTable.find("zero");
 		if(tableValue2 == symbolTable.end()) //we did not find an entry in the symbolTable
 		{
-		  insert("ZERO", INTEGER, CONSTANT, "0", YES, 1);
+		  insert("zero", INTEGER, CONSTANT, "0", YES, 1);
 		 
 		}
-		objectFile << setw(4) << "" << setw(2) << "" << "LDA" << setw(4) <<left << "ZERO";
+		objectFile << setw(4) << "" << setw(2) << "" << "LDA" << setw(4) <<left << "zero";
 		objectFile << setw(4) << "" << setw(2) << "" << "ISB" << setw(4) <<left << operand1;
 	}
 	// if register has operand2 multiply by op1
@@ -496,6 +523,188 @@ void EmitNegationCode(string operand1)
 	PushOperand(Areg);
 }
 
+void EmitNotCode(string operand1)
+{
+	 	 //check if  data Types are integers
+	 for (auto y = symbolTable.cbegin(); y != symbolTable.cend(); ++y)
+			{
+				if(y->second.internalName == operand1)
+				{
+					if ( storeTypeString[y->second.dataType] != "BOOLEAN")
+					{
+						error("illegal type");
+					}
+				}
+			}
+	//Allocate Temp and store it 		
+	if ( !Areg.empty() && Areg != operand1  && Areg.at(0) == 'T')
+	{
+		auto tableValue = symbolTable.find(Areg);
+		if(tableValue != symbolTable.end()) //we found an entry in the symbolTable
+		{
+		  tableValue->second.alloc = YES;
+		  tableValue->second.units = 1;
+		  
+		}
+		objectFile << setw(4) << "" << setw(2) << "" << "STA " << setw(4) <<left << Areg;
+		Areg = "";
+		
+	}
+	// if non-temp is in register then deassign it 
+	else if ( !Areg.empty() && Areg != operand1  && Areg.at(0) != 'T')
+	{
+		Areg = "";
+	}
+	else if (Areg != operand1 )
+	{
+		objectFile << setw(4) << "" << setw(2) << "" << "LDA" << setw(4) <<left << operand1;
+	}
+	// if register has operand1 set jumps
+	else if (Areg == operand1 )
+	{
+		auto tableValue2 = symbolTable.find("false");
+		if(tableValue2 == symbolTable.end()) //we did not find an entry in the symbolTable
+		{
+		  insert("false", BOOLEAN, CONSTANT, "0", YES, 1);
+		 
+		}
+		auto tableValue3 = symbolTable.find("true");
+		if(tableValue3 == symbolTable.end()) //we did not find an entry in the symbolTable
+		{
+		  insert("true", BOOLEAN, CONSTANT, "1", YES, 1);
+		 
+		}
+		string label = get_Label();
+		objectFile << setw(4) << "" << setw(2) << "" << "AZJ " << setw(4) << left << label;
+		objectFile << setw(4) << "" << " not " << operand1 << "\n";
+		objectFile << setw(4) << "" << setw(2) << "" << "LDA" << setw(4) <<left << "FALS";
+		objectFile << setw(4) << "" << setw(2) << "" << "UNJ " << setw(4) << label << "+1   \n" ;
+		objectFile << setw(4) << left << label << setw(2) << "" << "LDA" << setw(4) <<left << "TRUE";
+	}
 
+	else 
+	{
+		error("you broke it");
+	}
+	// if operand 1 was a temp free it
+	if (operand1.at(0) == 'T' )
+	{
+		free_Temp();
+	}
+	//A register == Tn
+	Areg = get_Temp();
+	// make Tn dataType = INTEGER
+	auto tableValue1 = symbolTable.find(Areg);
+	if(tableValue1 != symbolTable.end()) //we found an entry in the symbolTable
+	{
+	  tableValue1->second.dataType = INTEGER;
+	}
+	PushOperand(Areg);
+}
+
+
+
+ 
+/*
+void Code(string oprtr, string operand1, string operand2) 
+{
+	operand2 = operand2.substr(0,15);
+	operand1 = operand1.substr(0,15);
+	
+	if (oprtr == "program")
+	{
+		for (auto y = symbolTable.cbegin(); y != symbolTable.cend(); ++y)
+			{
+				if(y->second.internalName == "P0")
+				{
+					string x = y->second.externalName;
+					objectFile << "STRT  NOP" << setw(10) << "" << x << names << endl;
+				}
+			}
+			
+	}
+	else if (oprtr == "end")
+	{
+		printSymbolTable(); // we need to change this funciton 
+	}
+	 else if (oprtr == "read")
+    {
+        ReadStmt();
+    }
+    else if (oprtr == "write")
+    {
+        WriteStmt();
+    }
+    else if (oprtr == "+")
+    {
+        EmitAdditionCode(operand1, operand2);
+    }
+    else if (oprtr == "-")
+    {
+        EmitSubtractionCode(operand1, operand2);
+    }
+    else if (oprtr == "neg")
+    {
+        EmitNegationCode(operand1);
+    }
+    else if (oprtr == "not")
+    {
+        EmitNotCode(operand1);
+    }
+    else if (oprtr == "*")
+    {
+        EmitMultiplicationCode(operand1, operand2);
+    }
+    else if (oprtr == "div")
+    {
+        EmitDivisionCode(operand1, operand2);
+    }
+    else if (oprtr == "mod")
+    {
+        EmitModuloCode(operand1, operand2);
+    }
+    else if (oprtr == "and")
+    {
+        EmitAndCode(operand1, operand2);
+    }
+    else if (oprtr == "or")
+    {
+        EmitOrCode(operand1, operand2);
+    }
+    else if (oprtr == "=")
+    {
+        EmitEqualsCode(operand1, operand2);
+    }
+    else if (oprtr == ":=")
+    {
+        EmitAssignCode(operand1, operand2);
+    }
+    else if (oprtr == "<")
+    {
+        EmitLTCode(operand1, operand2);
+    }
+    else if (oprtr == "<=")
+    {
+        EmitLTOECode(operand1, operand2);
+    }
+    else if (oprtr == ">")
+    {
+        EmitGTCode(operand1, operand2);
+    }
+    else if (oprtr == ">=")
+    {
+        EmitGTOECode(operand1, operand2);
+    }
+    else if (oprtr == "<>")
+    {
+        EmitDNECode(operand1, operand2);
+    }
+	else
+	{
+		error("undefined operation");
+	}	
+
+}
+*/
 
 
