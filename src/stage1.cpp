@@ -1,4 +1,5 @@
 #include "stage1.h"
+#include "stage1_2.cpp"
 #include "stage0main.C"
 #include "exec_stmts.cpp"
 #include <unordered_map>
@@ -6,9 +7,7 @@
 
 bool isInt();
 char nextChar();
-storeType whichType(string name);
 string genInternalName(storeType);
-string whichValue(string name);
 void beginEndStmt();
 void consts();
 void constStmts();
@@ -17,7 +16,7 @@ void progStmt();
 void vars();
 void varStmts();
 
-void createListingHeader()
+void createListingHeader() 
 {
   listingFile << "STAGE0:  " << names << "       "<< ctime(&currentT) << "\n";
 	listingFile <<  left << setw(22) << "LINE NO." << "SOURCE STATEMENT\n\n" << right;

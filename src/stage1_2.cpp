@@ -1,6 +1,12 @@
 #include "stage1.h"
 
 
+
+void PushOperator(string);
+void PushOperand(string);
+string PopOperand();
+string PopOperator();
+
 void PushOperator(string oprtr)
 {
 	operatorStk.push(oprtr);

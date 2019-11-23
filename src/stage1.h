@@ -6,6 +6,7 @@
 #include <unordered_map>
 #include <ctime>
 #include <string>
+#include <stack>
 
 using namespace std;
 
@@ -38,12 +39,22 @@ struct entry
    int position;
 };
 
+
+stack<string> operatorStk;
+stack<string> operandStk;
+
+
+
+
 /*
 * variables
 */
 string token;
 char charac;
 int lineNumber = 0;
+string oprnd;
+string oprtr; 
+
 
 /*
 * prototypes
@@ -59,5 +70,7 @@ void error(string);
 void insert(string externalName, storeType inType, modes inMode, string inValue, allocation inAlloc, int inUnits); 
 void parser();
 void printSymbolTable();
+string whichValue(string name);
+storeType whichType(string name);
 
 #endif
