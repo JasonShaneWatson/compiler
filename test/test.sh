@@ -25,7 +25,7 @@ _test () {
         
         # Compile $program
         printf "%s" "Testing $program. . ."
-        "$PROGDIR/stage0" "$TESTDIR/$program"\
+        "$PROGDIR/stage1" "$TESTDIR/$program"\
                           "$PROGDIR/test/${program%.*}.lst"\
                           "$PROGDIR/test/${program%.*}.obj"
         

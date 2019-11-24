@@ -81,21 +81,26 @@ bool Key_Id(string token)
 bool non_Key_Id()
 {
 	// If key not found in map iterator to end is returned 
-  if (symbolTable.find(token)!= symbolTable.end())//we found a key with value of token, return false
-    error("multiple name definition");
+  //if (symbolTable.find(token)!= symbolTable.end())//we found a key with value of token, return false
+    //error("multiple name definition");
   
   //first character of token must be a lowercased leter
-  if(isupper(token[0]))
+  if(isupper(token[0]) || !isalpha(token[0]))
     error("invalid input, token must begin with a lowercased character");
   
   //next token should prevent this from happening, but lets make sure its a good token.
   //capital letters will have already been rejected in nextToken. 
-  for(uint x = 0; x < token.length(); x++)
+  /*for(uint x = 0; x < token.length(); x++)
     if(!isalnum(token[x]) && token[x] != '_')
-      error("invalid character in token"); 
-		
+      error("invalid character in token \"" + token + "\""); 
+		*/
 	if(Key_Id(token))
 			error("reserved keyword '" + token + "' cannot be redefined");
+  for(int x = 1; x < (int)token.length(); x++)
+  {
+    if( !isalpha(token[x]) && !isdigit(token[x]) && token[x] != '_' )
+      return false;
+  }
       
 	return true;
 }
@@ -636,8 +641,8 @@ string ids()
   if(token == ",")
   {
     nextToken();
-	//check token to make sure it is a valid non_Key_Id()
-	non_Key_Id();
+    //check token to make sure it is a valid non_Key_Id()
+    non_Key_Id();
     tempString = temp + "," + ids();
 	}
   return tempString;

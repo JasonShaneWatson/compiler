@@ -4,7 +4,7 @@ make
 
 echo
 
-./build/stage1 test/001.dat my.lst my.obj 
+./build/stage1 test/004.dat my.lst my.obj 
 
 
 echo -e "\n-- Begin listing file output -- \n~"

@@ -44,7 +44,15 @@ void PushOperator(string oprtr)
 	operatorStk.push(oprtr);
 }
 void PushOperand(string oprnd)
-{	
+{	  
+    //check if oprnd is a already defined constant 
+    auto searchValue = symbolTable.find(oprnd);
+    if (searchValue != symbolTable.end())
+    {
+          operandStk.push(searchValue->second.internalName);
+          return;
+    } 
+    
 		for (auto y = symbolTable.cbegin(); y != symbolTable.cend(); ++y)
 		{
 			if(y->second.value == oprnd)
@@ -53,7 +61,7 @@ void PushOperand(string oprnd)
 			}
 			else
 			{
-				insert(oprnd,whichType(oprnd),CONSTANT,whichValue(oprnd),YES,1);
+				insert(genInternalName(whichType(oprnd)),whichType(oprnd),CONSTANT,whichValue(oprnd),YES,1);
 			}
 		}
 }

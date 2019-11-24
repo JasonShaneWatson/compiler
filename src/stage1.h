@@ -44,30 +44,25 @@ struct entry
    int position;
 };
 
-
-stack<string> operatorStk;
-stack<string> operandStk;
-
-
-
-
 /*
 * variables
 */
 string token;
 char charac;
 int lineNumber = 0;
+stack<string> operatorStk;
+stack<string> operandStk;
 string oprnd;
 string oprtr; 
-
 string Areg = "";
-
 
 /*
 * prototypes
 */
 bool Key_Id(string s);
 bool non_Key_Id();
+bool isInt();
+string genInternalName(storeType);
 string ids();
 string nextToken();
 unordered_map<string,entry> symbolTable; //https://www.geeksforgeeks.org/unordered_map-in-cpp-stl/
@@ -77,6 +72,10 @@ void error(string);
 void insert(string externalName, storeType inType, modes inMode, string inValue, allocation inAlloc, int inUnits); 
 void parser();
 void printSymbolTable();
+void PushOperator(string);
+void PushOperand(string);
+string PopOperator();
+string PopOperand();
 string whichValue(string name);
 storeType whichType(string name);
 

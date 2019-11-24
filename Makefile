@@ -8,7 +8,7 @@ SRC_DIR=$(BUILD_ROOT)/src
 BUILD_DIR=$(BUILD_ROOT)/build
 TEST_DIR=$(BUILD_ROOT)/test
 
-stage0:
+stage1:
 	$(MAKE) --no-print-directory -C $(SRC_DIR)
 
 test: stage1
