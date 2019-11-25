@@ -12,10 +12,8 @@ void factor();
 void factors();
 void outputCode(string code, string value);
 void part();
-void readStmt();
 void term();
 void terms();
-void writeStmt();
 
 void execStmts() 
 {
@@ -106,8 +104,10 @@ void writeStmt()
 void assignStmt()
 {
   //make sure token is valid non reserved key  
-  non_Key_Id();
-
+  if(non_Key_Id())
+  {  
+	PushOperand(token);
+  }
   nextToken();
 
   //next token should be ":="
@@ -115,9 +115,21 @@ void assignStmt()
   {
    error("expected \":=\"");
   }
+  else
+  {
+	PushOperator(token);  
+  }
   nextToken();
 
   express();
+  
+  //nextToken();
+
+  if(token != ";")
+  {
+    error("expected ';' after Assignment statement");
+  }
+  //code(PopOperator, PopOperator, PopOperator);
 
 }
 
@@ -143,7 +155,7 @@ void expresses()
     PushOperator(token);
     nextToken();
     term();
-    //code(PopOperator(),PopOperand(),PopOperand());
+    code(PopOperator(),PopOperand(),PopOperand());
   }
 }
 
@@ -278,7 +290,7 @@ void factors()
     PushOperator(token);
     nextToken();
     part();
-    //code(PopOperator(),PopOperand(),PopOperand());
+    code(PopOperator(),PopOperand(),PopOperand());
     factors();
   }  
 }
@@ -291,7 +303,7 @@ void terms()
     PushOperator(token);
     nextToken();
     factor();
-    //code(PopOperator(),PopOperand(),PopOperand());
+    code(PopOperator(),PopOperand(),PopOperand());
     terms();
   }
 }

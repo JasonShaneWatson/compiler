@@ -156,6 +156,7 @@ void progStmt()
 	}
 	nextToken();
 	insert(x, PROG_NAME, CONSTANT, x, NO, 0);
+	objectFile << "STRT  NOP" << setw(10) << "" << x << names << endl;
 }
 
 //insert a unique entry into the symbolTable
