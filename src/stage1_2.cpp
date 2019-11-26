@@ -59,7 +59,7 @@ void PushOperand(string oprnd)
 				return;
 			}
 			else
-			{	insert(genInternalName(whichType(oprnd)),whichType(oprnd),CONSTANT,whichValue(oprnd),YES,1);
+			{	insert(oprnd,whichType(oprnd),CONSTANT,whichValue(oprnd),YES,1);
 				auto searchValue1 = symbolTable.find(oprnd);
 				if (searchValue1 != symbolTable.end())
 				{
