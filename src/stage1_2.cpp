@@ -37,10 +37,13 @@ void EmitAssignCode(string, string);
 
 void PushOperator(string oprtr)
 {
+  cout << "\nPushing \"" << oprtr << "\"\n";
 	operatorStk.push(oprtr);
 }
+
 void PushOperand(string oprnd)
 {	  
+    cout << "\nPushing \"" << oprnd << "\"\n";
     //check if oprnd is a already defined constant 
     auto searchValue = symbolTable.find(oprnd);
     if (searchValue != symbolTable.end())
@@ -70,8 +73,10 @@ void PushOperand(string oprnd)
 		}
 	}
 }
+
 string PopOperand()
 {
+ 
 	if (operandStk.empty()) {
 		error("operator stack underflow");
 	}
@@ -79,11 +84,13 @@ string PopOperand()
 	{
 		string top = operandStk.top();
 		operandStk.pop();
+     cout << "\nPopping \"" << top << "\"\n";
 		return top;
 
 	}
 	return 0;
 }
+
 string PopOperator()
 {
 	if (operatorStk.empty()) {
@@ -93,6 +100,7 @@ string PopOperator()
 	{
 		string top = operatorStk.top();
 		operatorStk.pop();
+     cout << "\nPopping \"" << top << "\"\n";
 		return top;
 	}
 	return 0;
@@ -103,13 +111,14 @@ void free_Temp()
 	currentTempNo--;
 	if (currentTempNo < -1)
 	{
-		error(" compiler error, currentTempNo should be > –1");
+		error(" compiler error, currentTempNo should be >= –1");
 	}
 }
 
 string get_Temp()
 {
 	 string temp;
+   cout << currentTempNo << endl;
 	 currentTempNo++;
 	 temp = "T" + to_string(currentTempNo);
 	 if (currentTempNo > maxTempNo)
@@ -121,6 +130,7 @@ string get_Temp()
 
 	 return temp;
 }
+
 string get_Label()
 {
 	string temp;
@@ -133,7 +143,6 @@ string get_Label()
 	 }
 	 return temp;
 }
-
 
 void EmitAdditionCode(string operand1,string operand2) //add operand1 to operand2
 {
@@ -175,15 +184,16 @@ void EmitAdditionCode(string operand1,string operand2) //add operand1 to operand
 		Areg = "";
 	}
 	// if register has neither operand1 or 2
-	else if (Areg != operand1 && Areg != operand2 )
+	
+  if (Areg != operand1 && Areg != operand2 )
 	{
-		Areg = "";
+		Areg = operand2;
 		objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(4) <<left << operand2 << "\n";
-		objectFile << setw(4) << "" << setw(2) << "" << "IAD " << setw(4) <<left << operand1<< "\n";
+		//objectFile << setw(4) << "" << setw(2) << "" << "IAD " << setw(4) <<left << operand1<< "\n";
 		
 	}
 	// if register has operand1
-	else if (Areg == operand1 )
+	if (Areg == operand1 )
 	{
 		objectFile << setw(4) << "" << setw(2) << "" << "IAD " << setw(4) <<left << operand2<< "\n";
 	}
@@ -194,7 +204,7 @@ void EmitAdditionCode(string operand1,string operand2) //add operand1 to operand
 	}
 	else 
 	{
-		error("you broke it");
+		error("you broke it in addition");
 	}
 	// if operand 1 was a temp free it
 	if (operand1.at(0) == 'T' )
@@ -213,7 +223,6 @@ void EmitAdditionCode(string operand1,string operand2) //add operand1 to operand
 	if(tableValue1 != symbolTable.end()) //we found an entry in the symbolTable
 	{
 	  tableValue1->second.dataType = INTEGER;
-	 
 	}
 	PushOperand(Areg);
 }
@@ -290,7 +299,7 @@ void EmitSubtractionCode(string operand1,string operand2)
 	}
 	else 
 	{
-		error("you broke it");
+		error("you broke it in subtraction");
 	}
 	//A register == Tn
 	Areg = get_Temp();
@@ -364,7 +373,7 @@ void EmitAndCode(string operand1,string operand2) //"and" operand1 to operand2
 	}
 	else 
 	{
-		error("you broke it");
+		error("you broke it in AND");
 	}
 	// if operand 1 was a temp free it
 	if (operand1.at(0) == 'T' )
@@ -387,7 +396,6 @@ void EmitAndCode(string operand1,string operand2) //"and" operand1 to operand2
 	}
 	PushOperand(Areg);
 }
-
 
 void EmitMultiplicationCode(string operand1,string operand2) //multiply operand2 by operand1
 { 
@@ -448,7 +456,7 @@ void EmitMultiplicationCode(string operand1,string operand2) //multiply operand2
 	}
 	else 
 	{
-		error("you broke it");
+		error("you broke it in multiplication");
 	}
 	// if operand 1 was a temp free it
 	if (operand1.at(0) == 'T' )
@@ -520,7 +528,7 @@ void EmitNegationCode(string operand1)
 
 	else 
 	{
-		error("you broke it");
+		error("you broke it in negation");
 	}
 	// if operand 1 was a temp free it
 	if (operand1.at(0) == 'T' )
@@ -599,7 +607,7 @@ void EmitNotCode(string operand1)
 
 	else 
 	{
-		error("you broke it");
+		error("you broke it in NOT");
 	}
 	// if operand 1 was a temp free it
 	if (operand1.at(0) == 'T' )
@@ -634,51 +642,57 @@ void EmitAssignCode(string operand1, string operand2)
  //operand2 can never be a temporary since it is to the left of ':=' */
  
  	 //check if  data Types are integers
-	 for (auto y = symbolTable.cbegin(); y != symbolTable.cend(); ++y)
-			{
-				string i = "";
-				string j = "";
-				string k = "";
-				string l = "";
-				if(y->second.internalName == operand1)
-				{
-					i = storeTypeString[y->second.dataType] ;
-					k = y->second.value ;
-
-				}
-				if(y->second.internalName == operand2)
-				{
-					j = storeTypeString[y->second.dataType] ;
-					l = y->second.value ;
-					if (storeTypeString[y->second.mode] != "VARIABLE")
-					{
-						error("symbol on the left hand side is not variable");
-					}
-				}
-				if (i != j)
-				{
-					error( " incompatable types");
-				}
-				if (l == k)
-				{
-					break;
-				}	
-			}
+	for (auto y = symbolTable.cbegin(); y != symbolTable.cend(); ++y)
+  {
+    string i = "";
+    string j = "";
+    string k = "";
+    string l = "";
+    if(y->second.internalName == operand1)
+    {
+      i = storeTypeString[y->second.dataType] ;
+      k = y->second.value ;
+ 
+    }
+    if(y->second.internalName == operand2)
+    {
+      j = storeTypeString[y->second.dataType] ;
+      l = y->second.value ;
+      if (storeTypeString[y->second.mode] != "VARIABLE")
+      {
+        error("symbol on the left hand side is not variable");
+      }
+    }
+    if (i != j)
+    {
+      error( " incompatable types");
+    }
+    /*if (l == k)
+    {
+      break;
+    }	*/
+  }
+  
+  if (operand1 == operand2)
+  {
+    return; 
+  }
 	if (Areg != operand1 )
 	{
-		Areg = "";
+		Areg = operand1;
 		objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(4) <<left << operand1<< "\n";
-		objectFile << setw(4) << "" << setw(2) << "" << "IDV " << setw(4) <<left << operand1<< "\n";
-		
+		//objectFile << setw(4) << "" << setw(2) << "" << "IDV " << setw(4) <<left << operand1<< "\n";
 	}
-	
+  operand1 = "";
+	objectFile << left << setw(6) << " " << setw(3) << "STA " << setw(4) << operand2 << setw(5) << " " << operand2 << " := "<< operand1 << endl;
+  //Areg = operand2;
 		// if operand 1 was a temp free it
 	if (operand1.at(0) == 'T' )
 	{
 		free_Temp();
 	}
 	//A register == Tn
-	Areg = get_Temp();
+	/**/Areg = get_Temp();
 	// make Tn dataType = INTEGER
 	auto tableValue1 = symbolTable.find(Areg);
 	if(tableValue1 != symbolTable.end()) //we found an entry in the symbolTable
@@ -687,8 +701,6 @@ void EmitAssignCode(string operand1, string operand2)
 	}
 	PushOperand(Areg);
 }
-
-
 
 void EmitDivisionCode(string operand1, string operand2)
 {
@@ -750,7 +762,7 @@ void EmitDivisionCode(string operand1, string operand2)
 	}
 	else 
 	{
-		error("you broke it");
+		error("you broke it in division");
 	}
 	// if operand 1 was a temp free it
 	if (operand1.at(0) == 'T' )
@@ -767,7 +779,6 @@ void EmitDivisionCode(string operand1, string operand2)
 	}
 	PushOperand(Areg);
 }
-
 
 void EmitModuloCode(string operand1, string operand2)
 {
@@ -831,7 +842,7 @@ void EmitModuloCode(string operand1, string operand2)
 	}
 	else 
 	{
-		error("you broke it");
+		error("you broke it in modulus");
 	}
 	// if operand 1 was a temp free it
 	if (operand1.at(0) == 'T' )
@@ -848,6 +859,7 @@ void EmitModuloCode(string operand1, string operand2)
 	}
 	PushOperand(Areg);
 }
+
 void EmitOrCode(string operand1, string operand2)
 {
 	 //check if  data Types are integers
@@ -919,7 +931,7 @@ void EmitOrCode(string operand1, string operand2)
 	}
 	else 
 	{
-		error("you broke it");
+		error("you broke it in or");
 	}
 	// if operand 1 was a temp free it
 	if (operand1.at(0) == 'T' )
@@ -942,6 +954,7 @@ void EmitOrCode(string operand1, string operand2)
 	}
 	PushOperand(Areg);
 }
+
 void EmitEqualsCode(string operand1, string operand2)
 {
 	string x = "";
@@ -1021,7 +1034,7 @@ void EmitEqualsCode(string operand1, string operand2)
 	}
 	else 
 	{
-		error("you broke it");
+		error("you broke it in =");
 	}
 	// if operand 1 was a temp free it
 	if (operand1.at(0) == 'T' )
@@ -1044,31 +1057,35 @@ void EmitEqualsCode(string operand1, string operand2)
 	}
 	PushOperand(Areg);
 }
+
 void EmitLTCode(string, string)
 {
 	
 }
+
 void EmitGTCode(string, string)
 {
 	
 }
+
 void EmitGTOECode(string, string)
 {
 	
 }
+
 void EmitLTOECode(string, string)
 {
 	
 }
+
 void EmitDNECode(string, string)
 {
 	
 }
 
- 
-
 void code(string oprtr, string operand1, string operand2) 
 {
+  cout  << endl << "coding: " << setw(12) << left << "oprtr = " + oprtr + ", " << setw(14) << "operand1 = " + operand1 + ", " << setw(14) << "operand2 = " + operand2 << endl;
 	operand2 = operand2.substr(0,15);
 	operand1 = operand1.substr(0,15);
 	
@@ -1166,5 +1183,3 @@ void code(string oprtr, string operand1, string operand2)
 	}	
 
 }
-
-

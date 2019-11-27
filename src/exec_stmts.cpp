@@ -10,13 +10,14 @@ void express();
 void expresses();
 void factor();
 void factors();
-void outputCode(string code, string value);
+void outputCode(string code, string value, string codeDescription);
 void part();
 void term();
 void terms();
 
 void execStmts() 
 {
+  cout  << setw(14) << left << "\nexecStmts," << setw(17) << "token == " + token << setw(13) << "Areg == " + Areg  << endl;
   nextToken();
   if(token == "end")
     return;
@@ -29,6 +30,7 @@ void execStmts()
 
 void execStmt()
 {
+  cout  << setw(14) << left << "\nexecStmt," << setw(17) << "token == " + token << setw(13) << "Areg == " + Areg  << endl;
   if(token == "read")
   {
     readStmt();
@@ -45,6 +47,7 @@ void execStmt()
 
 void readStmt()
 {
+  cout << setw(13) << left << "\nreadStmt," << setw(17) << "token == " + token << setw(13) << "Areg == " + Areg  << endl;
   if(token != "read")
   {
     error("expected \"read\"");
@@ -58,7 +61,7 @@ void readStmt()
   nextToken();
   string listOfIDs = ids();
 
-  outputCode("RDI",listOfIDs);
+  outputCode("RDI",listOfIDs, "read");
 
   if(token != ")")
   {
@@ -87,7 +90,7 @@ void writeStmt()
   nextToken();
   string listOfIDs = ids();
 
-  outputCode("PRI",listOfIDs);
+  outputCode("PRI",listOfIDs, "write");
 
   if(token != ")")
   {
@@ -103,39 +106,38 @@ void writeStmt()
 
 void assignStmt()
 {
+  cout  << setw(14) << left << "\nassignStmt," << setw(17) << "token == " + token << setw(13) << "Areg == " + Areg  << endl;
   //make sure token is valid non reserved key  
   if(non_Key_Id())
   {  
-	PushOperand(token);
+    PushOperand(token);
   }
   nextToken();
 
   //next token should be ":="
   if(token != ":=")
   {
-   error("expected \":=\"");
+    error("expected \":=\"");
   }
   else
   {
-	PushOperator(token);  
+    PushOperator(token);  
   }
-  nextToken();
-
-  express();
   
-  //nextToken();
+  nextToken();
+  express();
 
   if(token != ";")
   {
     error("expected ';' after Assignment statement");
   }
-  //code(PopOperator, PopOperator, PopOperator);
-
+ //code(PopOperator(), PopOperand(), PopOperand());
 }
 
 //express = term -> expresses
 void express()
 {
+  cout  << setw(14) << left << "\nexpress," << setw(17) << "token == " + token << setw(13) << "Areg == " + Areg  << endl;
   term();
   expresses();
 }
@@ -143,6 +145,7 @@ void express()
 //term = factor -> terms 
 void term()
 {
+  cout  << setw(14) << left << "\nterm," << setw(17) << "token == " + token << setw(13) << "Areg == " + Areg  << endl;
   factor();//$
   terms();
 }
@@ -150,6 +153,7 @@ void term()
 //expresses = rel_OP -> term || epsilon 
 void expresses()
 {
+  cout  << setw(14) << left << "\nexpresses," << setw(17) << "token == " + token << setw(13) << "Areg == " + Areg  << endl;
   if(rel_OP())
   {
     PushOperator(token);
@@ -162,6 +166,7 @@ void expresses()
 //factor = part -> factors 
 void factor()
 {
+   cout  << setw(14) << left << "\nfactor," << setw(17) << "token == " + token << setw(13) << "Areg == " + Areg  << endl;
   part();
   factors();
 }
@@ -183,6 +188,7 @@ void factor()
 */   
 void part()
 {
+  cout  << setw(14) << left << "\npart," << setw(17) << "token == " + token << setw(13) << "Areg == " + Areg  << endl;
   if(token == "not")
   {
     nextToken();
@@ -193,7 +199,7 @@ void part()
       if(token !=")")
         error("\")\" expected");
       nextToken();
-      outputCode("not", PopOperand());
+      outputCode("not", PopOperand(), "not");
     }
     else if(token == "true" || token == "false")
     {
@@ -210,7 +216,7 @@ void part()
     }
     else if(non_Key_Id())
     {
-      outputCode("not", token);
+      outputCode("not", token, "not");
       nextToken();
     }
   }
@@ -247,7 +253,7 @@ void part()
       if(token != ")")
         error("\")\" expected");
       nextToken();
-      outputCode("neg", PopOperand());
+      outputCode("neg", PopOperand(), "neg");
     }
     else if(isInt())
     {
@@ -256,7 +262,7 @@ void part()
     }
     else if(non_Key_Id())
     {
-      outputCode("neg", token);
+      outputCode("neg", token, "neg");
       nextToken();
     }
   }
@@ -269,7 +275,9 @@ void part()
       error("\")\" expected");
     }
     else
+    {
       nextToken();
+    }
   }
   else if(isInt()|| non_Key_Id() || token == "true" || token == "false")
   {
@@ -285,6 +293,7 @@ void part()
 //factors = mult_Lev_OP -> part -> factors || epsilon 
 void factors()
 {
+  cout  << setw(14) << left << "\nfactors," << setw(17) << "token == " + token << setw(13) << "Areg == " + Areg  << endl;
   if(mult_Lev_OP())
   {
     PushOperator(token);
@@ -298,6 +307,7 @@ void factors()
 //terms = add_Lev_OP -> factor -> terms || epsilon 
 void terms()
 {
+  cout  << setw(14) << left << "\nterms," << setw(17) << "token == " + token << setw(13) << "Areg == " + Areg  << endl;
   if(add_Lev_OP())
   {
     PushOperator(token);
@@ -309,7 +319,7 @@ void terms()
 }
 
 // will write code of passed params. 
-void outputCode(string code, string value)
+void outputCode(string code, string value, string codeDescription)
 {
   // create copy of value as a char *
   char valueArray[value.size()+1];
@@ -329,24 +339,26 @@ void outputCode(string code, string value)
     } 
     else // we found the symbol in the symbol table. 
     {
-      objectFile << "      " << code << " " << searchValue->second.internalName << "        " << "read(" << valueToken << ")" << endl;
+      objectFile << "      " << code << " " << searchValue->second.internalName << "        " << codeDescription << "(" << valueToken << ")" << endl;
     }
     token_in_string = strtok(NULL, ",");
   }
 }
-
 //is token a relational operator?
 bool rel_OP()
 {
+  cout  << setw(14) << left << "\nrel_OP," << setw(17) << "token == " + token << setw(13) << "Areg == " + Areg  << endl;
   return (token == "=" || token == "<" || token == ">" || token == "<=" || token == ">=" || token == "<>");
 }
 
 bool add_Lev_OP()
 {
+  cout  << setw(14) << left << "\nadd_Lev_OP," << setw(17) << "token == " + token << setw(13) << "Areg == " + Areg  << endl;
   return (token == "+" || token == "-" || token == "or");
 }
 
 bool mult_Lev_OP()
 {
+  cout  << setw(14) << left << "\nmult_Lev_OP," << setw(17) << "token == " + token << setw(13) << "Areg == " + Areg  << endl;
   return (token == "*" || token == "div" || token == "mod" || token == "and");
 }
