@@ -199,7 +199,7 @@ void part()
       if(token !=")")
         error("\")\" expected");
       nextToken();
-      outputCode("not", PopOperand(), "not");
+      code("not", PopOperand(), "not");
     }
     else if(token == "true" || token == "false")
     {
@@ -216,7 +216,8 @@ void part()
     }
     else if(non_Key_Id())
     {
-      outputCode("not", token, "not");
+		PushOperand(token);
+      code("not", PopOperand(), "not");
       nextToken();
     }
   }
@@ -279,10 +280,15 @@ void part()
       nextToken();
     }
   }
-  else if(isInt()|| non_Key_Id() || token == "true" || token == "false")
+  else if(isInt()|| non_Key_Id() || token == "true" || token == "false"|| non_Key_Id())
   {
     PushOperand(token);
-    nextToken();
+	nextToken();
+	if(operandStk.size() == 2 && token == ";")
+	{
+		code(PopOperator(), PopOperand(), PopOperand());
+	}
+
   }
   else
   {

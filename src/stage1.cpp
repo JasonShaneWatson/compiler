@@ -73,7 +73,7 @@ bool Key_Id(string token)
 {
   return (token == "program" || token == "begin" || token == "end" || 
           token == "var" || token == "const" || token == "integer" || 
-          token == "boolean" || token == "true" || token == "false" || token == "not");
+          token == "boolean" ||  token == "not");
 }
 
 //returns true if token is a valid NON_KEY_ID
@@ -94,8 +94,8 @@ bool non_Key_Id()
     if(!isalnum(token[x]) && token[x] != '_')
       error("invalid character in token \"" + token + "\""); 
 		*/
-	if(Key_Id(token))
-			error("reserved keyword '" + token + "' cannot be redefined");
+	//if(Key_Id(token))
+			//error("reserved keyword '" + token + "' cannot be redefined");
   for(int x = 1; x < (int)token.length(); x++)
   {
     if( !isalpha(token[x]) && !isdigit(token[x]) && token[x] != '_' )
