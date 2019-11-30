@@ -597,7 +597,7 @@ void EmitNotCode(string operand1)
 	}
 	if (Areg != operand1 )
 	{
-		objectFile << setw(4) << "" << setw(2) << "" << "LDA" << setw(4) <<left << operand1<< "\n";
+		objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(4) <<left << operand1<< "\n";
 		Areg = operand1;
 	}
 	// if register has operand1 set jumps
@@ -618,9 +618,9 @@ void EmitNotCode(string operand1)
 		string label = get_Label();
 		objectFile << setw(4) << "" << setw(2) << "" << "AZJ " << setw(4) << left << label;
 		objectFile << setw(4) << "" << " not " << operand1 << "\n";
-		objectFile << setw(4) << "" << setw(2) << "" << "LDA" << setw(4) <<left << "FALS" << endl;
+		objectFile << setw(4) << "" << setw(2) << "" << "LDA" << setw(4) <<left << " FALS" << endl;
 		objectFile << setw(4) << "" << setw(2) << "" << "UNJ " << setw(4) << label << "+1   \n" ;
-		objectFile << setw(4) << left << label << setw(2) << "" << "LDA" << setw(4) <<left << "TRUE"<< endl;
+		objectFile << setw(4) << left << label << setw(2) << "" << "LDA" << setw(4) <<left << " TRUE"<< endl;
 	}
 
 	else 
@@ -693,16 +693,16 @@ void EmitAssignCode(string operand1, string operand2)
       break;
     }	*/
   
-  if (operand1 == operand2)
-  {
-    return; 
-  }
+	if (operand1 == operand2)
+	{
+		return; 
+	}
 	if (Areg != operand2 )
 	{
 		Areg = operand2;
 		objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(4) <<left << operand2<< "\n";
 	}
-  //operand1 = "";
+
 	objectFile << left << setw(6) << " " << setw(3) << "STA " << setw(4) << operand1 << setw(5) << " " << operand1 << " := "<< operand2 << endl;
   //Areg = operand2;
 	// if operand 1 was a temp free it
@@ -908,12 +908,12 @@ void EmitOrCode(string operand1, string operand2)
 		
 	}
 	// if non-temp is in register then deassign it 
-	else if ( !Areg.empty() && (Areg != operand1 && Areg != operand2) && Areg.at(0) != 'T')
+	if ( !Areg.empty() && (Areg != operand1 && Areg != operand2) && Areg.at(0) != 'T')
 	{
 		Areg = "";
 	}
 	// if register has neither operand1 or 2 ld op2 and multiply by op1
-	else if (Areg != operand1 && Areg != operand2 )
+	if (Areg != operand1 && Areg != operand2 )
 	{
 		Areg = "";
 		objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(4) <<left << operand2<< "\n";
@@ -925,8 +925,9 @@ void EmitOrCode(string operand1, string operand2)
 		
 	}
 	// if register has operand1 multiply by op2
-	else if (Areg == operand1 )
+	if (Areg == operand1 )
 	{
+		
 		objectFile << setw(4) << "" << setw(2) << "" << "IAD " << setw(4) <<left << operand2 ;
 		string label = get_Label();
 		objectFile << setw(5) << "" << operand2 << " or " << operand1 << endl;
@@ -934,7 +935,7 @@ void EmitOrCode(string operand1, string operand2)
 		objectFile << setw(4) << label << setw(2) << "" << "LDA " << setw(4) << left << "TRUE     " << endl;
 	}
 	// if register has operand2 multiply by op1
-	else if (Areg == operand2)
+	if (Areg == operand2)
 	{
 		objectFile << setw(4) << "" << setw(2) << "" << "IAD " << setw(4) <<left << operand1 ;
 		string label = get_Label();
@@ -942,10 +943,7 @@ void EmitOrCode(string operand1, string operand2)
 		objectFile << setw(4) << "" << setw(2) << "" << "AZJ " << setw(4) << left << label << "+1   " << endl;
 		objectFile << setw(4) << label << setw(2) << "" << "LDA " << setw(4) << left << "TRUE     " << endl;
 	}
-	else 
-	{
-		error("you broke it in or");
-	}
+	
 	// if operand 1 was a temp free it
 	if (operand1.at(0) == 'T' )
 	{

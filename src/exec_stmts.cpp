@@ -131,7 +131,7 @@ void assignStmt()
   {
     error("expected ';' after Assignment statement");
   }
- //code(PopOperator(), PopOperand(), PopOperand());
+ code(PopOperator(), PopOperand(), PopOperand());
 }
 
 //express = term -> expresses
@@ -284,10 +284,11 @@ void part()
   {
     PushOperand(token);
 	nextToken();
-	if(operandStk.size() == 2 && token == ";")
+	/*if(operandStk.size() == 2 && token == ";")
 	{
 		code(PopOperator(), PopOperand(), PopOperand());
 	}
+	*/
 
   }
   else
