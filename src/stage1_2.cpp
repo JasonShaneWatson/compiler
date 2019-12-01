@@ -195,7 +195,7 @@ void EmitAdditionCode(string operand1,string operand2) //add operand1 to operand
 					}
 				}
 			}
-	//Allocate Temp and store it 		
+	//Allocate Temp and store it
 	if ( !Areg.empty() && (Areg != operand1 && Areg != operand2) && Areg.at(0) == 'T')
 	{
 		auto tableValue = symbolTable.find(Areg);
@@ -257,6 +257,10 @@ void EmitAdditionCode(string operand1,string operand2) //add operand1 to operand
 	{
 	  tableValue1->second.dataType = INTEGER;
 	}
+  else 
+  {
+    error ("Compiler error: 'A' register is not in symbol table.");
+  }
 	PushOperand(Areg);
 }
 
@@ -516,6 +520,10 @@ void EmitMultiplicationCode(string operand1,string operand2) //multiply operand2
 	{
 	  tableValue1->second.dataType = INTEGER;
 	}
+  else 
+  {
+    error ("Compiler error: 'A' register is not in symbol table.");
+  }
 	PushOperand(Areg);
 }
 
@@ -713,7 +721,8 @@ void EmitAssignCode(string operand1, string operand2)
 	{
 		return; 
 	}
-	if (Areg != operand2 )
+
+	if (Areg != operand1)
 	{
 		objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(4) <<left << operand2<< "\n";
 	}

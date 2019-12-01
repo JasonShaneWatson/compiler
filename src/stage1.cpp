@@ -45,8 +45,7 @@ void createListingTrailer()
 
 void printSymbolTable()
 {
-	objectFile << "STAGE0:  " << names << "       " << ctime(&currentT) << "\n";
-  objectFile << "Symbol Table\n\n";
+  objectFile << setw(4) << "" << setw(2) << "" << "HLT" << endl;
   int currentElement = 0;
   for (auto x = symbolTable.cbegin(); x != symbolTable.cend(); ++x) 
   {
@@ -54,14 +53,21 @@ void printSymbolTable()
     {
       if(y->second.position == currentElement)
       {
-        objectFile << left << setw(17) << y->second.externalName;
-        objectFile << left << setw(6) << y->second.internalName;
-        objectFile << right <<setw(9) << storeTypeString[y->second.dataType];
-        objectFile << setw(10) << modesString[y->second.mode];
-        objectFile << right << setw(17) << y->second.value;
-        objectFile << right << setw(5) << allocationString[y->second.alloc];
-        objectFile << setw(3) << y->second.units;
-        objectFile << "\n";
+        if(y->second.units == 1 && allocationString[y->second.alloc] == "YES")
+        {
+          //Internal Name
+          objectFile << left << setw(6) << y->second.internalName << 
+          //DEC or BSS
+          setw(4) << ((modesString[y->second.mode] == "VARIABLE") ? "BSS" : "DEC") <<
+          //value
+          setw(4) << setfill('0') << right << y->second.value << setfill(' ') <<
+          //padding
+          setw(6) << left << "" <<
+          //ExternalName          
+          setw(15) << y->second.externalName << 
+          //end the line;
+          endl;
+        }
         currentElement += 1;
       }
     }
