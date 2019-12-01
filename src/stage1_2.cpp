@@ -36,8 +36,22 @@ void EmitLTOECode(string, string);
 void EmitDNECode(string, string);
 void EmitAssignCode(string, string);
 void nonCommutativeCode(string, string, string);
+void BoolTAF();
 
 
+void BoolTAF()
+{
+		auto tableValue2 = symbolTable.find("FALSE");
+		if(tableValue2 == symbolTable.end()) //we did not find an entry in the symbolTable
+		{
+		  insert("FALSE", BOOLEAN, CONSTANT, "0", YES, 1); 
+		}
+		auto tableValue3 = symbolTable.find("TRUE");
+		if(tableValue3 == symbolTable.end()) //we did not find an entry in the symbolTable
+		{
+		  insert("TRUE", BOOLEAN, CONSTANT, "1", YES, 1); 
+		}
+}
 void PushOperator(string oprtr)
 {
   cout << "\nPushing \"" << oprtr << "\"\n";
@@ -48,6 +62,7 @@ void PushOperand(string oprnd)
 {	  
     cout << "\nPushing \"" << oprnd << "\"\n";
     bool oprndIsINT = true; 
+
     for (uint x = 0; x < oprnd.length(); x++)
     {
       if (!isdigit(token[x]))
@@ -55,14 +70,37 @@ void PushOperand(string oprnd)
         oprndIsINT = false;
       }
     }
-    auto searchValue = symbolTable.find(oprnd);
-    //if oprnd is ((boolean || int) && not in sybol talbe)
-    if (((oprnd == "true" || oprnd == "false") || oprndIsINT ) && (searchValue == symbolTable.end()))
-    {
-      insert(oprnd,whichType(oprnd),CONSTANT,whichValue(oprnd),YES,1);
+	if (oprnd == "true")
+	{
+		oprnd = "TRUE";
+	}
+	if (oprnd == "false")
+	{
+		oprnd = "FALSE";
+	}
+	for (auto y = symbolTable.cbegin(); y != symbolTable.cend(); ++y)
+	{
+		if(y->second.value == whichValue(oprnd) && y->second.value != "")
+		{
+			cout << "YVAL  " << y->second.value << "   " << y->second.internalName << "\n" << " OPRNDVAL" << whichValue(oprnd) << endl;
+			operandStk.push(y->second.internalName);
+			return;
+		}
+
+
     }
-  searchValue = symbolTable.find(oprnd);
-	operandStk.push(searchValue->second.internalName);
+			auto searchValue = symbolTable.find(oprnd);
+			//if oprnd is ((boolean || int) && not in sybol talbe)
+			if (((oprnd == "TRUE" || oprnd == "FALSE") || oprndIsINT ) && (searchValue == symbolTable.end()))
+			{
+				cout << "DEBUGGGGGGGGGG" << endl;
+				insert(oprnd,whichType(oprnd),CONSTANT,whichValue(oprnd),YES,1);
+
+			}
+				searchValue = symbolTable.find(oprnd);
+				operandStk.push(searchValue->second.internalName);
+
+
 
     //check if oprnd is a already defined constant 
 /*	if (oprnd == "true")
@@ -201,8 +239,8 @@ void EmitAndCode(string operand1,string operand2) //"and" operand1 to operand2
 {
  	//make sure  data types are the same
 	checkDataType("bool",operand1,operand2);
-	//Allocate Temp and store it 		
-	if ( !Areg.empty() && (Areg != operand1 && Areg != operand2) && Areg.at(0) == 'T')
+	//Allocate Temp and store it 
+	if ( !Areg.empty() && (Areg != operand1 && Areg != operand2) && (Areg.at(0) == 'T' && Areg != "TRUE"))
 	{
 		auto tableValue = symbolTable.find(Areg);
 		if(tableValue != symbolTable.end()) //we found an entry in the symbolTable
@@ -215,8 +253,9 @@ void EmitAndCode(string operand1,string operand2) //"and" operand1 to operand2
 		Areg = "";
 		
 	}
+	
 	// if non-temp is in register then deassign it 
-	else if ( !Areg.empty() && (Areg != operand1 && Areg != operand2) && Areg.at(0) != 'T')
+	if ( !Areg.empty() && (Areg != operand1 && Areg != operand2) && Areg.at(0) != 'T')
 	{
 		Areg = "";
 	}
@@ -248,17 +287,18 @@ void EmitAndCode(string operand1,string operand2) //"and" operand1 to operand2
 		error("you broke it in AND");
 	}
 	// if operand 1 was a temp free it
-	if (operand1.at(0) == 'T' )
+	if ((operand1.at(0) == 'T' && operand1 != "TRUE") )
 	{
 		free_Temp();
 	}
 	// if operand 2 was a temp free it
-	if (operand2.at(0) == 'T' )
+	if ((operand2.at(0) == 'T' && operand2 != "TRUE") )
 	{
 		free_Temp();
 	}
 	//A register == Tn
 	Areg = get_Temp();
+	BoolTAF();	
 	// make Tn dataType = INTEGER
 	auto tableValue1 = symbolTable.find(Areg);
 	if(tableValue1 != symbolTable.end()) //we found an entry in the symbolTable
@@ -283,7 +323,7 @@ void EmitNegationCode(string operand1)
 				}
 			}
 	//Allocate Temp and store it 		
-	if ( !Areg.empty() && Areg != operand1  && Areg.at(0) == 'T')
+	if ( !Areg.empty() && Areg != operand1  && (Areg.at(0) == 'T' && Areg != "TRUE"))
 	{
 		auto tableValue = symbolTable.find(Areg);
 		if(tableValue != symbolTable.end()) //we found an entry in the symbolTable
@@ -320,7 +360,7 @@ void EmitNegationCode(string operand1)
 		error("you broke it in negation");
 	}
 	// if operand 1 was a temp free it
-	if (operand1.at(0) == 'T' )
+	if ((operand1.at(0) == 'T' && operand1 != "TRUE") )
 	{
 		free_Temp();
 	}
@@ -348,8 +388,10 @@ void EmitNotCode(string operand1)
 					}
 				}
 			}
+			
+	BoolTAF();
 	//Allocate Temp and store it 		
-	if ( !Areg.empty() && Areg != operand1  && Areg.at(0) == 'T')
+	if ( !Areg.empty() && Areg != operand1  && (Areg.at(0) == 'T' && Areg != "TRUE"))
 	{
 		auto tableValue = symbolTable.find(Areg);
 		if(tableValue != symbolTable.end()) //we found an entry in the symbolTable
@@ -375,18 +417,6 @@ void EmitNotCode(string operand1)
 	// if register has operand1 set jumps
 	if (Areg == operand1 )
 	{
-		auto tableValue2 = symbolTable.find("false");
-		if(tableValue2 == symbolTable.end()) //we did not find an entry in the symbolTable
-		{
-		  insert("false", BOOLEAN, CONSTANT, "0", YES, 1);
-		 
-		}
-		auto tableValue3 = symbolTable.find("true");
-		if(tableValue3 == symbolTable.end()) //we did not find an entry in the symbolTable
-		{
-		  insert("true", BOOLEAN, CONSTANT, "1", YES, 1);
-		 
-		}
 		string label = get_Label();
 		objectFile << setw(4) << "" << setw(2) << "" << "AZJ " << setw(4) << left << label;
 		objectFile << setw(4) << "" << " not " << operand1 << "\n";
@@ -400,7 +430,7 @@ void EmitNotCode(string operand1)
 		error("you broke it in NOT");
 	}
 	// if operand 1 was a temp free it
-	if (operand1.at(0) == 'T' )
+	if ((operand1.at(0) == 'T' && operand1 != "TRUE") )
 	{
 		free_Temp();
 	}
@@ -429,7 +459,7 @@ void EmitAssignCode(string operand1, string operand2)
  deassign operand1;
  if operand1 is a temp then free its name for reuse;
  //operand2 can never be a temporary since it is to the left of ':=' */
- 
+	//BoolTAF();
  	 //check if  data Types are integers
     string i = "";
     string j = "";
@@ -466,14 +496,14 @@ void EmitAssignCode(string operand1, string operand2)
 
 	if (Areg != operand1)
 	{
-		objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(4) <<left << operand2<< "\n";
+		objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(4) <<left << operand1<< "\n";
 	}
   
-  Areg = operand2;
+	Areg = operand2;
 	objectFile << left << setw(6) << " " << setw(3) << "STA " << setw(4) << operand2 << setw(6) << " " << getExternalName(operand2) << " := "<< getExternalName(operand1) << endl;
 
 	// if operand 1 was a temp free it
-	if (!operand1.empty() && operand1.at(0) == 'T')
+	if (!operand1.empty() && (operand1.at(0) == 'T' && operand1 != "TRUE"))
 	{
 		free_Temp();
 	}
@@ -487,7 +517,7 @@ void EmitModuloCode(string operand1, string operand2)
 	//make sure  data types are integers
 	checkDataType("int",operand1,operand2);
 	//Allocate Temp and store it 		
-	if ( !Areg.empty() && (Areg != operand1 && Areg != operand2) && Areg.at(0) == 'T')
+	if ( !Areg.empty() && (Areg != operand1 && Areg != operand2) && (Areg.at(0) == 'T' && Areg != "TRUE"))
 	{
 		auto tableValue = symbolTable.find(Areg);
 		if(tableValue != symbolTable.end()) //we found an entry in the symbolTable
@@ -530,7 +560,7 @@ void EmitModuloCode(string operand1, string operand2)
 		error("you broke it in modulus");
 	}
 	// if operand 1 was a temp free it
-	if (operand1.at(0) == 'T' )
+	if ((operand1.at(0) == 'T' && operand1 != "TRUE") )
 	{
 		free_Temp();
 	}
@@ -549,8 +579,9 @@ void EmitOrCode(string operand1, string operand2)
 {
 	//make sure  data types are the bool
 	checkDataType("bool",operand1,operand2);
-	//Allocate Temp and store it 		
-	if ( !Areg.empty() && (Areg != operand1 && Areg != operand2) && Areg.at(0) == 'T')
+	//Allocate Temp and store it 	
+
+	if ( !Areg.empty() && (Areg != operand1 && Areg != operand2) && (Areg.at(0) == 'T' && Areg != "TRUE"))
 	{
 		auto tableValue = symbolTable.find(Areg);
 		if(tableValue != symbolTable.end()) //we found an entry in the symbolTable
@@ -601,17 +632,18 @@ void EmitOrCode(string operand1, string operand2)
 	}
 	
 	// if operand 1 was a temp free it
-	if (operand1.at(0) == 'T' )
+	if ((operand1.at(0) == 'T' && operand1 != "TRUE") )
 	{
 		free_Temp();
 	}
 	// if operand 2 was a temp free it
-	if (operand2.at(0) == 'T' )
+	if ((operand2.at(0) == 'T' && operand2 != "TRUE") )
 	{
 		free_Temp();
 	}
 	//A register == Tn
 	Areg = get_Temp();
+	BoolTAF();	
 	// make Tn dataType = INTEGER
 	auto tableValue1 = symbolTable.find(Areg);
 	if(tableValue1 != symbolTable.end()) //we found an entry in the symbolTable
@@ -626,8 +658,8 @@ void EmitEqualsCode(string operand1, string operand2)
 {
 	//make sure  data types are the same
 	checkDataType("same",operand1,operand2);
-	//Allocate Temp and store it 		
-	if ( !Areg.empty() && (Areg != operand1 && Areg != operand2) && Areg.at(0) == 'T')
+	//Allocate Temp and store it 
+	if ( !Areg.empty() && (Areg != operand1 && Areg != operand2) && (Areg.at(0) == 'T' && Areg != "TRUE"))
 	{
 		auto tableValue = symbolTable.find(Areg);
 		if(tableValue != symbolTable.end()) //we found an entry in the symbolTable
@@ -640,8 +672,9 @@ void EmitEqualsCode(string operand1, string operand2)
 		Areg = "";
 		
 	}
+	BoolTAF();	
 	// if non-temp is in register then deassign it 
-	else if ( !Areg.empty() && (Areg != operand1 && Areg != operand2) && Areg.at(0) != 'T')
+	if ( !Areg.empty() && (Areg != operand1 && Areg != operand2) && Areg.at(0) != 'T')
 	{
 		Areg = "";
 	}
@@ -684,12 +717,12 @@ void EmitEqualsCode(string operand1, string operand2)
 	}
 
 	// if operand 1 was a temp free it
-	if (operand1.at(0) == 'T' )
+	if ((operand1.at(0) == 'T' && operand1 != "TRUE") )
 	{
 		free_Temp();
 	}
 	// if operand 2 was a temp free it
-	if (operand2.at(0) == 'T' )
+	if ((operand2.at(0) == 'T' && operand2 != "TRUE") )
 	{
 		free_Temp();
 	}
@@ -710,7 +743,7 @@ void EmitLTCode(string operand1, string operand2)
 	//make sure  data types are integers
 	checkDataType("int",operand1,operand2);
 	//Allocate Temp and store it 		
-	if ( !Areg.empty() && (Areg != operand1 && Areg != operand2) && Areg.at(0) == 'T')
+	if ( !Areg.empty() && (Areg != operand1 && Areg != operand2) && (Areg.at(0) == 'T' && Areg != "TRUE"))
 	{
 		auto tableValue = symbolTable.find(Areg);
 		if(tableValue != symbolTable.end()) //we found an entry in the symbolTable
@@ -729,7 +762,7 @@ void EmitLTCode(string operand1, string operand2)
 		Areg = "";
 	}
 	// if register has neither operand1 or 2
-	
+	BoolTAF();
     if (Areg != operand2 )
 	{
 		Areg = operand2;
@@ -753,12 +786,12 @@ void EmitLTCode(string operand1, string operand2)
 		error("you broke it in lessthan");
 	}
 	// if operand 1 was a temp free it
-	if (operand1.at(0) == 'T' )
+	if ((operand1.at(0) == 'T' && operand1 != "TRUE") )
 	{
 		free_Temp();
 	}
 	// if operand 2 was a temp free it
-	if (operand2.at(0) == 'T' )
+	if ((operand2.at(0) == 'T' && operand2 != "TRUE") )
 	{
 		free_Temp();
 	}
@@ -782,7 +815,7 @@ void EmitGTCode(string operand1, string operand2)
 	//make sure  data types are integers
 	checkDataType("int",operand1,operand2);
 	//Allocate Temp and store it 		
-	if ( !Areg.empty() && (Areg != operand1 && Areg != operand2) && Areg.at(0) == 'T')
+	if ( !Areg.empty() && (Areg != operand1 && Areg != operand2) && (Areg.at(0) == 'T' && Areg != "TRUE"))
 	{
 		auto tableValue = symbolTable.find(Areg);
 		if(tableValue != symbolTable.end()) //we found an entry in the symbolTable
@@ -795,6 +828,7 @@ void EmitGTCode(string operand1, string operand2)
 		Areg = "";
 		
 	}
+	BoolTAF();
 	// if non-temp is in register then deassign it 
 	if ( !Areg.empty() && (Areg != operand1 && Areg != operand2) && Areg.at(0) != 'T')
 	{
@@ -825,12 +859,12 @@ void EmitGTCode(string operand1, string operand2)
 		error("you broke it in lessthan");
 	}
 	// if operand 1 was a temp free it
-	if (operand1.at(0) == 'T' )
+	if ((operand1.at(0) == 'T' && operand1 != "TRUE") )
 	{
 		free_Temp();
 	}
 	// if operand 2 was a temp free it
-	if (operand2.at(0) == 'T' )
+	if ((operand2.at(0) == 'T' && operand2 != "TRUE") )
 	{
 		free_Temp();
 	}
@@ -854,7 +888,7 @@ void EmitGTOECode(string operand1, string operand2)
   //make sure  data types are integers
 	checkDataType("int",operand1,operand2);
 	//Allocate Temp and store it 		
-	if ( !Areg.empty() && (Areg != operand1 && Areg != operand2) && Areg.at(0) == 'T')
+	if ( !Areg.empty() && (Areg != operand1 && Areg != operand2) && (Areg.at(0) == 'T' && Areg != "TRUE"))
 	{
 		auto tableValue = symbolTable.find(Areg);
 		if(tableValue != symbolTable.end()) //we found an entry in the symbolTable
@@ -867,6 +901,7 @@ void EmitGTOECode(string operand1, string operand2)
 		Areg = "";
 		
 	}
+	BoolTAF();
 	// if non-temp is in register then deassign it 
 	if ( !Areg.empty() && (Areg != operand1 && Areg != operand2) && Areg.at(0) != 'T')
 	{
@@ -898,12 +933,12 @@ void EmitGTOECode(string operand1, string operand2)
 		error("you broke it in lessthan");
 	}
 	// if operand 1 was a temp free it
-	if (operand1.at(0) == 'T' )
+	if ((operand1.at(0) == 'T' && operand1 != "TRUE") )
 	{
 		free_Temp();
 	}
 	// if operand 2 was a temp free it
-	if (operand2.at(0) == 'T' )
+	if ((operand2.at(0) == 'T' && operand2 != "TRUE") )
 	{
 		free_Temp();
 	}
@@ -927,7 +962,7 @@ void EmitLTOECode(string operand1, string operand2)
   //make sure  data types are integers
 	checkDataType("int",operand1,operand2);
 	//Allocate Temp and store it 		
-	if ( !Areg.empty() && (Areg != operand1 && Areg != operand2) && Areg.at(0) == 'T')
+	if ( !Areg.empty() && (Areg != operand1 && Areg != operand2) && (Areg.at(0) == 'T' && Areg != "TRUE"))
 	{
 		auto tableValue = symbolTable.find(Areg);
 		if(tableValue != symbolTable.end()) //we found an entry in the symbolTable
@@ -940,6 +975,7 @@ void EmitLTOECode(string operand1, string operand2)
 		Areg = "";
 		
 	}
+	BoolTAF();
 	// if non-temp is in register then deassign it 
 	if ( !Areg.empty() && (Areg != operand1 && Areg != operand2) && Areg.at(0) != 'T')
 	{
@@ -971,12 +1007,12 @@ void EmitLTOECode(string operand1, string operand2)
 		error("you broke it in lessthan");
 	}
 	// if operand 1 was a temp free it
-	if (operand1.at(0) == 'T' )
+	if ((operand1.at(0) == 'T' && operand1 != "TRUE") )
 	{
 		free_Temp();
 	}
 	// if operand 2 was a temp free it
-	if (operand2.at(0) == 'T' )
+	if ((operand2.at(0) == 'T' && operand2 != "TRUE") )
 	{
 		free_Temp();
 	}
@@ -1000,7 +1036,8 @@ void EmitDNECode(string operand1, string operand2)
   //make sure  data types are the same
 	checkDataType("same",operand1,operand2);
 	//Allocate Temp and store it 		
-	if ( !Areg.empty() && (Areg != operand1 && Areg != operand2) && Areg.at(0) == 'T')
+	BoolTAF();
+	if ( !Areg.empty() && (Areg != operand1 && Areg != operand2) && (Areg.at(0) == 'T' && Areg != "TRUE"))
 	{
 		auto tableValue = symbolTable.find(Areg);
 		if(tableValue != symbolTable.end()) //we found an entry in the symbolTable
@@ -1057,12 +1094,12 @@ void EmitDNECode(string operand1, string operand2)
 	}
 
 	// if operand 1 was a temp free it
-	if (operand1.at(0) == 'T' )
+	if ((operand1.at(0) == 'T' && operand1 != "TRUE") )
 	{
 		free_Temp();
 	}
 	// if operand 2 was a temp free it
-	if (operand2.at(0) == 'T' )
+	if ((operand2.at(0) == 'T' && operand2 != "TRUE") )
 	{
 		free_Temp();
 	}
@@ -1200,23 +1237,30 @@ void checkDataType(string type, string operand1, string operand2)
 	{
     if(y->second.internalName == operand1)
 		{
-      operand1Type = storeTypeString[y->second.dataType] 
-			if (storeTypeString[y->second.dataType] != (type=="int"?"INTEGER":(type=="bool"?"BOOLEAN":storeTypeString[y->second.dataType])))
+			operand1Type = y->second.dataType ;
+			if (storeTypeString[y->second.dataType] != (type=="int"?"INTEGER":(type=="bool"?"BOOLEAN":(storeTypeString[y->second.dataType]))))
 			{
 				error("illegal type");
 			}
 		}
-		else if(y->second.internalName == operand2)
+	else if(y->second.internalName == operand2)
 		{
-      operand2Type = storeTypeString[y->second.dataType] 
-			if (storeTypeString[y->second.dataType] != (type=="int"?"INTEGER":(type=="bool"?"BOOLEAN":storeTypeString[y->second.dataType])))
+			operand2Type = y->second.dataType ; 
+			cout << y->second.dataType << "    " << y->second.externalName << "    " << y->second.internalName << endl;
+			if (storeTypeString[y->second.dataType] != (type=="int"?"INTEGER":(type=="bool"?"BOOLEAN":(storeTypeString[y->second.dataType]))))
 			{
 				error("illegal type");
 			}
 		}
 	}
-  if (operand1Type != operand2Type)
+	cout << "HELLLLOOO" << operand1Type <<  " asd  " << operand2Type << endl;
+  if (operand1 == operand2)
   {
+	  return;
+  }
+  if  (operand1Type != operand2Type)
+  {
+		
     error("data types must match");
   }
 }
@@ -1227,7 +1271,7 @@ void commutativeCode(string type, string operand1,string operand2)
 	checkDataType("int",operand1,operand2);
   
 	//if A Register holds a temp not operand1 nor operand2 then 
-	if ( !Areg.empty() && (Areg != operand1 && Areg != operand2) && Areg.at(0) == 'T')
+	if ( !Areg.empty() && (Areg != operand1 && Areg != operand2) && (Areg.at(0) == 'T' && Areg != "TRUE"))
 	{
 		auto tableValue = symbolTable.find(Areg);
 		if(tableValue != symbolTable.end()) //we found an entry in the symbolTable
@@ -1264,7 +1308,7 @@ void commutativeCode(string type, string operand1,string operand2)
   
   //deassign all temporaries involved in the addition and free those names for reuse
 	// if operand 1 was a temp free it
-	if (operand1.at(0) == 'T' || operand2.at(0) == 'T'  )
+	if ((operand1.at(0) == 'T' && operand1 != "TRUE") || (operand2.at(0) == 'T' && operand2 != "TRUE")  )
 	{
 		free_Temp();
 	}
@@ -1291,7 +1335,7 @@ void nonCommutativeCode(string type, string operand1,string operand2)
 	checkDataType("int",operand1,operand2);
   
 	//if A Register holds a temp not operand2 then 
-	if (!Areg.empty() && Areg != operand2 && Areg.at(0) == 'T')
+	if (!Areg.empty() && Areg != operand2 && (Areg.at(0) == 'T' && Areg != "TRUE"))
 	{
 		auto tableValue = symbolTable.find(Areg);
 		if(tableValue != symbolTable.end()) //we found an entry in the symbolTable
@@ -1328,7 +1372,7 @@ void nonCommutativeCode(string type, string operand1,string operand2)
   
   //deassign all temporaries involved in the addition and free those names for reuse
 	// if operand 1 was a temp free it
-	if (operand1.at(0) == 'T' || operand2.at(0) == 'T'  )
+	if ((operand1.at(0) == 'T' && operand1 != "TRUE") || (operand2.at(0) == 'T' && operand2 != "TRUE")  )
 	{
 		free_Temp();
 	}
