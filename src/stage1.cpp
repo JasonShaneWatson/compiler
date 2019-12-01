@@ -210,12 +210,15 @@ void insert(string externalName, storeType inType, modes inMode, string inValue,
     {
       entry New;
       New.externalName = nameToken;
+
 	  if(nameToken == "FALSE")
 	  {
+		  cout << "DEBUGGGGGGGGGG" << endl;
 		  New.internalName = "FALS";
 	  }
       else if(isupper(nameToken[0]))
       {
+		 
         New.internalName = nameToken;
       }
       else
@@ -518,9 +521,9 @@ void constStmts()
 
 string whichValue(string name)
 {
-  if(name == "true")
+  if(name == "true" || name == "TRUE")
     return "1";
-  else if (name == "false")
+  else if (name == "false"|| name == "FALSE")
     return "0";
   
   bool isLiteral = true;
@@ -551,7 +554,7 @@ string whichValue(string name)
 
 storeType whichType(string name)
 {
-  if(name == "true" || name == "false")
+  if(name == "true" || name == "false" || name == "TRUE"|| name == "FALSE")
     return BOOLEAN;
    
   //if name is an INTEGER, check and make sure it is correctly formatted
