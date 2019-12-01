@@ -72,6 +72,7 @@ void printSymbolTable()
       }
     }
   }
+  objectFile << setw(4) << "" << setw(2) << "" << "END STRT" << endl;
 }
 
 //check if string is a reserved keyword 
@@ -209,7 +210,11 @@ void insert(string externalName, storeType inType, modes inMode, string inValue,
     {
       entry New;
       New.externalName = nameToken;
-      if(isupper(nameToken[0]))
+	  if(nameToken == "FALSE")
+	  {
+		  New.internalName = "FALS";
+	  }
+      else if(isupper(nameToken[0]))
       {
         New.internalName = nameToken;
       }
@@ -220,6 +225,7 @@ void insert(string externalName, storeType inType, modes inMode, string inValue,
 					hasPrgName = true;
 					New.internalName = "P0";
 				}
+				
 				else
 				{
 					New.internalName = genInternalName(inType);

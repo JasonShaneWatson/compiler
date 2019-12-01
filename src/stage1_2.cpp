@@ -36,8 +36,22 @@ void EmitLTOECode(string, string);
 void EmitDNECode(string, string);
 void EmitAssignCode(string, string);
 void nonCommutativeCode(string, string, string);
+void BoolTAF();
 
 
+void BoolTAF()
+{
+		auto tableValue2 = symbolTable.find("FALSE");
+		if(tableValue2 == symbolTable.end()) //we did not find an entry in the symbolTable
+		{
+		  insert("FALSE", BOOLEAN, CONSTANT, "0", YES, 1); 
+		}
+		auto tableValue3 = symbolTable.find("TRUE");
+		if(tableValue3 == symbolTable.end()) //we did not find an entry in the symbolTable
+		{
+		  insert("TRUE", BOOLEAN, CONSTANT, "1", YES, 1); 
+		}
+}
 void PushOperator(string oprtr)
 {
   cout << "\nPushing \"" << oprtr << "\"\n";
@@ -201,7 +215,8 @@ void EmitAndCode(string operand1,string operand2) //"and" operand1 to operand2
 {
  	//make sure  data types are the same
 	checkDataType("bool",operand1,operand2);
-	//Allocate Temp and store it 		
+	//Allocate Temp and store it 
+	BoolTAF();	
 	if ( !Areg.empty() && (Areg != operand1 && Areg != operand2) && Areg.at(0) == 'T')
 	{
 		auto tableValue = symbolTable.find(Areg);
@@ -215,6 +230,7 @@ void EmitAndCode(string operand1,string operand2) //"and" operand1 to operand2
 		Areg = "";
 		
 	}
+	
 	// if non-temp is in register then deassign it 
 	else if ( !Areg.empty() && (Areg != operand1 && Areg != operand2) && Areg.at(0) != 'T')
 	{
@@ -348,6 +364,8 @@ void EmitNotCode(string operand1)
 					}
 				}
 			}
+			
+	BoolTAF();
 	//Allocate Temp and store it 		
 	if ( !Areg.empty() && Areg != operand1  && Areg.at(0) == 'T')
 	{
@@ -375,18 +393,6 @@ void EmitNotCode(string operand1)
 	// if register has operand1 set jumps
 	if (Areg == operand1 )
 	{
-		auto tableValue2 = symbolTable.find("false");
-		if(tableValue2 == symbolTable.end()) //we did not find an entry in the symbolTable
-		{
-		  insert("false", BOOLEAN, CONSTANT, "0", YES, 1);
-		 
-		}
-		auto tableValue3 = symbolTable.find("true");
-		if(tableValue3 == symbolTable.end()) //we did not find an entry in the symbolTable
-		{
-		  insert("true", BOOLEAN, CONSTANT, "1", YES, 1);
-		 
-		}
 		string label = get_Label();
 		objectFile << setw(4) << "" << setw(2) << "" << "AZJ " << setw(4) << left << label;
 		objectFile << setw(4) << "" << " not " << operand1 << "\n";
@@ -549,7 +555,8 @@ void EmitOrCode(string operand1, string operand2)
 {
 	//make sure  data types are the bool
 	checkDataType("bool",operand1,operand2);
-	//Allocate Temp and store it 		
+	//Allocate Temp and store it 	
+	BoolTAF();	
 	if ( !Areg.empty() && (Areg != operand1 && Areg != operand2) && Areg.at(0) == 'T')
 	{
 		auto tableValue = symbolTable.find(Areg);
@@ -626,7 +633,8 @@ void EmitEqualsCode(string operand1, string operand2)
 {
 	//make sure  data types are the same
 	checkDataType("same",operand1,operand2);
-	//Allocate Temp and store it 		
+	//Allocate Temp and store it 
+	BoolTAF();	
 	if ( !Areg.empty() && (Areg != operand1 && Areg != operand2) && Areg.at(0) == 'T')
 	{
 		auto tableValue = symbolTable.find(Areg);
@@ -640,6 +648,7 @@ void EmitEqualsCode(string operand1, string operand2)
 		Areg = "";
 		
 	}
+
 	// if non-temp is in register then deassign it 
 	else if ( !Areg.empty() && (Areg != operand1 && Areg != operand2) && Areg.at(0) != 'T')
 	{
@@ -729,7 +738,7 @@ void EmitLTCode(string operand1, string operand2)
 		Areg = "";
 	}
 	// if register has neither operand1 or 2
-	
+	BoolTAF();
     if (Areg != operand2 )
 	{
 		Areg = operand2;
@@ -795,6 +804,7 @@ void EmitGTCode(string operand1, string operand2)
 		Areg = "";
 		
 	}
+	BoolTAF();
 	// if non-temp is in register then deassign it 
 	if ( !Areg.empty() && (Areg != operand1 && Areg != operand2) && Areg.at(0) != 'T')
 	{
@@ -867,6 +877,7 @@ void EmitGTOECode(string operand1, string operand2)
 		Areg = "";
 		
 	}
+	BoolTAF();
 	// if non-temp is in register then deassign it 
 	if ( !Areg.empty() && (Areg != operand1 && Areg != operand2) && Areg.at(0) != 'T')
 	{
@@ -940,6 +951,7 @@ void EmitLTOECode(string operand1, string operand2)
 		Areg = "";
 		
 	}
+	BoolTAF();
 	// if non-temp is in register then deassign it 
 	if ( !Areg.empty() && (Areg != operand1 && Areg != operand2) && Areg.at(0) != 'T')
 	{
@@ -1000,6 +1012,7 @@ void EmitDNECode(string operand1, string operand2)
   //make sure  data types are the same
 	checkDataType("same",operand1,operand2);
 	//Allocate Temp and store it 		
+	BoolTAF();
 	if ( !Areg.empty() && (Areg != operand1 && Areg != operand2) && Areg.at(0) == 'T')
 	{
 		auto tableValue = symbolTable.find(Areg);
@@ -1200,7 +1213,7 @@ void checkDataType(string type, string operand1, string operand2)
 	{
     if(y->second.internalName == operand1)
 		{
-      operand1Type = storeTypeString[y->second.dataType] 
+			operand1Type = y->second.dataType ;
 			if (storeTypeString[y->second.dataType] != (type=="int"?"INTEGER":(type=="bool"?"BOOLEAN":storeTypeString[y->second.dataType])))
 			{
 				error("illegal type");
@@ -1208,7 +1221,7 @@ void checkDataType(string type, string operand1, string operand2)
 		}
 		else if(y->second.internalName == operand2)
 		{
-      operand2Type = storeTypeString[y->second.dataType] 
+      operand2Type = y->second.dataType ; 
 			if (storeTypeString[y->second.dataType] != (type=="int"?"INTEGER":(type=="bool"?"BOOLEAN":storeTypeString[y->second.dataType])))
 			{
 				error("illegal type");
