@@ -1,0 +1,9 @@
+STRT  NOP          stage1no1** - Your Names(s)
+      PRI B0       write(a)
+      PRI B1       write(b)
+      PRI B2       write(c)
+      HLT          
+B0    DEC 0001     a
+B1    DEC 0001     b
+B2    DEC 0000     c
+      END STRT     

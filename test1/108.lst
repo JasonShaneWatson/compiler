@@ -1,0 +1,12 @@
+STAGE1:  YOUR NAME(S)       Tue Oct 16 08:56:24 2018
+
+LINE NO.              SOURCE STATEMENT
+
+    1|program stage1no108;
+    2|  const w=3;x=true;
+    3|  var   a,b,c,d,e:integer;
+    4|  begin
+    5|    d := a+x; 
+Error: Line 5: illegal type for addition operation
+
+COMPILATION TERMINATED      1 ERRORS ENCOUNTERED

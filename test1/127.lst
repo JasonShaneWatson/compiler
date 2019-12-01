@@ -1,0 +1,11 @@
+STAGE1:  YOUR NAME(S)       Tue Oct 16 08:56:24 2018
+
+LINE NO.              SOURCE STATEMENT
+
+    1|program stage1no127;
+    2|  const a = 5;
+    3|begin
+    4|  read(a);
+Error: Line 4: reading in of read-only location
+
+COMPILATION TERMINATED      1 ERRORS ENCOUNTERED

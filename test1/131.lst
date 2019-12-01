@@ -1,0 +1,14 @@
+STAGE1:  YOUR NAME(S)       Tue Oct 16 08:56:24 2018
+
+LINE NO.              SOURCE STATEMENT
+
+    1|program stage1no131;
+    2|const
+    3|  a = true;
+    4|  b = a;
+    5|  c = not a;
+    6|begin
+    7|  write(a,b,c);
+    8|end.
+
+COMPILATION TERMINATED      0 ERRORS ENCOUNTERED

@@ -1,0 +1,16 @@
+STAGE1:  YOUR NAME(S)       Tue Oct 16 08:56:24 2018
+
+LINE NO.              SOURCE STATEMENT
+
+    1|program stage1no120;
+    2|  const  a = true;
+    3|         b = false;
+    4|  var    c,d,e: boolean;
+    5|
+    6|  begin
+    7|    read(d,e);
+    8|    c := (d=e) and (a <>b);
+    9|    write(c);
+   10|end.
+
+COMPILATION TERMINATED      0 ERRORS ENCOUNTERED

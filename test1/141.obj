@@ -1,0 +1,13 @@
+STRT  NOP          stage1no1** - Your Names(s)
+      RDI I0       read(aaaaaaaaaaaaaaa)
+      RDI I0       read(aaaaaaaaaaaaaaa)
+      RDI I0       read(aaaaaaaaaaaaaaa)
+      LDA I0       
+      IAD I0       aaaaaaaaaaaaaaa + aaaaaaaaaaaaaaa
+      STA I0       aaaaaaaaaaaaaaa := T0
+      PRI I0       write(aaaaaaaaaaaaaaa)
+      PRI I0       write(aaaaaaaaaaaaaaa)
+      PRI I0       write(aaaaaaaaaaaaaaa)
+      HLT          
+I0    BSS 0001     aaaaaaaaaaaaaaa
+      END STRT     

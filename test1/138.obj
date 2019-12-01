@@ -1,0 +1,36 @@
+STRT  NOP          stage1no1** - Your Names(s)
+      RDI I0       read(a)
+      RDI I1       read(b)
+      LDA I0       
+      IDV I1       a div b
+      IMU I1       T0 * b
+      STA T0       deassign AReg
+      LDA I0       
+      ISB T0       a - T0
+      STA I2       c := T0
+      LDA I0       
+      IDV I1       a mod b
+      STQ T0       store remainder in memory
+      LDA T0       load remainder from memory
+      STA I3       d := T0
+      ISB I2       c = d
+      AZJ L0       
+      LDA FALS     
+      UNJ L0  +1   
+L0    LDA TRUE     
+      STA B0       e := T0
+      PRI I0       write(a)
+      PRI I1       write(b)
+      PRI I2       write(c)
+      PRI I3       write(d)
+      PRI B0       write(e)
+      HLT          
+I0    BSS 0001     a
+I1    BSS 0001     b
+I2    BSS 0001     c
+I3    BSS 0001     d
+B0    BSS 0001     e
+T0    BSS 0001     T0
+FALS  DEC 0000     false
+TRUE  DEC 0001     true
+      END STRT     
