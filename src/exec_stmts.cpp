@@ -119,11 +119,8 @@ void assignStmt()
   {
     error("expected \":=\"");
   }
-  else
-  {
-    PushOperator(token);  
-  }
-  
+
+  PushOperator(token);  
   nextToken();
   express();
 
@@ -131,7 +128,10 @@ void assignStmt()
   {
     error("expected ';' after Assignment statement");
   }
- code(PopOperator(), PopOperand(), PopOperand());
+  cout << "calling code 2" << endl;
+  auto temp1 = PopOperand();
+  auto temp2 = PopOperand();
+  code(PopOperator(), temp1, temp2);
 }
 
 //express = term -> expresses
@@ -159,7 +159,10 @@ void expresses()
     PushOperator(token);
     nextToken();
     term();
-    code(PopOperator(),PopOperand(),PopOperand());
+    cout << "calling code 3" << endl;
+    auto temp1 = PopOperand();
+    auto temp2 = PopOperand();
+    code(PopOperator(), temp1, temp2);
   }
 }
 
@@ -199,6 +202,7 @@ void part()
       if(token !=")")
         error("\")\" expected");
       nextToken();
+      cout << "calling code 4" << endl;
       code("not", PopOperand(), "not");
     }
     else if(token == "true" || token == "false")
@@ -280,10 +284,10 @@ void part()
       nextToken();
     }
   }
-  else if(isInt()|| non_Key_Id() || token == "true" || token == "false"|| non_Key_Id())
+  else if(isInt()|| non_Key_Id() || token == "true" || token == "false")
   {
     PushOperand(token);
-	nextToken();
+    nextToken();
 	/*if(operandStk.size() == 2 && token == ";")
 	{
 		code(PopOperator(), PopOperand(), PopOperand());
@@ -295,7 +299,7 @@ void part()
   {
     error("Illegal keyword");
   }
-}
+}  
 
 //factors = mult_Lev_OP -> part -> factors || epsilon 
 void factors()
@@ -306,7 +310,10 @@ void factors()
     PushOperator(token);
     nextToken();
     part();
-    code(PopOperator(),PopOperand(),PopOperand());
+    cout << "calling code 5" << endl;
+    auto temp1 = PopOperand();
+    auto temp2 = PopOperand();
+    code(PopOperator(), temp1, temp2);
     factors();
   }  
 }
@@ -320,7 +327,10 @@ void terms()
     PushOperator(token);
     nextToken();
     factor();
-    code(PopOperator(),PopOperand(),PopOperand());
+    cout << "calling code 1" << endl;
+    auto temp1 = PopOperand();
+    auto temp2 = PopOperand();
+    code(PopOperator(), temp1, temp2);
     terms();
   }
 }

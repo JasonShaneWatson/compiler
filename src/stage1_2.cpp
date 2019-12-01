@@ -16,6 +16,7 @@ string PopOperator();//d
 void free_Temp();//d
 string get_Temp();//d
 string get_Label();//d
+string getExternalName(string);
 
 void EmitAdditionCode(string, string); //d
 void EmitSubtractionCode(string, string);//d
@@ -44,8 +45,25 @@ void PushOperator(string oprtr)
 void PushOperand(string oprnd)
 {	  
     cout << "\nPushing \"" << oprnd << "\"\n";
+    bool oprndIsINT = true; 
+    for (uint x = 0; x < oprnd.length(); x++)
+    {
+      if (!isdigit(token[x]))
+      {
+        oprndIsINT = false;
+      }
+    }
+    auto searchValue = symbolTable.find(oprnd);
+    //if oprnd is ((boolean || int) && not in sybol talbe)
+    if (((oprnd == "true" || oprnd == "false") || oprndIsINT ) && (searchValue == symbolTable.end()))
+    {
+      insert(oprnd,whichType(oprnd),CONSTANT,whichValue(oprnd),YES,1);
+    }
+  searchValue = symbolTable.find(oprnd);
+	operandStk.push(searchValue->second.internalName);
+
     //check if oprnd is a already defined constant 
-	if (oprnd == "true")
+/*	if (oprnd == "true")
 	{
 		oprnd = "1";
 		cout << oprnd;
@@ -58,10 +76,12 @@ void PushOperand(string oprnd)
     auto searchValue = symbolTable.find(oprnd);
     if (searchValue != symbolTable.end())
     {
-          operandStk.push(searchValue->second.internalName);
-		  cout<< "operand is on stack"<< operandStk.top();
-          return;
+      insert(oprnd,whichType(oprnd),CONSTANT,whichValue(oprnd),YES,1);
+      searchValue = symbolTable.find(oprnd);
+      operandStk.push(searchValue->second.internalName);
+      return;
     }
+
 	
 	else{
     
@@ -82,7 +102,7 @@ void PushOperand(string oprnd)
 				}
 			}
 		}
-	}
+	}*/
 }
 
 string PopOperand()
@@ -129,7 +149,7 @@ void free_Temp()
 string get_Temp()
 {
 	 string temp;
-   cout << currentTempNo << endl;
+   cout << "currentTempNo = " << currentTempNo << endl;
 	 currentTempNo++;
 	 temp = "T" + to_string(currentTempNo);
 	 if (currentTempNo > maxTempNo)
@@ -189,13 +209,14 @@ void EmitAdditionCode(string operand1,string operand2) //add operand1 to operand
 		Areg = "";
 		
 	}
+  
 	// if non-temp is in register then deassign it 
-	else if ( !Areg.empty() && (Areg != operand1 && Areg != operand2) && Areg.at(0) != 'T')
+	if ( !Areg.empty() && (Areg != operand1 && Areg != operand2) && Areg.at(0) != 'T')
 	{
 		Areg = "";
 	}
+  
 	// if register has neither operand1 or 2
-	
   if (Areg != operand1 && Areg != operand2 )
 	{
 		Areg = operand2;
@@ -203,6 +224,7 @@ void EmitAdditionCode(string operand1,string operand2) //add operand1 to operand
 		//objectFile << setw(4) << "" << setw(2) << "" << "IAD " << setw(4) <<left << operand1<< "\n";
 		
 	}
+  
 	// if register has operand1
 	if (Areg == operand1 )
 	{
@@ -416,21 +438,21 @@ void EmitAndCode(string operand1,string operand2) //"and" operand1 to operand2
 
 void EmitMultiplicationCode(string operand1,string operand2) //multiply operand2 by operand1
 { 
-	 //check if  data Types are integers
+	 	 //check if  data Types are integers
 	 for (auto y = symbolTable.cbegin(); y != symbolTable.cend(); ++y)
 			{
 				if(y->second.internalName == operand1)
 				{
 					if ( storeTypeString[y->second.dataType] != "INTEGER")
 					{
-						error("illegal type");
+						error("illegal type ADD");
 					}
 				}
 				else if(y->second.internalName == operand2)
 				{
 					if (storeTypeString[y->second.dataType] != "INTEGER")
 					{
-						error("illegal type");
+						error("illegal type ADD");
 					}
 				}
 			}
@@ -444,36 +466,37 @@ void EmitMultiplicationCode(string operand1,string operand2) //multiply operand2
 		  tableValue->second.units = 1;
 		  
 		}
-		objectFile << setw(4) << "" << setw(2) << "" << "STA " << setw(4) <<left << Areg<< "\n";
+		objectFile << setw(4) << "" << setw(2) << "" << "STA " << setw(4) <<left << Areg<< "\n" ;
 		Areg = "";
 		
 	}
 	// if non-temp is in register then deassign it 
-	else if ( !Areg.empty() && (Areg != operand1 && Areg != operand2) && Areg.at(0) != 'T')
+	if ( !Areg.empty() && (Areg != operand1 && Areg != operand2) && Areg.at(0) != 'T')
 	{
 		Areg = "";
 	}
-	// if register has neither operand1 or 2 ld op2 and multiply by op1
-	else if (Areg != operand1 && Areg != operand2 )
+	// if register has neither operand1 or 2
+	
+  if (Areg != operand1 && Areg != operand2 )
 	{
-		Areg = "";
-		objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(4) <<left << operand2<< "\n";
-		objectFile << setw(4) << "" << setw(2) << "" << "IMU " << setw(4) <<left << operand1<< "\n";
+		Areg = operand2;
+		objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(4) <<left << operand2 << "\n";
+		//objectFile << setw(4) << "" << setw(2) << "" << "IAD " << setw(4) <<left << operand1<< "\n";
 		
 	}
-	// if register has operand1 multiply by op2
-	else if (Areg == operand1 )
+	// if register has operand1
+	if (Areg == operand1 )
 	{
-		objectFile << setw(4) << "" << setw(2) << "" << "IMU " << setw(4) <<left << operand2<< "\n";
+		objectFile << setw(4) << "" << setw(2) << "" << "IMU " << setw(4) <<left << operand2<< "      add "<< operand2 <<"\n";
 	}
-	// if register has operand2 multiply by op1
+	// if register has operand2
 	else if (Areg == operand2)
 	{
-		objectFile << setw(4) << "" << setw(2) << "" << "IMU " << setw(4) <<left << operand1<< "\n";
+		objectFile << setw(4) << "" << setw(2) << "" << "IMU " << setw(4) <<left << operand1<< "      add "<< operand1 <<"\n";
 	}
 	else 
 	{
-		error("you broke it in multiplication");
+		error("you broke it in addition");
 	}
 	// if operand 1 was a temp free it
 	if (operand1.at(0) == 'T' )
@@ -492,7 +515,6 @@ void EmitMultiplicationCode(string operand1,string operand2) //multiply operand2
 	if(tableValue1 != symbolTable.end()) //we found an entry in the symbolTable
 	{
 	  tableValue1->second.dataType = INTEGER;
-	 
 	}
 	PushOperand(Areg);
 }
@@ -646,15 +668,14 @@ void EmitNotCode(string operand1)
 void EmitAssignCode(string operand1, string operand2)
 {
 	/*
-	 if types of operands are not the same
- process error: incompatible types
+ if types of operands are not the same
+  process error: incompatible types
  if storage mode of operand2 is not VARIABLE
- process error: symbol on left-hand side of assignment must have a storage mode of VARIABLE
+  process error: symbol on left-hand side of assignment must have a storage mode of VARIABLE
  if operand1 = operand2 return;
  if operand1 is not in A register then
- emit code to load operand1 into the A register;
- emit code to store the contents of that register into the memory location pointed to by
- operand2
+  emit code to load operand1 into the A register;
+ emit code to store the contents of that register into the memory location pointed to by operand2
  deassign operand1;
  if operand1 is a temp then free its name for reuse;
  //operand2 can never be a temporary since it is to the left of ':=' */
@@ -664,34 +685,29 @@ void EmitAssignCode(string operand1, string operand2)
     string j = "";
     string k = "";
     string l = "";
+
 	for (auto y = symbolTable.cbegin(); y != symbolTable.cend(); ++y)
   {
     if(y->second.internalName == operand1)
     {
       i = storeTypeString[y->second.dataType] ;
       k = y->second.value ;
-      if (modesString[y->second.mode] != "VARIABLE")
-      {
-		cout << modesString[y->second.mode];
-        error("symbol on the left hand side is not variable1");
-      }
- 
     }
     if(y->second.internalName == operand2)
     {
       j = storeTypeString[y->second.dataType] ;
       l = y->second.value ;
-
+      if (modesString[y->second.mode] != "VARIABLE")
+      {
+        cout << modesString[y->second.mode];
+        error("symbol on the left hand side is not variable1");
+      }
     }
   }
-    if (i != j)
-    {
-      error( " incompatable types Assign" + i );
-    }
-    /*if (l == k)
-    {
-      break;
-    }	*/
+  if (i != j)
+  {
+    error( " incompatable types Assign" + i );
+  }
   
 	if (operand1 == operand2)
 	{
@@ -699,19 +715,18 @@ void EmitAssignCode(string operand1, string operand2)
 	}
 	if (Areg != operand2 )
 	{
-		Areg = operand2;
 		objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(4) <<left << operand2<< "\n";
 	}
+  
+  Areg = operand2;
+	objectFile << left << setw(6) << " " << setw(3) << "STA " << setw(4) << operand2 << setw(6) << " " << getExternalName(operand2) << " := "<< getExternalName(operand1) << endl;
 
-	objectFile << left << setw(6) << " " << setw(3) << "STA " << setw(4) << operand1 << setw(5) << " " << operand1 << " := "<< operand2 << endl;
-  //Areg = operand2;
 	// if operand 1 was a temp free it
-	if (operand1.at(0) == 'T' )
+	if (!operand1.empty() && operand1.at(0) == 'T')
 	{
 		free_Temp();
 	}
-
-	PushOperand(Areg);
+	//PushOperand(Areg);
 	//Areg == operand1;
 }
 
@@ -1193,4 +1208,17 @@ void code(string oprtr, string operand1, string operand2)
 		error("undefined operation");
 	}	
 
+}
+
+string getExternalName(string internalName)
+{
+  for (auto y = symbolTable.cbegin(); y != symbolTable.cend(); ++y)
+  {
+    if(y->second.internalName == internalName)
+    {
+      return y->second.externalName;
+    }
+  }
+  error("Could not find external name for " + internalName);
+  return "";
 }
