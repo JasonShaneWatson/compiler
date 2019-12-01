@@ -65,6 +65,10 @@ void PushOperand(string oprnd)
 
     for (uint x = 0; x < oprnd.length(); x++)
     {
+		if (oprnd.at(0) == '+' || oprnd.at(0) == '-')
+		{
+			continue;
+		}
       if (!isdigit(token[x]))
       {
         oprndIsINT = false;
@@ -78,27 +82,41 @@ void PushOperand(string oprnd)
 	{
 		oprnd = "FALSE";
 	}
-	for (auto y = symbolTable.cbegin(); y != symbolTable.cend(); ++y)
+	auto searchValue = symbolTable.find(oprnd);
+	if (searchValue == symbolTable.end() || oprnd == "TRUE" || oprnd == "FALSE")
 	{
-		if(y->second.value == whichValue(oprnd) && y->second.value != "")
+	  int currentElement = 0;
+	  for (auto x = symbolTable.cbegin(); x != symbolTable.cend(); ++x) 
+	  {
+		for (auto y = symbolTable.cbegin(); y != symbolTable.cend(); ++y)
 		{
-			cout << "YVAL  " << y->second.value << "   " << y->second.internalName << "\n" << " OPRNDVAL" << whichValue(oprnd) << endl;
-			operandStk.push(y->second.internalName);
-			return;
+		  if(y->second.position == currentElement)
+		  {
+			  cout << "     " << y->second.internalName <<y->second.value <<endl;
+			if(y->second.value == whichValue(oprnd) && y->second.value != "")
+			{
+				cout << "YVAL  " << y->second.value << "   " << y->second.internalName << "\n" << " OPRNDVAL" << whichValue(oprnd) << endl;
+				operandStk.push(y->second.internalName);
+				return;
+			}
+		  }
 		}
+		  currentElement++;
+	  }
+	  cout << "EERRRRRR" << endl;
 
 
     }
-			auto searchValue = symbolTable.find(oprnd);
-			//if oprnd is ((boolean || int) && not in sybol talbe)
-			if (((oprnd == "TRUE" || oprnd == "FALSE") || oprndIsINT ) && (searchValue == symbolTable.end()))
-			{
-				cout << "DEBUGGGGGGGGGG" << endl;
-				insert(oprnd,whichType(oprnd),CONSTANT,whichValue(oprnd),YES,1);
+	
+	//if oprnd is ((boolean || int) && not in sybol talbe)
+	if (((oprnd == "TRUE" || oprnd == "FALSE") || oprndIsINT ) && (searchValue == symbolTable.end()))
+	{
+		cout << "DEBUGGGGGGGGGG" << endl;
+		insert(oprnd,whichType(oprnd),CONSTANT,whichValue(oprnd),YES,1);
 
-			}
-				searchValue = symbolTable.find(oprnd);
-				operandStk.push(searchValue->second.internalName);
+	}
+		searchValue = symbolTable.find(oprnd);
+		operandStk.push(searchValue->second.internalName);
 
 
 
@@ -260,7 +278,7 @@ void EmitAndCode(string operand1,string operand2) //"and" operand1 to operand2
 		Areg = "";
 	}
 	// if register has neither operand1 or 2 ld op2 and multiply by op1
-	else if (Areg != operand1 && Areg != operand2 )
+	if (Areg != operand1 && Areg != operand2 )
 	{
 		Areg = "";
 		objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(4) <<left << operand2<< "\n";
@@ -269,23 +287,20 @@ void EmitAndCode(string operand1,string operand2) //"and" operand1 to operand2
 		
 	}
 	// if register has operand1 multiply by op2
-	else if (Areg == operand1 )
+	if (Areg == operand1 )
 	{
-		objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(4) <<left << operand2<< "\n";
+		//objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(4) <<left << operand2<< "\n";
 		objectFile << setw(4) << "" << setw(2) << "" << "IMU " << setw(4) <<left << operand2;
 		objectFile << setw(5) << "" << operand2 << " AND " << operand1 << endl;
 
 	}
 	// if register has operand2 multiply by op1
-	else if (Areg == operand2)
+	if (Areg == operand2)
 	{
 		objectFile << setw(4) << "" << setw(2) << "" << "IMU " << setw(4) <<left << operand1;
 		objectFile << setw(5) << "" << operand2 << " AND " << operand1 << endl;
 	}
-	else 
-	{
-		error("you broke it in AND");
-	}
+	
 	// if operand 1 was a temp free it
 	if ((operand1.at(0) == 'T' && operand1 != "TRUE") )
 	{
