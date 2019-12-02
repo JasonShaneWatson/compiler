@@ -54,13 +54,13 @@ void BoolTAF()
 }
 void PushOperator(string oprtr)
 {
-  cout << "\nPushing \"" << oprtr << "\"\n";
+ //cout << "\nPushing \"" << oprtr << "\"\n";
 	operatorStk.push(oprtr);
 }
 
 void PushOperand(string oprnd)
 {	  
-    cout << "\nPushing \"" << oprnd << "\"\n";
+   //cout << "\nPushing \"" << oprnd << "\"\n";
     bool oprndIsINT = true; 
 
     for (uint x = 0; x < oprnd.length(); x++)
@@ -92,7 +92,7 @@ void PushOperand(string oprnd)
 		{
 		  if(y->second.position == currentElement)
 		  {
-			  cout << "     " << y->second.internalName <<y->second.value <<endl;
+			 //cout << "     " << y->second.internalName <<y->second.value <<endl;
 			if(y->second.value == whichValue(oprnd) && y->second.value != "")
 			{
 				cout << "YVAL  " << y->second.value << "   " << y->second.internalName << "\n" << " OPRNDVAL" << whichValue(oprnd) << endl;
@@ -103,7 +103,7 @@ void PushOperand(string oprnd)
 		}
 		  currentElement++;
 	  }
-	  cout << "EERRRRRR" << endl;
+	 //cout << "EERRRRRR" << endl;
 
 
     }
@@ -173,7 +173,7 @@ string PopOperand()
 	{
 		string top = operandStk.top();
 		operandStk.pop();
-     cout << "\nPopping \"" << top << "\"\n";
+    //cout << "\nPopping \"" << top << "\"\n";
 		return top;
 
 	}
@@ -189,7 +189,7 @@ string PopOperator()
 	{
 		string top = operatorStk.top();
 		operatorStk.pop();
-     cout << "\nPopping \"" << top << "\"\n";
+    //cout << "\nPopping \"" << top << "\"\n";
 		return top;
 	}
 	return 0;
@@ -207,7 +207,7 @@ void free_Temp()
 string get_Temp()
 {
 	 string temp;
-   cout << "currentTempNo = " << currentTempNo << endl;
+  //cout << "currentTempNo = " << currentTempNo << endl;
 	 currentTempNo++;
 	 temp = "T" + to_string(currentTempNo);
 	 if (currentTempNo > maxTempNo)
@@ -489,7 +489,7 @@ void EmitAssignCode(string operand1, string operand2)
       l = y->second.value ;
       if (modesString[y->second.mode] != "VARIABLE")
       {
-        cout << modesString[y->second.mode];
+       //cout << modesString[y->second.mode];
         error("symbol on the left hand side is not variable1");
       }
     }
@@ -1075,9 +1075,7 @@ void EmitDNECode(string operand1, string operand2)
 		objectFile << setw(5) << "" << operand2 << " <> " << operand1 << endl;
 		string label = get_Label();
 		objectFile << setw(4) << "" << setw(2) << "" << "AZJ " << setw(4) << label << setw(5) << "" << endl;
-		objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(4) << "TRUE     " << endl;
-		objectFile << setw(4) << "" << setw(2) << "" << "UNJ " << setw(4) << label << "+1   \n" ;
-		objectFile << setw(4) << left << label << setw(2) << "" << "LDA" << setw(4) <<left << " FALS"<< endl;
+		objectFile << setw(4) << left << label << setw(2) << "" << "LDA" << setw(4) <<left << " TRUE"<< endl;
 		
 	}
 	// if register has operand1 multiply by op2
@@ -1128,7 +1126,7 @@ void EmitDNECode(string operand1, string operand2)
 
 void code(string oprtr, string operand1, string operand2) 
 {
-  cout  << endl << "coding: " << setw(12) << left << "oprtr = " + oprtr + ", " << setw(14) << "operand1 = " + operand1 + ", " << setw(14) << "operand2 = " + operand2 << endl;
+ //cout  << endl << "coding: " << setw(12) << left << "oprtr = " + oprtr + ", " << setw(14) << "operand1 = " + operand1 + ", " << setw(14) << "operand2 = " + operand2 << endl;
 	operand2 = operand2.substr(0,15);
 	operand1 = operand1.substr(0,15);
 	
@@ -1257,14 +1255,14 @@ void checkDataType(string type, string operand1, string operand2)
 	else if(y->second.internalName == operand2)
 		{
 			operand2Type = y->second.dataType ; 
-			cout << y->second.dataType << "    " << y->second.externalName << "    " << y->second.internalName << endl;
+			//cout << y->second.dataType << "    " << y->second.externalName << "    " << y->second.internalName << endl;
 			if (storeTypeString[y->second.dataType] != (type=="int"?"INTEGER":(type=="bool"?"BOOLEAN":(storeTypeString[y->second.dataType]))))
 			{
 				error("illegal type");
 			}
 		}
 	}
-	cout << "HELLLLOOO" << operand1Type <<  " asd  " << operand2Type << endl;
+	//cout << "HELLLLOOO" << operand1Type <<  " asd  " << operand2Type << endl;
   if (operand1 == operand2)
   {
 	  return;

@@ -491,10 +491,7 @@ void constStmts()
 	else if ( y == "not")
 	{
 		nextToken();
-		if (token != "true" && token != "false")
-		{
-			error("illegal type follows 'not'");
-		}
+
 		if (token == "true")
 		{
 			y = "false";
@@ -502,6 +499,24 @@ void constStmts()
 		if (token == "false")
 		{
 			y = "true";
+		}
+		cout << token << endl;
+		
+		auto searchTable = symbolTable.find(token) ;
+		if (searchTable != symbolTable.end())
+		{
+			if ( storeTypeString[searchTable->second.dataType] == "BOOLEAN" && searchTable->second.value == "1")
+			{
+				
+				y = "false";
+				
+			}
+			if ( storeTypeString[searchTable->second.dataType] == "INTEGER" && searchTable->second.value == "0")
+			{
+				
+				y = "true";
+				
+			}
 		}
 	}
 	if (token == ";")
