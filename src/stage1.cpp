@@ -58,11 +58,20 @@ void printSymbolTable()
           //Internal Name
           objectFile << left << setw(6) << y->second.internalName << 
           //DEC or BSS
-          setw(4) << ((modesString[y->second.mode] == "VARIABLE") ? "BSS" : "DEC") <<
+          setw(4) << ((modesString[y->second.mode] == "VARIABLE") ? "BSS" : "DEC");
+          
           //value
-          setw(4) << setfill('0') << right << y->second.value << setfill(' ') <<
+          string value = y->second.value;
+          if(!value.empty() && (value.at(0) == '+' || value.at(0) == '-') && modesString[y->second.mode] != "VARIABLE")
+          {
+            objectFile << value.at(0) << setw(3) << right << setfill('0') << value.substr(1,value.length()) << setfill(' ');
+          }
+          else
+          {
+            objectFile << setw(4) << setfill('0') << right << ((modesString[y->second.mode] == "VARIABLE") ?/*then*/ "1" :/*else*/y->second.value) << setfill(' ');
+          }  
           //padding
-          setw(6) << left << "" <<
+          objectFile << setw(6) << left << "" <<
           //ExternalName          
           setw(15) << y->second.externalName << 
           //end the line;
