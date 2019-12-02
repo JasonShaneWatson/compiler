@@ -120,47 +120,7 @@ void PushOperand(string oprnd)
 
 
 
-    //check if oprnd is a already defined constant 
-/*	if (oprnd == "true")
-	{
-		oprnd = "1";
-		//cout << oprnd;
-	}
-	if (oprnd == "false")
-	{
-		oprnd = "0";
-		
-	}
-    auto searchValue = symbolTable.find(oprnd);
-    if (searchValue != symbolTable.end())
-    {
-      insert(oprnd,whichType(oprnd),CONSTANT,whichValue(oprnd),YES,1);
-      searchValue = symbolTable.find(oprnd);
-      operandStk.push(searchValue->second.internalName);
-      return;
-    }
 
-	
-	else{
-    
-		for (auto y = symbolTable.cbegin(); y != symbolTable.cend(); ++y)
-		{
-			if(y->second.value == oprnd)
-			{
-				operandStk.push(y->second.internalName);
-				return;
-			}
-			else
-			{
-				auto searchValue1 = symbolTable.find(oprnd);
-				if (searchValue1 != symbolTable.end())
-				{
-					  operandStk.push(searchValue1->second.internalName);
-					  return;
-				}
-			}
-		}
-	}*/
 }
 
 string PopOperand()
@@ -206,10 +166,10 @@ void free_Temp()
 
 string get_Temp()
 {
-	 string temp;
-  ////cout << "currentTempNo = " << currentTempNo << endl;
+
+  ////cout << "currentTempNo = " << currentTempNo << endl
 	 currentTempNo++;
-	 temp = "T" + to_string(currentTempNo);
+	 string temp = "T" + to_string(currentTempNo);
 	 if (currentTempNo > maxTempNo)
 	 {
 		 insert(temp, UNKNOWN, VARIABLE, "", NO, 1);

@@ -262,11 +262,12 @@ void part()
       code("neg", PopOperand(), "neg");
     }
     else if(isInt())
+    
     {
-      PushOperand(token);
-	  code("neg", PopOperand(), "neg");
+      PushOperand("-" + token);
       nextToken();
     }
+    
     else if(non_Key_Id())
     {
 	PushOperand(token);
