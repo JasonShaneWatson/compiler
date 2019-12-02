@@ -1314,7 +1314,11 @@ void commutativeCode(string type, string operand1,string operand2)
   
   //deassign all temporaries involved in the addition and free those names for reuse
 	// if operand 1 was a temp free it
-	if ((operand1.at(0) == 'T' && operand1 != "TRUE") || (operand2.at(0) == 'T' && operand2 != "TRUE")  )
+	if (operand1.at(0) == 'T' && operand1 != "TRUE")
+	{
+		free_Temp();
+	}
+	if (operand2.at(0) == 'T' && operand1 != "TRUE" )
 	{
 		free_Temp();
 	}
@@ -1378,7 +1382,11 @@ void nonCommutativeCode(string type, string operand1,string operand2)
   
   //deassign all temporaries involved in the addition and free those names for reuse
 	// if operand 1 was a temp free it
-	if ((operand1.at(0) == 'T' && operand1 != "TRUE") || (operand2.at(0) == 'T' && operand2 != "TRUE")  )
+	if (operand1.at(0) == 'T' && operand1 != "TRUE")
+	{
+		free_Temp();
+	}
+	if (operand2.at(0) == 'T' && operand1 != "TRUE" )
 	{
 		free_Temp();
 	}
