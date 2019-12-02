@@ -222,7 +222,6 @@ void insert(string externalName, storeType inType, modes inMode, string inValue,
 
 	  if(nameToken == "FALSE")
 	  {
-		  ////cout << "DEBUGGGGGGGGGG" << endl;
 		  New.internalName = "FALS";
 	  }
       else if(isupper(nameToken[0]))
@@ -500,7 +499,7 @@ void constStmts()
 		{
 			y = "true";
 		}
-		cout << token << endl;
+
 		
 		auto searchTable = symbolTable.find(token) ;
 		if (searchTable != symbolTable.end())
