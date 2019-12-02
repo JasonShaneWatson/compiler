@@ -338,7 +338,7 @@ void EmitNegationCode(string operand1)
 				}
 			}
 	//Allocate Temp and store it 		
-	if ( !Areg.empty() && Areg != operand1  && (Areg.at(0) == 'T' && Areg != "TRUE"))
+	if ( !Areg.empty() && (Areg.at(0) == 'T' && Areg != "TRUE"))
 	{
 		auto tableValue = symbolTable.find(Areg);
 		if(tableValue != symbolTable.end()) //we found an entry in the symbolTable
@@ -541,12 +541,12 @@ void EmitModuloCode(string operand1, string operand2)
 		
 	}
 	// if non-temp is in register then deassign it 
-	else if ( !Areg.empty() && (Areg != operand1 && Areg != operand2) && Areg.at(0) != 'T')
+	 if ( !Areg.empty() && (Areg != operand1 && Areg != operand2) && Areg.at(0) != 'T')
 	{
 		Areg = "";
 	}
 	// if register has neither operand1 or 2
-	else if (Areg != operand1 && Areg != operand2 )
+	 if (Areg != operand1 && Areg != operand2 )
 	{
 		Areg = "";
 		objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(6) <<left << operand2<< "\n";
@@ -561,14 +561,11 @@ void EmitModuloCode(string operand1, string operand2)
 		objectFile << setw(4) << "" << setw(2) << "" << "IDV " << setw(6) <<left << operand1<< "\n";
 		
 	}
-	else if (Areg == operand2 )
+	if (Areg == operand2 )
 	{
 		objectFile << setw(4) << "" << setw(2) << "" << "IDV " << setw(6) <<left << operand1<< "\n";
 	}
-	else 
-	{
-		error("you broke it in modulus");
-	}
+
 	// if operand 1 was a temp free it
 	if ((operand1.at(0) == 'T' && operand1 != "TRUE") )
 	{
@@ -1074,7 +1071,7 @@ void EmitDNECode(string operand1, string operand2)
 		objectFile << setw(4) << "" << setw(2) << "" << "ISB " << setw(6) <<left << operand1;
 		objectFile << setw(5) << "" << operand2 << " <> " << operand1 << endl;
 		string label = get_Label();
-		objectFile << setw(4) << "" << setw(2) << "" << "AZJ " << setw(6) << label << setw(5) << "" << endl;
+		objectFile << setw(4) << "" << setw(2) << "" << "AZJ " << setw(4) << label << "+1   \n" ;
 		objectFile << setw(4) << left << label << setw(2) << "" << "LDA " << setw(6) <<left << "TRUE"<< endl;
 		
 	}
@@ -1084,7 +1081,7 @@ void EmitDNECode(string operand1, string operand2)
 		objectFile << setw(4) << "" << setw(2) << "" << "ISB " << setw(6) <<left << operand2;
 		objectFile << setw(5) << "" << operand2 << " <> " << operand1 << endl;
 		string label = get_Label();
-		objectFile << setw(4) << "" << setw(2) << "" << "AZJ " << setw(6) << label << setw(5) << "" << endl;
+		objectFile << setw(4) << "" << setw(2) << "" << "AZJ " << setw(4) << label  << "+1   \n" ;
 		objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(6) << "TRUE     " << endl;
 		objectFile << setw(4) << "" << setw(2) << "" << "UNJ " << setw(4) << label << "+1   \n" ;
 		objectFile << setw(4) << left << label << setw(2) << "" << "LDA " << setw(6) <<left << "FALS"<< endl;
@@ -1095,7 +1092,7 @@ void EmitDNECode(string operand1, string operand2)
 		objectFile << setw(4) << "" << setw(2) << "" << "ISB " << setw(6) <<left << operand1;
 		objectFile << setw(5) << "" << operand2 << " <> " << operand1 << endl;
 		string label = get_Label();
-		objectFile << setw(4) << "" << setw(2) << "" << "AZJ " << setw(6) << label << setw(5) << "" << endl;
+		objectFile << setw(4) << "" << setw(2) << "" << "AZJ " << setw(4) << label  << "+1   \n" ;
 		objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(6) << "TRUE     " << endl;
 		objectFile << setw(4) << "" << setw(2) << "" << "UNJ " << setw(4) << label << "+1   \n" ;
 		objectFile << setw(4) << left << label << setw(2) << "" << "LDA " << setw(6) <<left << "FALS"<< endl;

@@ -253,6 +253,7 @@ void part()
     nextToken();
     if(token == "(")
     {
+		
       nextToken();
       express();
       if(token != ")")
@@ -262,14 +263,12 @@ void part()
     }
     else if(isInt())
     {
-		 //cout << "YOU SUCK1"<< endl;
       PushOperand(token);
 	  code("neg", PopOperand(), "neg");
       nextToken();
     }
     else if(non_Key_Id())
     {
-		 //cout << "YOU SUCK"<< endl;
 	PushOperand(token);
       code("neg", PopOperand(), "neg");
       nextToken();
