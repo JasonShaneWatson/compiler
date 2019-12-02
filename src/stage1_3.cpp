@@ -238,6 +238,10 @@ void part()
       }
       nextToken();
     }
+	else if( token == "+")
+	{
+		error ("integer, literal, or non keyword identifier expected");
+	}
     else if(isInt() || non_Key_Id())
     {
       PushOperand(token);
@@ -350,7 +354,9 @@ void outputCode(string code, string value, string codeDescription)
   //loop through the char * and find each individuall value seperated by a ','
   while(token_in_string != NULL)
   {
+
     string valueToken = string(token_in_string);
+	  valueToken = valueToken.substr(0,15);
     // If value not found in map iterator to end is returned
     // we cannot emit a code for a key that hasn't been inserted into table
     auto searchValue = symbolTable.find(valueToken);

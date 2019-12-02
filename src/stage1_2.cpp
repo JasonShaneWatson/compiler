@@ -41,6 +41,7 @@ void BoolTAF();
 
 void BoolTAF()
 {
+	
   	auto tableValue3 = symbolTable.find("TRUE");
 		if(tableValue3 == symbolTable.end()) //we did not find an entry in the symbolTable
 		{
@@ -60,6 +61,7 @@ void PushOperator(string oprtr)
 
 void PushOperand(string oprnd)
 {	  
+	oprnd = oprnd.substr(0,15);
    ////cout << "\nPushing \"" << oprnd << "\"\n";
     bool oprndIsINT = true; 
 
@@ -487,7 +489,7 @@ void EmitModuloCode(string operand1, string operand2)
 	//make sure  data types are integers
 	checkDataType("int",operand1,operand2);
 	//Allocate Temp and store it 		
-	if ( !Areg.empty() && (Areg != operand1 && Areg != operand2) && (Areg.at(0) == 'T' && Areg != "TRUE"))
+	if ( !Areg.empty() &&  Areg != operand2 && (Areg.at(0) == 'T' && Areg != "TRUE"))
 	{
 		auto tableValue = symbolTable.find(Areg);
 		if(tableValue != symbolTable.end()) //we found an entry in the symbolTable
@@ -808,7 +810,7 @@ void EmitGTCode(string operand1, string operand2)
     if (Areg != operand1 )
 	{
 		Areg = operand1;
-		objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(6) <<left << operand2 << "\n";
+		objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(6) <<left << operand1 << "\n";
 		
 	}
 
@@ -954,7 +956,7 @@ void EmitLTOECode(string operand1, string operand2)
     if (Areg != operand2 )
 	{
 		Areg = operand2;
-		objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(6) <<left << operand2 << "\n";
+		objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(6) <<left << operand1 << "\n";
 		
 	}
 
@@ -962,12 +964,11 @@ void EmitLTOECode(string operand1, string operand2)
 	if (Areg == operand2)
 	{
 		string label = get_Label();
-		objectFile << setw(4) << "" << setw(2) << "" << "ISB " << setw(6) <<left << operand1<< "      sub "<< operand1 <<"\n";
+		objectFile << setw(4) << "" << setw(2) << "" << "ISB " << setw(6) <<left << operand2<< "      sub "<< operand1 <<"\n";
 		objectFile << setw(4) << "" << setw(2) << "" << "AMJ " << setw(6) << label << setw(5) << "" << endl;
-		objectFile << setw(4) << "" << setw(2) << "" << "AZJ " << setw(6) << label << setw(5) << "" << endl;
-		objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(6) << "FALS" << endl;
+		objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(6) << "TRUE" << endl;
 		objectFile << setw(4) << "" << setw(2) << "" << "UNJ " << setw(4) << label << "+1   \n" ;
-		objectFile << setw(4) << left << label << setw(2) << "" << "LDA " << setw(6) <<left << "TRUE"<< endl;
+		objectFile << setw(4) << left << label << setw(2) << "" << "LDA " << setw(6) <<left << "FALS"<< endl;
 		
 	}
 	else 
