@@ -29,12 +29,13 @@ _test () {
                           "$PROGDIR/test/${program%.*}.lst"\
                           "$PROGDIR/test/${program%.*}.obj"
         
+       
         # diff obj files
         printf "\t"
         if [ -r "$TESTDIR/${program%.*}.obj" ]; then
             (diff "${DIFF_OPTIONS[@]}" \
-                <(tail -n +2 "$TESTDIR/${program%.*}.obj") \
-                <(tail -n +2 "$PROGDIR/test/${program%.*}.obj") \
+                <(tail -n +2 "$TESTDIR/${program%.*}.obj" | cut -c1-16) \
+                <(tail -n +2 "$PROGDIR/test/${program%.*}.obj" | cut -c1-16) \
                 >>"$PROGDIR/test.log"\
             && printf "$GREEN%s$RESET" "✔") \
             || (printf "$RED%s$RESET" "X")
