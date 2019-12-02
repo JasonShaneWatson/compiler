@@ -810,7 +810,7 @@ void EmitGTCode(string operand1, string operand2)
     if (Areg != operand1 )
 	{
 		Areg = operand1;
-		objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(6) <<left << operand1 << "\n";
+		objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(6) <<left << operand2 << "\n";
 		
 	}
 
@@ -818,11 +818,12 @@ void EmitGTCode(string operand1, string operand2)
 	if (Areg == operand1)
 	{
 		string label = get_Label();
-		objectFile << setw(4) << "" << setw(2) << "" << "ISB " << setw(6) <<left << operand2<< "      sub "<< operand1 <<"\n";
+		objectFile << setw(4) << "" << setw(2) << "" << "ISB " << setw(6) <<left << operand1<< "      sub "<< operand1 <<"\n";
 		objectFile << setw(4) << "" << setw(2) << "" << "AMJ " << setw(6) << label << setw(5) << "" << endl;
-		objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(6) << "FALS" << endl;
+		objectFile << setw(4) << "" << setw(2) << "" << "AZJ " << setw(6) << label << setw(5) << "" << endl;
+		objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(6) << "TRUE" << endl;
 		objectFile << setw(4) << "" << setw(2) << "" << "UNJ " << setw(4) << label << "+1   \n" ;
-		objectFile << setw(4) << left << label << setw(2) << "" << "LDA " << setw(6) <<left << "TRUE" << endl;
+		objectFile << setw(4) << left << label << setw(2) << "" << "LDA " << setw(6) <<left << "FALS" << endl;
 		
 	}
 	else 
@@ -956,7 +957,7 @@ void EmitLTOECode(string operand1, string operand2)
     if (Areg != operand2 )
 	{
 		Areg = operand2;
-		objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(6) <<left << operand1 << "\n";
+		objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(6) <<left << operand2 << "\n";
 		
 	}
 
@@ -964,11 +965,12 @@ void EmitLTOECode(string operand1, string operand2)
 	if (Areg == operand2)
 	{
 		string label = get_Label();
-		objectFile << setw(4) << "" << setw(2) << "" << "ISB " << setw(6) <<left << operand2<< "      sub "<< operand1 <<"\n";
+		objectFile << setw(4) << "" << setw(2) << "" << "ISB " << setw(6) <<left << operand1<< "      sub "<< operand1 <<"\n";
 		objectFile << setw(4) << "" << setw(2) << "" << "AMJ " << setw(6) << label << setw(5) << "" << endl;
-		objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(6) << "TRUE" << endl;
+		objectFile << setw(4) << "" << setw(2) << "" << "AZJ " << setw(6) << label << setw(5) << "" << endl;
+		objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(6) << "FALS" << endl;
 		objectFile << setw(4) << "" << setw(2) << "" << "UNJ " << setw(4) << label << "+1   \n" ;
-		objectFile << setw(4) << left << label << setw(2) << "" << "LDA " << setw(6) <<left << "FALS"<< endl;
+		objectFile << setw(4) << left << label << setw(2) << "" << "LDA " << setw(6) <<left << "TRUE"<< endl;
 		
 	}
 	else 
