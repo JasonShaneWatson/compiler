@@ -45,7 +45,7 @@ void createListingTrailer()
 
 void printSymbolTable()
 {
-  objectFile << setw(4) << "" << setw(2) << "" << "HLT" << endl;
+  objectFile << setw(4) << "" << setw(2) << "" << setw(10) << left << "HLT" << endl;
   int currentElement = 0;
   for (auto x = symbolTable.cbegin(); x != symbolTable.cend(); ++x) 
   {
@@ -81,7 +81,7 @@ void printSymbolTable()
       }
     }
   }
-  objectFile << setw(4) << "" << setw(2) << "" << "END STRT" << endl;
+  objectFile << setw(4) << "" << setw(2) << "" << "END STRT  " << endl;
 }
 
 //check if string is a reserved keyword 
@@ -222,7 +222,7 @@ void insert(string externalName, storeType inType, modes inMode, string inValue,
 
 	  if(nameToken == "FALSE")
 	  {
-		  cout << "DEBUGGGGGGGGGG" << endl;
+		  ////cout << "DEBUGGGGGGGGGG" << endl;
 		  New.internalName = "FALS";
 	  }
       else if(isupper(nameToken[0]))
@@ -491,7 +491,10 @@ void constStmts()
 	else if ( y == "not")
 	{
 		nextToken();
-
+		if (token != "true" && token != "false")
+		{
+			error("illegal type follows 'not'");
+		}
 		if (token == "true")
 		{
 			y = "false";
@@ -499,24 +502,6 @@ void constStmts()
 		if (token == "false")
 		{
 			y = "true";
-		}
-		cout << token << endl;
-		
-		auto searchTable = symbolTable.find(token) ;
-		if (searchTable != symbolTable.end())
-		{
-			if ( storeTypeString[searchTable->second.dataType] == "BOOLEAN" && searchTable->second.value == "1")
-			{
-				
-				y = "false";
-				
-			}
-			if ( storeTypeString[searchTable->second.dataType] == "INTEGER" && searchTable->second.value == "0")
-			{
-				
-				y = "true";
-				
-			}
 		}
 	}
 	if (token == ";")

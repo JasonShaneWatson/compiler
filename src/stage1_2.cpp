@@ -41,26 +41,26 @@ void BoolTAF();
 
 void BoolTAF()
 {
+  	auto tableValue3 = symbolTable.find("TRUE");
+		if(tableValue3 == symbolTable.end()) //we did not find an entry in the symbolTable
+		{
+		  insert("TRUE", BOOLEAN, CONSTANT, "1", YES, 1); 
+		}
 		auto tableValue2 = symbolTable.find("FALSE");
 		if(tableValue2 == symbolTable.end()) //we did not find an entry in the symbolTable
 		{
 		  insert("FALSE", BOOLEAN, CONSTANT, "0", YES, 1); 
 		}
-		auto tableValue3 = symbolTable.find("TRUE");
-		if(tableValue3 == symbolTable.end()) //we did not find an entry in the symbolTable
-		{
-		  insert("TRUE", BOOLEAN, CONSTANT, "1", YES, 1); 
-		}
 }
 void PushOperator(string oprtr)
 {
- //cout << "\nPushing \"" << oprtr << "\"\n";
+ ////cout << "\nPushing \"" << oprtr << "\"\n";
 	operatorStk.push(oprtr);
 }
 
 void PushOperand(string oprnd)
 {	  
-   //cout << "\nPushing \"" << oprnd << "\"\n";
+   ////cout << "\nPushing \"" << oprnd << "\"\n";
     bool oprndIsINT = true; 
 
     for (uint x = 0; x < oprnd.length(); x++)
@@ -92,10 +92,10 @@ void PushOperand(string oprnd)
 		{
 		  if(y->second.position == currentElement)
 		  {
-			 //cout << "     " << y->second.internalName <<y->second.value <<endl;
+			 ////cout << "     " << y->second.internalName <<y->second.value <<endl;
 			if(y->second.value == whichValue(oprnd) && y->second.value != "")
 			{
-				cout << "YVAL  " << y->second.value << "   " << y->second.internalName << "\n" << " OPRNDVAL" << whichValue(oprnd) << endl;
+				//cout << "YVAL  " << y->second.value << "   " << y->second.internalName << "\n" << " OPRNDVAL" << whichValue(oprnd) << endl;
 				operandStk.push(y->second.internalName);
 				return;
 			}
@@ -103,7 +103,7 @@ void PushOperand(string oprnd)
 		}
 		  currentElement++;
 	  }
-	 //cout << "EERRRRRR" << endl;
+	 ////cout << "EERRRRRR" << endl;
 
 
     }
@@ -111,7 +111,7 @@ void PushOperand(string oprnd)
 	//if oprnd is ((boolean || int) && not in sybol talbe)
 	if (((oprnd == "TRUE" || oprnd == "FALSE") || oprndIsINT ) && (searchValue == symbolTable.end()))
 	{
-		cout << "DEBUGGGGGGGGGG" << endl;
+		//cout << "DEBUGGGGGGGGGG" << endl;
 		insert(oprnd,whichType(oprnd),CONSTANT,whichValue(oprnd),YES,1);
 
 	}
@@ -124,7 +124,7 @@ void PushOperand(string oprnd)
 /*	if (oprnd == "true")
 	{
 		oprnd = "1";
-		cout << oprnd;
+		//cout << oprnd;
 	}
 	if (oprnd == "false")
 	{
@@ -173,7 +173,7 @@ string PopOperand()
 	{
 		string top = operandStk.top();
 		operandStk.pop();
-    //cout << "\nPopping \"" << top << "\"\n";
+    ////cout << "\nPopping \"" << top << "\"\n";
 		return top;
 
 	}
@@ -189,7 +189,7 @@ string PopOperator()
 	{
 		string top = operatorStk.top();
 		operatorStk.pop();
-    //cout << "\nPopping \"" << top << "\"\n";
+    ////cout << "\nPopping \"" << top << "\"\n";
 		return top;
 	}
 	return 0;
@@ -207,7 +207,7 @@ void free_Temp()
 string get_Temp()
 {
 	 string temp;
-  //cout << "currentTempNo = " << currentTempNo << endl;
+  ////cout << "currentTempNo = " << currentTempNo << endl;
 	 currentTempNo++;
 	 temp = "T" + to_string(currentTempNo);
 	 if (currentTempNo > maxTempNo)
@@ -267,7 +267,7 @@ void EmitAndCode(string operand1,string operand2) //"and" operand1 to operand2
 		  tableValue->second.units = 1;
 		  
 		}
-		objectFile << setw(4) << "" << setw(2) << "" << "STA " << setw(4) <<left << Areg << endl;
+		objectFile << setw(4) << "" << setw(2) << "" << "STA " << setw(6) <<left << Areg << endl;
 		Areg = "";
 		
 	}
@@ -281,8 +281,8 @@ void EmitAndCode(string operand1,string operand2) //"and" operand1 to operand2
 	if (Areg != operand1 && Areg != operand2 )
 	{
 		Areg = "";
-		objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(4) <<left << operand2<< "\n";
-		objectFile << setw(4) << "" << setw(2) << "" << "IMU " << setw(4) <<left << operand1;
+		objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(6) <<left << operand2<< "\n";
+		objectFile << setw(4) << "" << setw(2) << "" << "IMU " << setw(6) <<left << operand1;
 		objectFile << setw(5) << "" << operand2 << " AND " << operand1 << endl;
 		
 	}
@@ -290,14 +290,14 @@ void EmitAndCode(string operand1,string operand2) //"and" operand1 to operand2
 	if (Areg == operand1 )
 	{
 		//objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(4) <<left << operand2<< "\n";
-		objectFile << setw(4) << "" << setw(2) << "" << "IMU " << setw(4) <<left << operand2;
+		objectFile << setw(4) << "" << setw(2) << "" << "IMU " << setw(6) <<left << operand2;
 		objectFile << setw(5) << "" << operand2 << " AND " << operand1 << endl;
 
 	}
 	// if register has operand2 multiply by op1
 	if (Areg == operand2)
 	{
-		objectFile << setw(4) << "" << setw(2) << "" << "IMU " << setw(4) <<left << operand1;
+		objectFile << setw(4) << "" << setw(2) << "" << "IMU " << setw(6) <<left << operand1;
 		objectFile << setw(5) << "" << operand2 << " AND " << operand1 << endl;
 	}
 	
@@ -410,7 +410,7 @@ void EmitNotCode(string operand1)
 		  tableValue->second.units = 1;
 		  
 		}
-		objectFile << setw(4) << "" << setw(2) << "" << "STA " << setw(4) <<left << Areg<< "\n";
+		objectFile << setw(4) << "" << setw(2) << "" << "STA " << setw(6) <<left << Areg<< "\n";
 		Areg = "";
 		
 	}
@@ -421,18 +421,18 @@ void EmitNotCode(string operand1)
 	}
 	if (Areg != operand1 )
 	{
-		objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(4) <<left << operand1<< "\n";
+		objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(6) <<left << operand1<< "\n";
 		Areg = operand1;
 	}
 	// if register has operand1 set jumps
 	if (Areg == operand1 )
 	{
 		string label = get_Label();
-		objectFile << setw(4) << "" << setw(2) << "" << "AZJ " << setw(4) << left << label;
+		objectFile << setw(4) << "" << setw(2) << "" << "AZJ " << setw(6) << left << label;
 		objectFile << setw(4) << "" << " not " << operand1 << "\n";
-		objectFile << setw(4) << "" << setw(2) << "" << "LDA" << setw(4) <<left << " FALS" << endl;
+		objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(6) <<left << "FALS" << endl;
 		objectFile << setw(4) << "" << setw(2) << "" << "UNJ " << setw(4) << label << "+1   \n" ;
-		objectFile << setw(4) << left << label << setw(2) << "" << "LDA" << setw(4) <<left << " TRUE"<< endl;
+		objectFile << setw(4) << left << label << setw(2) << "" << "LDA " << setw(6) <<left << "TRUE"<< endl;
 	}
 
 	else 
@@ -489,7 +489,7 @@ void EmitAssignCode(string operand1, string operand2)
       l = y->second.value ;
       if (modesString[y->second.mode] != "VARIABLE")
       {
-       //cout << modesString[y->second.mode];
+       ////cout << modesString[y->second.mode];
         error("symbol on the left hand side is not variable1");
       }
     }
@@ -506,11 +506,11 @@ void EmitAssignCode(string operand1, string operand2)
 
 	if (Areg != operand1)
 	{
-		objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(4) <<left << operand1<< "\n";
+		objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(6) <<left << operand1<< "\n";
 	}
   
 	Areg = operand2;
-	objectFile << left << setw(6) << " " << setw(3) << "STA " << setw(4) << operand2 << setw(6) << " " << getExternalName(operand2) << " := "<< getExternalName(operand1) << endl;
+	objectFile << left << setw(6) << " " << setw(3) << "STA " << setw(6) << operand2 << setw(6) << " " << getExternalName(operand2) << " := "<< getExternalName(operand1) << endl;
 
 	// if operand 1 was a temp free it
 	if (!operand1.empty() && (operand1.at(0) == 'T' && operand1 != "TRUE"))
@@ -536,7 +536,7 @@ void EmitModuloCode(string operand1, string operand2)
 		  tableValue->second.units = 1;
 		  
 		}
-		objectFile << setw(4) << "" << setw(2) << "" << "STA " << setw(4) <<left << Areg<< "\n";
+		objectFile << setw(4) << "" << setw(2) << "" << "STA " << setw(6) <<left << Areg<< "\n";
 		Areg = "";
 		
 	}
@@ -549,21 +549,21 @@ void EmitModuloCode(string operand1, string operand2)
 	else if (Areg != operand1 && Areg != operand2 )
 	{
 		Areg = "";
-		objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(4) <<left << operand2<< "\n";
-		objectFile << setw(4) << "" << setw(2) << "" << "IDV " << setw(4) <<left << operand1<< "\n";
+		objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(6) <<left << operand2<< "\n";
+		objectFile << setw(4) << "" << setw(2) << "" << "IDV " << setw(6) <<left << operand1<< "\n";
 		
 	}
 	// if register is not operand 2 then empty reg and load op2
 	else if (Areg != operand2 )
 	{
 		Areg = "";
-		objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(4) <<left << operand2<< "\n";
-		objectFile << setw(4) << "" << setw(2) << "" << "IDV " << setw(4) <<left << operand1<< "\n";
+		objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(6) <<left << operand2<< "\n";
+		objectFile << setw(4) << "" << setw(2) << "" << "IDV " << setw(6) <<left << operand1<< "\n";
 		
 	}
 	else if (Areg == operand2 )
 	{
-		objectFile << setw(4) << "" << setw(2) << "" << "IDV " << setw(4) <<left << operand1<< "\n";
+		objectFile << setw(4) << "" << setw(2) << "" << "IDV " << setw(6) <<left << operand1<< "\n";
 	}
 	else 
 	{
@@ -577,8 +577,8 @@ void EmitModuloCode(string operand1, string operand2)
 	//A register == Tn
 	Areg = get_Temp();
 	// make Tn dataType = INTEGER
-	objectFile << setw(4) << "" << setw(2) << "" << "STQ " << setw(4) <<left << Areg<< "\n";
-	objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(4) <<left << Areg<< "\n";
+	objectFile << setw(4) << "" << setw(2) << "" << "STQ " << setw(6) <<left << Areg<< "\n";
+	objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(6) <<left << Areg<< "\n";
 	auto tableValue1 = symbolTable.find(Areg);
 	if(tableValue1 != symbolTable.end()) //we found an entry in the symbolTable
 	{
@@ -602,7 +602,7 @@ void EmitOrCode(string operand1, string operand2)
 		  tableValue->second.units = 1;
 		  
 		}
-		objectFile << setw(4) << "" << setw(2) << "" << "STA " << setw(4) <<left << Areg << endl;
+		objectFile << setw(4) << "" << setw(2) << "" << "STA " << setw(6) <<left << Areg << endl;
 		Areg = "";
 		
 	}
@@ -615,32 +615,32 @@ void EmitOrCode(string operand1, string operand2)
 	if (Areg != operand1 && Areg != operand2 )
 	{
 		Areg = "";
-		objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(4) <<left << operand2<< "\n";
-		objectFile << setw(4) << "" << setw(2) << "" << "IAD " << setw(4) <<left << operand1;
+		objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(6) <<left << operand2<< "\n";
+		objectFile << setw(4) << "" << setw(2) << "" << "IAD " << setw(6) <<left << operand1;
 		string label = get_Label();
 		objectFile << setw(5) << "" << operand2 << " or " << operand1 << endl;
 		objectFile << setw(4) << "" << setw(2) << "" << "AZJ " << setw(4) << left << label << "+1   " << endl;
-		objectFile << setw(4) << label << setw(2) << "" << "LDA " << setw(4) << left << "TRUE     " << endl;
+		objectFile << setw(4) << label << setw(2) << "" << "LDA " << setw(6) << left << "TRUE     " << endl;
 		
 	}
 	// if register has operand1 multiply by op2
 	if (Areg == operand1 )
 	{
 		
-		objectFile << setw(4) << "" << setw(2) << "" << "IAD " << setw(4) <<left << operand2 ;
+		objectFile << setw(4) << "" << setw(2) << "" << "IAD " << setw(6) <<left << operand2 ;
 		string label = get_Label();
 		objectFile << setw(5) << "" << operand2 << " or " << operand1 << endl;
 		objectFile << setw(4) << "" << setw(2) << "" << "AZJ " << setw(4) << left << label << "+1   " << endl;
-		objectFile << setw(4) << label << setw(2) << "" << "LDA " << setw(4) << left << "TRUE     " << endl;
+		objectFile << setw(4) << label << setw(2) << "" << "LDA " << setw(6) << left << "TRUE     " << endl;
 	}
 	// if register has operand2 multiply by op1
 	if (Areg == operand2)
 	{
-		objectFile << setw(4) << "" << setw(2) << "" << "IAD " << setw(4) <<left << operand1 ;
+		objectFile << setw(4) << "" << setw(2) << "" << "IAD " << setw(6) <<left << operand1 ;
 		string label = get_Label();
 		objectFile << setw(5) << "" << operand2 << " or " << operand1 << endl;
 		objectFile << setw(4) << "" << setw(2) << "" << "AZJ " << setw(4) << left << label << "+1   " << endl;
-		objectFile << setw(4) << label << setw(2) << "" << "LDA " << setw(4) << left << "TRUE     " << endl;
+		objectFile << setw(4) << label << setw(2) << "" << "LDA " << setw(6) << left << "TRUE     " << endl;
 	}
 	
 	// if operand 1 was a temp free it
@@ -680,7 +680,7 @@ void EmitEqualsCode(string operand1, string operand2)
 		  tableValue->second.units = 1;
 		  
 		}
-		objectFile << setw(4) << "" << setw(2) << "" << "STA " << setw(4) <<left << Areg << endl;
+		objectFile << setw(4) << "" << setw(2) << "" << "STA " << setw(6) <<left << Areg << endl;
 		Areg = "";
 		
 	}
@@ -694,37 +694,37 @@ void EmitEqualsCode(string operand1, string operand2)
 	if (Areg != operand1 && Areg != operand2 )
 	{
 		Areg = "";
-		objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(4) <<left << operand2<< "\n";
-		objectFile << setw(4) << "" << setw(2) << "" << "ISB " << setw(4) <<left << operand1;
+		objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(6) <<left << operand2<< "\n";
+		objectFile << setw(4) << "" << setw(2) << "" << "ISB " << setw(6) <<left << operand1;
 		objectFile << setw(5) << "" << operand2 << " = " << operand1 << endl;
 		string label = get_Label();
-		objectFile << setw(4) << "" << setw(2) << "" << "AZJ " << setw(4) << label << setw(5) << "" << endl;
-		objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(4) << "FALS     " << endl;
+		objectFile << setw(4) << "" << setw(2) << "" << "AZJ " << setw(6) << label << setw(5) << "" << endl;
+		objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(6) << "FALS" << endl;
 		objectFile << setw(4) << "" << setw(2) << "" << "UNJ " << setw(4) << label << "+1   \n" ;
-		objectFile << setw(4) << left << label << setw(2) << "" << "LDA" << setw(4) <<left << " TRUE"<< endl;
+		objectFile << setw(4) << left << label << setw(2) << "" << "LDA " << setw(6) <<left << "TRUE"<< endl;
 		
 	}
 	// if register has operand1 multiply by op2
 	if (Areg == operand1 )
 	{
-		objectFile << setw(4) << "" << setw(2) << "" << "ISB " << setw(4) <<left << operand2;
+		objectFile << setw(4) << "" << setw(2) << "" << "ISB " << setw(6) <<left << operand2;
 		objectFile << setw(5) << "" << operand2 << " = " << operand1 << endl;
 		string label = get_Label();
-		objectFile << setw(4) << "" << setw(2) << "" << "AZJ " << setw(4) << label << setw(5) << "" << endl;
-		objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(4) << "FALS     " << endl;
+		objectFile << setw(4) << "" << setw(2) << "" << "AZJ " << setw(6) << label << setw(5) << "" << endl;
+		objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(6) << "FALS" << endl;
 		objectFile << setw(4) << "" << setw(2) << "" << "UNJ " << setw(4) << label << "+1   \n" ;
-		objectFile << setw(4) << left << label << setw(2) << "" << "LDA" << setw(4) <<left << " TRUE"<< endl;
+		objectFile << setw(4) << left << label << setw(2) << "" << "LDA " << setw(6) <<left << "TRUE"<< endl;
 	}
 	// if register has operand2 multiply by op1
 	if (Areg == operand2)
 	{
-		objectFile << setw(4) << "" << setw(2) << "" << "ISB " << setw(4) <<left << operand1;
+		objectFile << setw(4) << "" << setw(2) << "" << "ISB " << setw(6) <<left << operand1;
 		objectFile << setw(5) << "" << operand2 << " = " << operand1 << endl;
 		string label = get_Label();
-		objectFile << setw(4) << "" << setw(2) << "" << "AZJ " << setw(4) << label << setw(5) << "" << endl;
-		objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(4) << "FALS     " << endl;
+		objectFile << setw(4) << "" << setw(2) << "" << "AZJ " << setw(6) << label << setw(5) << "" << endl;
+		objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(6) << "FALS" << endl;
 		objectFile << setw(4) << "" << setw(2) << "" << "UNJ " << setw(4) << label << "+1   \n" ;
-		objectFile << setw(4) << left << label << setw(2) << "" << "LDA" << setw(4) <<left << " TRUE"<< endl;
+		objectFile << setw(4) << left << label << setw(2) << "" << "LDA " << setw(6) <<left << "TRUE"<< endl;
 		
 	}
 
@@ -764,7 +764,7 @@ void EmitLTCode(string operand1, string operand2)
 		  tableValue->second.units = 1;
 		  
 		}
-		objectFile << setw(4) << "" << setw(2) << "" << "STA " << setw(4) <<left << Areg<< "\n" ;
+		objectFile << setw(4) << "" << setw(2) << "" << "STA " << setw(6) <<left << Areg<< "\n" ;
 		Areg = "";
 		
 	}
@@ -778,7 +778,7 @@ void EmitLTCode(string operand1, string operand2)
     if (Areg != operand2 )
 	{
 		Areg = operand2;
-		objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(4) <<left << operand2 << "\n";
+		objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(6) <<left << operand2 << "\n";
 		
 	}
 
@@ -786,11 +786,11 @@ void EmitLTCode(string operand1, string operand2)
 	if (Areg == operand2)
 	{
 		string label = get_Label();
-		objectFile << setw(4) << "" << setw(2) << "" << "ISB " << setw(4) <<left << operand1<< "      sub "<< operand1 <<"\n";
-		objectFile << setw(4) << "" << setw(2) << "" << "AMJ " << setw(4) << label << setw(5) << "" << endl;
-		objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(4) << "FALS     " << endl;
+		objectFile << setw(4) << "" << setw(2) << "" << "ISB " << setw(6) << left << operand1<< "      sub "<< operand1 <<"\n";
+		objectFile << setw(4) << "" << setw(2) << "" << "AMJ " << setw(6) << label << setw(5) << "" << endl;
+		objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(6) << "FALS" << endl;
 		objectFile << setw(4) << "" << setw(2) << "" << "UNJ " << setw(4) << label << "+1   \n" ;
-		objectFile << setw(4) << left << label << setw(2) << "" << "LDA" << setw(4) <<left << " TRUE"<< endl;
+		objectFile << setw(4) << left << label << setw(2) << "" << "LDA " << setw(6) <<left << "TRUE"<< endl;
 		
 	}
 	else 
@@ -836,7 +836,7 @@ void EmitGTCode(string operand1, string operand2)
 		  tableValue->second.units = 1;
 		  
 		}
-		objectFile << setw(4) << "" << setw(2) << "" << "STA " << setw(4) <<left << Areg<< "\n" ;
+		objectFile << setw(4) << "" << setw(2) << "" << "STA " << setw(6) <<left << Areg<< "\n" ;
 		Areg = "";
 		
 	}
@@ -851,7 +851,7 @@ void EmitGTCode(string operand1, string operand2)
     if (Areg != operand1 )
 	{
 		Areg = operand1;
-		objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(4) <<left << operand2 << "\n";
+		objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(6) <<left << operand2 << "\n";
 		
 	}
 
@@ -859,11 +859,11 @@ void EmitGTCode(string operand1, string operand2)
 	if (Areg == operand1)
 	{
 		string label = get_Label();
-		objectFile << setw(4) << "" << setw(2) << "" << "ISB " << setw(4) <<left << operand2<< "      sub "<< operand1 <<"\n";
-		objectFile << setw(4) << "" << setw(2) << "" << "AMJ " << setw(4) << label << setw(5) << "" << endl;
-		objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(4) << "FALS     " << endl;
+		objectFile << setw(4) << "" << setw(2) << "" << "ISB " << setw(6) <<left << operand2<< "      sub "<< operand1 <<"\n";
+		objectFile << setw(4) << "" << setw(2) << "" << "AMJ " << setw(6) << label << setw(5) << "" << endl;
+		objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(6) << "FALS" << endl;
 		objectFile << setw(4) << "" << setw(2) << "" << "UNJ " << setw(4) << label << "+1   \n" ;
-		objectFile << setw(4) << left << label << setw(2) << "" << "LDA" << setw(4) <<left << " TRUE" << endl;
+		objectFile << setw(4) << left << label << setw(2) << "" << "LDA " << setw(6) <<left << "TRUE" << endl;
 		
 	}
 	else 
@@ -909,7 +909,7 @@ void EmitGTOECode(string operand1, string operand2)
 		  tableValue->second.units = 1;
 		  
 		}
-		objectFile << setw(4) << "" << setw(2) << "" << "STA " << setw(4) <<left << Areg<< "\n" ;
+		objectFile << setw(4) << "" << setw(2) << "" << "STA " << setw(6) <<left << Areg<< "\n" ;
 		Areg = "";
 		
 	}
@@ -924,7 +924,7 @@ void EmitGTOECode(string operand1, string operand2)
     if (Areg != operand1 )
 	{
 		Areg = operand1;
-		objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(4) <<left << operand2 << "\n";
+		objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(6) <<left << operand2 << "\n";
 		
 	}
 
@@ -932,11 +932,11 @@ void EmitGTOECode(string operand1, string operand2)
 	if (Areg == operand1)
 	{
 		string label = get_Label();
-		objectFile << setw(4) << "" << setw(2) << "" << "ISB " << setw(4) <<left << operand1<< "      sub "<< operand1 <<"\n";
-		objectFile << setw(4) << "" << setw(2) << "" << "AMJ " << setw(4) << label << setw(5) << "" << endl;
-		objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(4) << "FALS     " << endl;
+		objectFile << setw(4) << "" << setw(2) << "" << "ISB " << setw(6) <<left << operand1<< "      sub "<< operand1 <<"\n";
+		objectFile << setw(4) << "" << setw(2) << "" << "AMJ " << setw(6) << label << setw(5) << "" << endl;
+		objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(6) << "TRUE" << endl;
 		objectFile << setw(4) << "" << setw(2) << "" << "UNJ " << setw(4) << label << "+1   \n" ;
-		objectFile << setw(4) << left << label << setw(2) << "" << "LDA" << setw(4) <<left << " TRUE"<< endl;
+		objectFile << setw(4) << left << label << setw(2) << "" << "LDA " << setw(6) << left << "FALS"<< endl;
 		
 	}
 	else 
@@ -982,7 +982,7 @@ void EmitLTOECode(string operand1, string operand2)
 		  tableValue->second.units = 1;
 		  
 		}
-		objectFile << setw(4) << "" << setw(2) << "" << "STA " << setw(4) <<left << Areg<< "\n" ;
+		objectFile << setw(4) << "" << setw(2) << "" << "STA " << setw(6) <<left << Areg<< "\n" ;
 		Areg = "";
 		
 	}
@@ -997,7 +997,7 @@ void EmitLTOECode(string operand1, string operand2)
     if (Areg != operand2 )
 	{
 		Areg = operand2;
-		objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(4) <<left << operand2 << "\n";
+		objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(6) <<left << operand2 << "\n";
 		
 	}
 
@@ -1005,12 +1005,12 @@ void EmitLTOECode(string operand1, string operand2)
 	if (Areg == operand2)
 	{
 		string label = get_Label();
-		objectFile << setw(4) << "" << setw(2) << "" << "ISB " << setw(4) <<left << operand1<< "      sub "<< operand1 <<"\n";
-		objectFile << setw(4) << "" << setw(2) << "" << "AMJ " << setw(4) << label << setw(5) << "" << endl;
-		objectFile << setw(4) << "" << setw(2) << "" << "AZJ " << setw(4) << label << setw(5) << "" << endl;
-		objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(4) << "FALS     " << endl;
+		objectFile << setw(4) << "" << setw(2) << "" << "ISB " << setw(6) <<left << operand1<< "      sub "<< operand1 <<"\n";
+		objectFile << setw(4) << "" << setw(2) << "" << "AMJ " << setw(6) << label << setw(5) << "" << endl;
+		objectFile << setw(4) << "" << setw(2) << "" << "AZJ " << setw(6) << label << setw(5) << "" << endl;
+		objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(6) << "FALS" << endl;
 		objectFile << setw(4) << "" << setw(2) << "" << "UNJ " << setw(4) << label << "+1   \n" ;
-		objectFile << setw(4) << left << label << setw(2) << "" << "LDA" << setw(4) <<left << " TRUE"<< endl;
+		objectFile << setw(4) << left << label << setw(2) << "" << "LDA " << setw(6) <<left << "TRUE"<< endl;
 		
 	}
 	else 
@@ -1057,7 +1057,7 @@ void EmitDNECode(string operand1, string operand2)
 		  tableValue->second.units = 1;
 		  
 		}
-		objectFile << setw(4) << "" << setw(2) << "" << "STA " << setw(4) <<left << Areg << endl;
+		objectFile << setw(4) << "" << setw(2) << "" << "STA " << setw(6) <<left << Areg << endl;
 		Areg = "";
 		
 	}
@@ -1070,35 +1070,35 @@ void EmitDNECode(string operand1, string operand2)
 	if (Areg != operand1 && Areg != operand2 )
 	{
 		Areg = "";
-		objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(4) <<left << operand2<< "\n";
-		objectFile << setw(4) << "" << setw(2) << "" << "ISB " << setw(4) <<left << operand1;
+		objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(6) <<left << operand2<< "\n";
+		objectFile << setw(4) << "" << setw(2) << "" << "ISB " << setw(6) <<left << operand1;
 		objectFile << setw(5) << "" << operand2 << " <> " << operand1 << endl;
 		string label = get_Label();
-		objectFile << setw(4) << "" << setw(2) << "" << "AZJ " << setw(4) << label << setw(5) << "" << endl;
-		objectFile << setw(4) << left << label << setw(2) << "" << "LDA" << setw(4) <<left << " TRUE"<< endl;
+		objectFile << setw(4) << "" << setw(2) << "" << "AZJ " << setw(6) << label << setw(5) << "" << endl;
+		objectFile << setw(4) << left << label << setw(2) << "" << "LDA " << setw(6) <<left << "TRUE"<< endl;
 		
 	}
 	// if register has operand1 multiply by op2
 	if (Areg == operand1 )
 	{
-		objectFile << setw(4) << "" << setw(2) << "" << "ISB " << setw(4) <<left << operand2;
+		objectFile << setw(4) << "" << setw(2) << "" << "ISB " << setw(6) <<left << operand2;
 		objectFile << setw(5) << "" << operand2 << " <> " << operand1 << endl;
 		string label = get_Label();
-		objectFile << setw(4) << "" << setw(2) << "" << "AZJ " << setw(4) << label << setw(5) << "" << endl;
-		objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(4) << "TRUE     " << endl;
+		objectFile << setw(4) << "" << setw(2) << "" << "AZJ " << setw(6) << label << setw(5) << "" << endl;
+		objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(6) << "TRUE     " << endl;
 		objectFile << setw(4) << "" << setw(2) << "" << "UNJ " << setw(4) << label << "+1   \n" ;
-		objectFile << setw(4) << left << label << setw(2) << "" << "LDA" << setw(4) <<left << " FALS"<< endl;
+		objectFile << setw(4) << left << label << setw(2) << "" << "LDA " << setw(6) <<left << "FALS"<< endl;
 	}
 	// if register has operand2 multiply by op1
 	if (Areg == operand2)
 	{
-		objectFile << setw(4) << "" << setw(2) << "" << "ISB " << setw(4) <<left << operand1;
+		objectFile << setw(4) << "" << setw(2) << "" << "ISB " << setw(6) <<left << operand1;
 		objectFile << setw(5) << "" << operand2 << " <> " << operand1 << endl;
 		string label = get_Label();
-		objectFile << setw(4) << "" << setw(2) << "" << "AZJ " << setw(4) << label << setw(5) << "" << endl;
-		objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(4) << "TRUE     " << endl;
+		objectFile << setw(4) << "" << setw(2) << "" << "AZJ " << setw(6) << label << setw(5) << "" << endl;
+		objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(6) << "TRUE     " << endl;
 		objectFile << setw(4) << "" << setw(2) << "" << "UNJ " << setw(4) << label << "+1   \n" ;
-		objectFile << setw(4) << left << label << setw(2) << "" << "LDA" << setw(4) <<left << " FALS"<< endl;
+		objectFile << setw(4) << left << label << setw(2) << "" << "LDA " << setw(6) <<left << "FALS"<< endl;
 		
 	}
 
@@ -1126,7 +1126,7 @@ void EmitDNECode(string operand1, string operand2)
 
 void code(string oprtr, string operand1, string operand2) 
 {
- //cout  << endl << "coding: " << setw(12) << left << "oprtr = " + oprtr + ", " << setw(14) << "operand1 = " + operand1 + ", " << setw(14) << "operand2 = " + operand2 << endl;
+ ////cout  << endl << "coding: " << setw(12) << left << "oprtr = " + oprtr + ", " << setw(14) << "operand1 = " + operand1 + ", " << setw(14) << "operand2 = " + operand2 << endl;
 	operand2 = operand2.substr(0,15);
 	operand1 = operand1.substr(0,15);
 	
@@ -1255,14 +1255,14 @@ void checkDataType(string type, string operand1, string operand2)
 	else if(y->second.internalName == operand2)
 		{
 			operand2Type = y->second.dataType ; 
-			//cout << y->second.dataType << "    " << y->second.externalName << "    " << y->second.internalName << endl;
+			////cout << y->second.dataType << "    " << y->second.externalName << "    " << y->second.internalName << endl;
 			if (storeTypeString[y->second.dataType] != (type=="int"?"INTEGER":(type=="bool"?"BOOLEAN":(storeTypeString[y->second.dataType]))))
 			{
 				error("illegal type");
 			}
 		}
 	}
-	//cout << "HELLLLOOO" << operand1Type <<  " asd  " << operand2Type << endl;
+	////cout << "HELLLLOOO" << operand1Type <<  " asd  " << operand2Type << endl;
   if (operand1 == operand2)
   {
 	  return;
@@ -1288,7 +1288,7 @@ void commutativeCode(string type, string operand1,string operand2)
 		  tableValue->second.alloc = YES;
 		  tableValue->second.units = 1;
 		}
-		objectFile << setw(4) << "" << setw(2) << "" << "STA " << setw(4) <<left << Areg<< "\n" ;
+		objectFile << setw(4) << "" << setw(2) << "" << "STA " << setw(6) <<left << Areg<< "\n" ;
 		Areg = "";
 	}
   
@@ -1303,12 +1303,12 @@ void commutativeCode(string type, string operand1,string operand2)
 	{
     //emit code to load operand2 into A register
 		Areg = operand2;
-		objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(4) <<left << operand2 << "\n";
+		objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(6) <<left << operand2 << "\n";
 	}
   
 	// if register has operand1
   //emit code to perform register-memory addition
-	objectFile << setw(4) << "" << setw(2) << "" << setw(4) << (type=="addition" ? "IAD" : "IMU") <<
+	objectFile << setw(4) << "" << setw(2) << "" << setw(4) << (type=="addition" ? "IAD " : "IMU ") <<
     setw(4) << left << (Areg==operand1?operand2:operand1) <<
     setw(6) << "" <<
     left << (Areg==operand1?getExternalName(operand1):getExternalName(operand2)) << 
@@ -1352,7 +1352,7 @@ void nonCommutativeCode(string type, string operand1,string operand2)
 		  tableValue->second.alloc = YES;
 		  tableValue->second.units = 1;
 		}
-		objectFile << setw(4) << "" << setw(2) << "" << "STA " << setw(4) << left << Areg << "\n" ;
+		objectFile << setw(4) << "" << setw(2) << "" << "STA " << setw(6) << left << Areg << "\n" ;
 		Areg = "";
 	}
   
@@ -1367,13 +1367,13 @@ void nonCommutativeCode(string type, string operand1,string operand2)
 	{
     //emit code to load operand2 into A register
 		Areg = operand2;
-		objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(4) <<left << operand2 << "\n";
+		objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(6) <<left << operand2 << "\n";
 	}
   
 	// if register has operand1
   //emit code to perform register-memory addition
-	objectFile << setw(4) << "" << setw(2) << "" << setw(4) << (type=="subtraction" ? "ISB" : "IDV") <<
-    setw(4) << left << operand1 <<
+	objectFile << setw(4) << "" << setw(2) << "" << setw(4) << (type=="subtraction" ? "ISB " : "IDV ") <<
+    setw(6) << left << operand1 <<
     setw(6) << "" <<
     left << getExternalName(operand2) << 
     (type=="subtraction"?" - ":" div ") << 
