@@ -1,0 +1,14 @@
+STRT  NOP          stage1no118 - Aspen Wills, Jason Watson
+      LDA I0    
+      ISB I1         I0 = I1
+      AZJ L0         
+      LDA FALS  
+      UNJ L0  +1   
+L0    LDA TRUE  
+      STA T0    
+      LDA B0    
+      ISB B1         B0 <> B1
+      AZJ L1  +1   
+L1    LDA TRUE  
+      IMU T0         T0 AND T1
+      STA B2          c := T0

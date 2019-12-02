@@ -347,7 +347,7 @@ void EmitNegationCode(string operand1)
 		  tableValue->second.units = 1;
 		  
 		}
-		objectFile << setw(4) << "" << setw(2) << "" << "STA " << setw(4) <<left << Areg<< "\n";
+		objectFile << setw(4) << "" << setw(2) << "" << "STA " << setw(6) <<left << Areg<< "\n";
 		Areg = "";
 		
 	}
@@ -365,8 +365,8 @@ void EmitNegationCode(string operand1)
 		  insert("ZERO", INTEGER, CONSTANT, "0", YES, 1);
 		 
 		}
-		objectFile << setw(4) << "" << setw(2) << "" << "LDA" << setw(4) <<left << " ZERO"<< "\n";
-		objectFile << setw(4) << "" << setw(2) << "" << "ISB " << setw(4) <<left << operand1<< "\n";
+		objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(6) <<left << "ZERO"<< "\n";
+		objectFile << setw(4) << "" << setw(2) << "" << "ISB " << setw(6) <<left << operand1<< "\n";
 	}
 	// if register has operand2 multiply by op1
 	// if operand 1 was a temp free it

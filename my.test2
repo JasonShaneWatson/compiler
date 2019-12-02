@@ -1,0 +1,318 @@
+make --no-print-directory -C ./src
+g++ -o ../build/stage1 -g -Wall -std=c++11 stage1.cpp 
+
+
+execStmts,   token == begin   Areg ==      
+
+execStmt,    token == a       Areg ==      
+
+assignStmt,  token == a       Areg ==      
+
+Pushing "a"
+
+Pushing ":="
+
+express,     token == five    Areg ==      
+
+term,        token == five    Areg ==      
+
+factor,      token == five    Areg ==      
+
+part,        token == five    Areg ==      
+
+Pushing "five"
+
+factors,     token == *       Areg ==      
+
+mult_Lev_OP, token == *       Areg ==      
+
+Pushing "*"
+
+part,        token == (       Areg ==      
+
+express,     token == 3       Areg ==      
+
+term,        token == 3       Areg ==      
+
+factor,      token == 3       Areg ==      
+
+part,        token == 3       Areg ==      
+
+Pushing "3"
+
+factors,     token == +       Areg ==      
+
+mult_Lev_OP, token == +       Areg ==      
+
+terms,       token == +       Areg ==      
+
+add_Lev_OP,  token == +       Areg ==      
+
+Pushing "+"
+
+factor,      token == 34      Areg ==      
+
+part,        token == 34      Areg ==      
+
+Pushing "34"
+
+factors,     token == )       Areg ==      
+
+mult_Lev_OP, token == )       Areg ==      
+
+Popping "I5"
+
+Popping "I4"
+
+Popping "+"
+
+coding: oprtr = +,  operand1 = I4, operand2 = I5 
+-1
+
+Pushing "T0"
+
+terms,       token == )       Areg == T0   
+
+add_Lev_OP,  token == )       Areg == T0   
+
+expresses,   token == )       Areg == T0   
+
+rel_OP,      token == )       Areg == T0   
+
+Popping "T0"
+
+Popping "I0"
+
+Popping "*"
+
+coding: oprtr = *,  operand1 = I0, operand2 = T0 
+-1
+
+Pushing "T0"
+
+factors,     token == ;       Areg == T0   
+
+mult_Lev_OP, token == ;       Areg == T0   
+
+terms,       token == ;       Areg == T0   
+
+add_Lev_OP,  token == ;       Areg == T0   
+
+expresses,   token == ;       Areg == T0   
+
+rel_OP,      token == ;       Areg == T0   
+
+execStmts,   token == ;       Areg == T0   
+
+execStmt,    token == b       Areg == T0   
+
+assignStmt,  token == b       Areg == T0   
+
+Pushing "b"
+
+Pushing ":="
+
+express,     token == a       Areg == T0   
+
+term,        token == a       Areg == T0   
+
+factor,      token == a       Areg == T0   
+
+part,        token == a       Areg == T0   
+
+Pushing "a"
+
+factors,     token == +       Areg == T0   
+
+mult_Lev_OP, token == +       Areg == T0   
+
+terms,       token == +       Areg == T0   
+
+add_Lev_OP,  token == +       Areg == T0   
+
+Pushing "+"
+
+factor,      token == -       Areg == T0   
+
+part,        token == -       Areg == T0   
+
+Pushing "-5"
+
+factors,     token == mod     Areg == T0   
+
+mult_Lev_OP, token == mod     Areg == T0   
+
+Pushing "mod"
+
+part,        token == a       Areg == T0   
+
+Pushing "a"
+
+Popping "I1"
+
+Popping "I6"
+
+Popping "mod"
+
+coding: oprtr = mod, operand1 = I6, operand2 = I1 
+0
+
+Pushing "T1"
+
+factors,     token == ;       Areg == T1   
+
+mult_Lev_OP, token == ;       Areg == T1   
+
+Popping "T1"
+
+Popping "I1"
+
+Popping "+"
+
+coding: oprtr = +,  operand1 = I1, operand2 = T1 
+0
+
+Pushing "T1"
+
+terms,       token == ;       Areg == T1   
+
+add_Lev_OP,  token == ;       Areg == T1   
+
+expresses,   token == ;       Areg == T1   
+
+rel_OP,      token == ;       Areg == T1   
+
+execStmts,   token == ;       Areg == T1   
+
+execStmt,    token == c       Areg == T1   
+
+assignStmt,  token == c       Areg == T1   
+
+Pushing "c"
+
+Pushing ":="
+
+express,     token == (       Areg == T1   
+
+term,        token == (       Areg == T1   
+
+factor,      token == (       Areg == T1   
+
+part,        token == (       Areg == T1   
+
+express,     token == a       Areg == T1   
+
+term,        token == a       Areg == T1   
+
+factor,      token == a       Areg == T1   
+
+part,        token == a       Areg == T1   
+
+Pushing "a"
+
+factors,     token == +       Areg == T1   
+
+mult_Lev_OP, token == +       Areg == T1   
+
+terms,       token == +       Areg == T1   
+
+add_Lev_OP,  token == +       Areg == T1   
+
+Pushing "+"
+
+factor,      token == b       Areg == T1   
+
+part,        token == b       Areg == T1   
+
+Pushing "b"
+
+factors,     token == )       Areg == T1   
+
+mult_Lev_OP, token == )       Areg == T1   
+
+Popping "I2"
+
+Popping "I1"
+
+Popping "+"
+
+coding: oprtr = +,  operand1 = I1, operand2 = I2 
+1
+
+Pushing "T2"
+
+terms,       token == )       Areg == T2   
+
+add_Lev_OP,  token == )       Areg == T2   
+
+expresses,   token == )       Areg == T2   
+
+rel_OP,      token == )       Areg == T2   
+
+factors,     token == *       Areg == T2   
+
+mult_Lev_OP, token == *       Areg == T2   
+
+Pushing "*"
+
+part,        token == (       Areg == T2   
+
+express,     token == b       Areg == T2   
+
+term,        token == b       Areg == T2   
+
+factor,      token == b       Areg == T2   
+
+part,        token == b       Areg == T2   
+
+Pushing "b"
+
+factors,     token == -       Areg == T2   
+
+mult_Lev_OP, token == -       Areg == T2   
+
+terms,       token == -       Areg == T2   
+
+add_Lev_OP,  token == -       Areg == T2   
+
+Pushing "-"
+
+factor,      token == a       Areg == T2   
+
+part,        token == a       Areg == T2   
+
+Pushing "a"
+
+factors,     token == )       Areg == T2   
+
+mult_Lev_OP, token == )       Areg == T2   
+
+Popping "I1"
+
+Popping "I2"
+
+Popping "-"
+
+coding: oprtr = -,  operand1 = I2, operand2 = I1 
+
+-- Begin listing file output -- 
+~
+STAGE0:   - Aspen Wills, Jason Watson       Tue Nov 26 23:32:25 2019
+
+LINE NO.              SOURCE STATEMENT
+
+    1|program stage1no146;
+    2|const
+    3|  five = 5;
+    4|var
+    5|  a, b, c : integer;
+    6|begin
+    7|  a := five * (3 + 34);
+    8|  b := a + -5 mod a;
+    9|  c := (a + b) * (b - a);
+Error: Line 9: you broke it
+
+COMPILATION TERMINATED      1 ERRORS ENCOUNTERED
+~
+-- End of listing File --
+

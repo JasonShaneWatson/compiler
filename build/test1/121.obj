@@ -1,0 +1,110 @@
+STRT  NOP          stage1no121 - Aspen Wills, Jason Watson
+      RDI I1        read(a)
+      RDI I2        read(b)
+      RDI I3        read(c)
+      RDI I4        read(d)
+      RDI I5        read(e)
+      RDI I6        read(f)
+      RDI I7        read(g)
+      RDI I8        read(h)
+      RDI I9        read(i)
+      RDI I10        read(j)
+      RDI I11        read(k)
+      RDI I12        read(l)
+      RDI I13        read(m)
+      RDI I14        read(n)
+      RDI I15        read(o)
+      RDI I16        read(p)
+      RDI I17        read(q)
+      RDI I18        read(r)
+      RDI I19        read(s)
+      RDI I20        read(t)
+      RDI I21        read(u)
+      RDI I22        read(v)
+      RDI I23        read(w)
+      RDI I24        read(x)
+      RDI I25        read(y)
+      RDI I26        read(z)
+      LDA I1    
+      IAD I2        a + b
+      IAD I3        T0 + c
+      IAD I4        T0 + d
+      IAD I5        T0 + e
+      IAD I6        T0 + f
+      IAD I7        T0 + g
+      IAD I8        T0 + h
+      IAD I9        T0 + i
+      IAD I10       T0 + j
+      IAD I11       T0 + k
+      IAD I12       T0 + l
+      IAD I13       T0 + m
+      IAD I14       T0 + n
+      IAD I15       T0 + o
+      IAD I16       T0 + p
+      IAD I17       T0 + q
+      IAD I18       T0 + r
+      IAD I19       T0 + s
+      IAD I20       T0 + t
+      IAD I21       T0 + u
+      IAD I22       T0 + v
+      IAD I23       T0 + w
+      IAD I24       T0 + x
+      IAD I25       T0 + y
+      IAD I26       T0 + z
+      STA I0          sum := T0
+      PRI I1        write(a)
+      PRI I2        write(b)
+      PRI I3        write(c)
+      PRI I4        write(d)
+      PRI I5        write(e)
+      PRI I6        write(f)
+      PRI I7        write(g)
+      PRI I8        write(h)
+      PRI I9        write(i)
+      PRI I10        write(j)
+      PRI I11        write(k)
+      PRI I12        write(l)
+      PRI I13        write(m)
+      PRI I14        write(n)
+      PRI I15        write(o)
+      PRI I16        write(p)
+      PRI I17        write(q)
+      PRI I18        write(r)
+      PRI I19        write(s)
+      PRI I20        write(t)
+      PRI I21        write(u)
+      PRI I22        write(v)
+      PRI I23        write(w)
+      PRI I24        write(x)
+      PRI I25        write(y)
+      PRI I26        write(z)
+      PRI I0        write(sum)
+      HLT       
+I0    BSS 0001      sum            
+I1    BSS 0001      a              
+I2    BSS 0001      b              
+I3    BSS 0001      c              
+I4    BSS 0001      d              
+I5    BSS 0001      e              
+I6    BSS 0001      f              
+I7    BSS 0001      g              
+I8    BSS 0001      h              
+I9    BSS 0001      i              
+I10   BSS 0001      j              
+I11   BSS 0001      k              
+I12   BSS 0001      l              
+I13   BSS 0001      m              
+I14   BSS 0001      n              
+I15   BSS 0001      o              
+I16   BSS 0001      p              
+I17   BSS 0001      q              
+I18   BSS 0001      r              
+I19   BSS 0001      s              
+I20   BSS 0001      t              
+I21   BSS 0001      u              
+I22   BSS 0001      v              
+I23   BSS 0001      w              
+I24   BSS 0001      x              
+I25   BSS 0001      y              
+I26   BSS 0001      z              
+      END STRT  

@@ -1,0 +1,4 @@
+STRT  NOP          stage1no114 - Aspen Wills, Jason Watson
+      LDA I1    
+      IMU I2        five * a
+      STA I6          d := T0

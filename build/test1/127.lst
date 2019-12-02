@@ -1,0 +1,11 @@
+STAGE0:   - Aspen Wills, Jason Watson       Sun Dec  1 22:03:57 2019
+
+LINE NO.              SOURCE STATEMENT
+
+    1|program stage1no127;
+    2|  const a = 5;
+    3|begin
+    4|  read(a); {reading in of read-only location 'a'}
+    5|end.
+
+COMPILATION TERMINATED      0 ERRORS ENCOUNTERED

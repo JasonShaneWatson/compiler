@@ -3,7 +3,7 @@
 make
 
 echo
-lab=118;
+lab=135;
 
 ./build/stage1 test/$lab.dat my.lst my.obj 
 
@@ -15,5 +15,5 @@ cat my.lst
 echo -e "~\n-- End of listing File --\n"
 
 echo -e "\n-- diff my_output.txt his_output.txt -- \n~"
-diff my_output.txt his_output.txt
+diff my_output.txt his_output.txt | cat -te
 echo -e "~\n-- End Differences -- \n"

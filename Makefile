@@ -6,7 +6,7 @@ CXX = g++
 BUILD_ROOT=.
 SRC_DIR=$(BUILD_ROOT)/src
 BUILD_DIR=$(BUILD_ROOT)/build
-TEST_DIR=$(BUILD_ROOT)/test
+TEST_DIR=$(BUILD_ROOT)/test1
 
 stage1:
 	$(MAKE) --no-print-directory -C $(SRC_DIR)

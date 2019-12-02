@@ -1,0 +1,20 @@
+STRT  NOP          stage1no104 - Aspen Wills, Jason Watson
+      RDI I1        read(a)
+      LDA I4    
+      IAD I1        2 + a
+      IAD I0        T0 + five
+      STA I1          a := T0
+      ISB I1          a - a
+      STA I2          b := T0
+      IDV I1          b div a
+      STA I3          c := T0
+      PRI I1        write(a)
+      PRI I2        write(b)
+      PRI I3        write(c)
+      HLT       
+I0    DEC 0005      five           
+I1    BSS 0001      a              
+I2    BSS 0001      b              
+I3    BSS 0001      c              
+I4    DEC 0002      2              
+      END STRT  
