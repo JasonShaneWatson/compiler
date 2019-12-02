@@ -352,28 +352,23 @@ void EmitNegationCode(string operand1)
 		
 	}
 	// if non-temp is in register then deassign it 
-	else if ( !Areg.empty() && Areg != operand1  && Areg.at(0) != 'T')
+	if ( !Areg.empty() && Areg != operand1  && Areg.at(0) != 'T')
 	{
 		Areg = "";
 	}
 	// if register has operand1 multiply by op2
-	else if (Areg == operand1 )
+	if (Areg != operand1 )
 	{
-		auto tableValue2 = symbolTable.find("zero");
+		auto tableValue2 = symbolTable.find("ZERO");
 		if(tableValue2 == symbolTable.end()) //we did not find an entry in the symbolTabl
 		{
-		  insert("zero", INTEGER, CONSTANT, "0", YES, 1);
+		  insert("ZERO", INTEGER, CONSTANT, "0", YES, 1);
 		 
 		}
-		objectFile << setw(4) << "" << setw(2) << "" << "LDA" << setw(4) <<left << "zero"<< "\n";
-		objectFile << setw(4) << "" << setw(2) << "" << "ISB" << setw(4) <<left << operand1<< "\n";
+		objectFile << setw(4) << "" << setw(2) << "" << "LDA" << setw(4) <<left << " ZERO"<< "\n";
+		objectFile << setw(4) << "" << setw(2) << "" << "ISB " << setw(4) <<left << operand1<< "\n";
 	}
 	// if register has operand2 multiply by op1
-
-	else 
-	{
-		error("you broke it in negation");
-	}
 	// if operand 1 was a temp free it
 	if ((operand1.at(0) == 'T' && operand1 != "TRUE") )
 	{
@@ -582,6 +577,8 @@ void EmitModuloCode(string operand1, string operand2)
 	//A register == Tn
 	Areg = get_Temp();
 	// make Tn dataType = INTEGER
+	objectFile << setw(4) << "" << setw(2) << "" << "STQ " << setw(4) <<left << Areg<< "\n";
+	objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(4) <<left << Areg<< "\n";
 	auto tableValue1 = symbolTable.find(Areg);
 	if(tableValue1 != symbolTable.end()) //we found an entry in the symbolTable
 	{
@@ -791,9 +788,9 @@ void EmitLTCode(string operand1, string operand2)
 		string label = get_Label();
 		objectFile << setw(4) << "" << setw(2) << "" << "ISB " << setw(4) <<left << operand1<< "      sub "<< operand1 <<"\n";
 		objectFile << setw(4) << "" << setw(2) << "" << "AMJ " << setw(4) << label << setw(5) << "" << endl;
-		objectFile << setw(4) << "" << setw(2) << "" << "UNJ " << setw(4) << label << "+1   \n" ;
-		objectFile << setw(4) << left << label << setw(2) << "" << "LDA" << setw(4) <<left << "TRUE";
 		objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(4) << "FALS     " << endl;
+		objectFile << setw(4) << "" << setw(2) << "" << "UNJ " << setw(4) << label << "+1   \n" ;
+		objectFile << setw(4) << left << label << setw(2) << "" << "LDA" << setw(4) <<left << " TRUE"<< endl;
 		
 	}
 	else 
@@ -864,9 +861,9 @@ void EmitGTCode(string operand1, string operand2)
 		string label = get_Label();
 		objectFile << setw(4) << "" << setw(2) << "" << "ISB " << setw(4) <<left << operand2<< "      sub "<< operand1 <<"\n";
 		objectFile << setw(4) << "" << setw(2) << "" << "AMJ " << setw(4) << label << setw(5) << "" << endl;
-		objectFile << setw(4) << "" << setw(2) << "" << "UNJ " << setw(4) << label << "+1   \n" ;
-		objectFile << setw(4) << left << label << setw(2) << "" << "LDA" << setw(4) <<left << "TRUE";
 		objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(4) << "FALS     " << endl;
+		objectFile << setw(4) << "" << setw(2) << "" << "UNJ " << setw(4) << label << "+1   \n" ;
+		objectFile << setw(4) << left << label << setw(2) << "" << "LDA" << setw(4) <<left << " TRUE" << endl;
 		
 	}
 	else 
@@ -935,9 +932,8 @@ void EmitGTOECode(string operand1, string operand2)
 	if (Areg == operand1)
 	{
 		string label = get_Label();
-		objectFile << setw(4) << "" << setw(2) << "" << "ISB " << setw(4) <<left << operand2<< "      sub "<< operand1 <<"\n";
+		objectFile << setw(4) << "" << setw(2) << "" << "ISB " << setw(4) <<left << operand1<< "      sub "<< operand1 <<"\n";
 		objectFile << setw(4) << "" << setw(2) << "" << "AMJ " << setw(4) << label << setw(5) << "" << endl;
-		objectFile << setw(4) << "" << setw(2) << "" << "AZJ " << setw(4) << label << setw(5) << "" << endl;
 		objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(4) << "FALS     " << endl;
 		objectFile << setw(4) << "" << setw(2) << "" << "UNJ " << setw(4) << label << "+1   \n" ;
 		objectFile << setw(4) << left << label << setw(2) << "" << "LDA" << setw(4) <<left << " TRUE"<< endl;

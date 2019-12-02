@@ -258,16 +258,20 @@ void part()
       if(token != ")")
         error("\")\" expected");
       nextToken();
-      outputCode("neg", PopOperand(), "neg");
+      code("neg", PopOperand(), "neg");
     }
     else if(isInt())
     {
-      PushOperand("-" + token);
+		 cout << "YOU SUCK1"<< endl;
+      PushOperand(token);
+	  code("neg", PopOperand(), "neg");
       nextToken();
     }
     else if(non_Key_Id())
     {
-      outputCode("neg", token, "neg");
+		 cout << "YOU SUCK"<< endl;
+	PushOperand(token);
+      code("neg", PopOperand(), "neg");
       nextToken();
     }
   }
