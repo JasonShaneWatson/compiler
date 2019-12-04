@@ -36,22 +36,36 @@ void EmitLTOECode(string, string);
 void EmitDNECode(string, string);
 void EmitAssignCode(string, string);
 void nonCommutativeCode(string, string, string);
-void BoolTAF();
+void EmitThenCode(string);
+void EmitElseCode(string);
+void EmitPostIfCode(string);
+void EmitWhileCode();
+void EmitDoCode(string, string);
+void EmitPostWhileCode(string);
+void EmitRepeatCode(string, string);
+void EmitUntilCode(string);
+void BoolTAF(string);
 
 
-void BoolTAF()
+void BoolTAF(string Type)
 {
 	
-  	auto tableValue3 = symbolTable.find("TRUE");
+  	if (Type == "TRUE")
+	{
+	auto tableValue3 = symbolTable.find("TRUE");
 		if(tableValue3 == symbolTable.end()) //we did not find an entry in the symbolTable
 		{
 		  insert("TRUE", BOOLEAN, CONSTANT, "1", YES, 1); 
 		}
+	}
+	if (Type == "FALSE")
+	{
 		auto tableValue2 = symbolTable.find("FALSE");
 		if(tableValue2 == symbolTable.end()) //we did not find an entry in the symbolTable
 		{
 		  insert("FALSE", BOOLEAN, CONSTANT, "0", YES, 1); 
 		}
+	}
 }
 void PushOperator(string oprtr)
 {
@@ -184,7 +198,7 @@ string get_Temp()
 
 string get_Label()
 {
-	string temp;
+	 string temp;
 	 currentLabelNo++;
 	 temp = "L" + to_string(currentLabelNo);
 	 if (currentLabelNo > maxLabelNo)
@@ -275,7 +289,7 @@ void EmitAndCode(string operand1,string operand2) //"and" operand1 to operand2
 	}
 	//A register == Tn
 	Areg = get_Temp();
-	BoolTAF();	
+		
 	// make Tn dataType = INTEGER
 	auto tableValue1 = symbolTable.find(Areg);
 	if(tableValue1 != symbolTable.end()) //we found an entry in the symbolTable
@@ -361,7 +375,7 @@ void EmitNotCode(string operand1)
 				}
 			}
 			
-	BoolTAF();
+
 	//Allocate Temp and store it 		
 	if ( !Areg.empty() && Areg != operand1  && (Areg.at(0) == 'T' && Areg != "TRUE"))
 	{
@@ -392,8 +406,10 @@ void EmitNotCode(string operand1)
 		string label = get_Label();
 		objectFile << setw(4) << "" << setw(2) << "" << "AZJ " << setw(6) << left << label;
 		objectFile << setw(4) << "" << " not " << operand1 << "\n";
+		BoolTAF("FALSE");
 		objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(6) <<left << "FALS" << endl;
 		objectFile << setw(4) << "" << setw(2) << "" << "UNJ " << setw(4) << label << "+1   \n" ;
+		BoolTAF("TRUE");
 		objectFile << setw(4) << left << label << setw(2) << "" << "LDA " << setw(6) <<left << "TRUE"<< endl;
 	}
 
@@ -431,7 +447,6 @@ void EmitAssignCode(string operand1, string operand2)
  deassign operand1;
  if operand1 is a temp then free its name for reuse;
  //operand2 can never be a temporary since it is to the left of ':=' */
-	//BoolTAF();
  	 //check if  data Types are integers
     string i = "";
     string j = "";
@@ -579,6 +594,7 @@ void EmitOrCode(string operand1, string operand2)
 		string label = get_Label();
 		objectFile << setw(5) << "" << operand2 << " or " << operand1 << endl;
 		objectFile << setw(4) << "" << setw(2) << "" << "AZJ " << setw(4) << left << label << "+1   " << endl;
+		BoolTAF("TRUE");
 		objectFile << setw(4) << label << setw(2) << "" << "LDA " << setw(6) << left << "TRUE     " << endl;
 		
 	}
@@ -590,6 +606,7 @@ void EmitOrCode(string operand1, string operand2)
 		string label = get_Label();
 		objectFile << setw(5) << "" << operand2 << " or " << operand1 << endl;
 		objectFile << setw(4) << "" << setw(2) << "" << "AZJ " << setw(4) << left << label << "+1   " << endl;
+		BoolTAF("TRUE");
 		objectFile << setw(4) << label << setw(2) << "" << "LDA " << setw(6) << left << "TRUE     " << endl;
 	}
 	// if register has operand2 multiply by op1
@@ -599,6 +616,7 @@ void EmitOrCode(string operand1, string operand2)
 		string label = get_Label();
 		objectFile << setw(5) << "" << operand2 << " or " << operand1 << endl;
 		objectFile << setw(4) << "" << setw(2) << "" << "AZJ " << setw(4) << left << label << "+1   " << endl;
+		BoolTAF("TRUE");
 		objectFile << setw(4) << label << setw(2) << "" << "LDA " << setw(6) << left << "TRUE     " << endl;
 	}
 	
@@ -614,7 +632,7 @@ void EmitOrCode(string operand1, string operand2)
 	}
 	//A register == Tn
 	Areg = get_Temp();
-	BoolTAF();	
+		
 	// make Tn dataType = INTEGER
 	auto tableValue1 = symbolTable.find(Areg);
 	if(tableValue1 != symbolTable.end()) //we found an entry in the symbolTable
@@ -643,7 +661,6 @@ void EmitEqualsCode(string operand1, string operand2)
 		Areg = "";
 		
 	}
-	BoolTAF();	
 	// if non-temp is in register then deassign it 
 	if ( !Areg.empty() && (Areg != operand1 && Areg != operand2) && Areg.at(0) != 'T')
 	{
@@ -658,8 +675,10 @@ void EmitEqualsCode(string operand1, string operand2)
 		objectFile << setw(5) << "" << operand2 << " = " << operand1 << endl;
 		string label = get_Label();
 		objectFile << setw(4) << "" << setw(2) << "" << "AZJ " << setw(6) << label << setw(5) << "" << endl;
+		BoolTAF("FALSE");
 		objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(6) << "FALS" << endl;
 		objectFile << setw(4) << "" << setw(2) << "" << "UNJ " << setw(4) << label << "+1   \n" ;
+		BoolTAF("TRUE");
 		objectFile << setw(4) << left << label << setw(2) << "" << "LDA " << setw(6) <<left << "TRUE"<< endl;
 		
 	}
@@ -670,8 +689,10 @@ void EmitEqualsCode(string operand1, string operand2)
 		objectFile << setw(5) << "" << operand2 << " = " << operand1 << endl;
 		string label = get_Label();
 		objectFile << setw(4) << "" << setw(2) << "" << "AZJ " << setw(6) << label << setw(5) << "" << endl;
+		BoolTAF("FALSE");
 		objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(6) << "FALS" << endl;
 		objectFile << setw(4) << "" << setw(2) << "" << "UNJ " << setw(4) << label << "+1   \n" ;
+		BoolTAF("TRUE");
 		objectFile << setw(4) << left << label << setw(2) << "" << "LDA " << setw(6) <<left << "TRUE"<< endl;
 	}
 	// if register has operand2 multiply by op1
@@ -681,8 +702,10 @@ void EmitEqualsCode(string operand1, string operand2)
 		objectFile << setw(5) << "" << operand2 << " = " << operand1 << endl;
 		string label = get_Label();
 		objectFile << setw(4) << "" << setw(2) << "" << "AZJ " << setw(6) << label << setw(5) << "" << endl;
+		BoolTAF("FALSE");
 		objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(6) << "FALS" << endl;
 		objectFile << setw(4) << "" << setw(2) << "" << "UNJ " << setw(4) << label << "+1   \n" ;
+		BoolTAF("TRUE");
 		objectFile << setw(4) << left << label << setw(2) << "" << "LDA " << setw(6) <<left << "TRUE"<< endl;
 		
 	}
@@ -733,7 +756,7 @@ void EmitLTCode(string operand1, string operand2)
 		Areg = "";
 	}
 	// if register has neither operand1 or 2
-	BoolTAF();
+
     if (Areg != operand2 )
 	{
 		Areg = operand2;
@@ -747,8 +770,10 @@ void EmitLTCode(string operand1, string operand2)
 		string label = get_Label();
 		objectFile << setw(4) << "" << setw(2) << "" << "ISB " << setw(6) << left << operand1<< "      sub "<< operand1 <<"\n";
 		objectFile << setw(4) << "" << setw(2) << "" << "AMJ " << setw(6) << label << setw(5) << "" << endl;
+		BoolTAF("FALSE");
 		objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(6) << "FALS" << endl;
 		objectFile << setw(4) << "" << setw(2) << "" << "UNJ " << setw(4) << label << "+1   \n" ;
+		BoolTAF("TRUE");
 		objectFile << setw(4) << left << label << setw(2) << "" << "LDA " << setw(6) <<left << "TRUE"<< endl;
 		
 	}
@@ -799,7 +824,6 @@ void EmitGTCode(string operand1, string operand2)
 		Areg = "";
 		
 	}
-	BoolTAF();
 	// if non-temp is in register then deassign it 
 	if ( !Areg.empty() && (Areg != operand1 && Areg != operand2) && Areg.at(0) != 'T')
 	{
@@ -821,8 +845,10 @@ void EmitGTCode(string operand1, string operand2)
 		objectFile << setw(4) << "" << setw(2) << "" << "ISB " << setw(6) <<left << operand1<< "      sub "<< operand1 <<"\n";
 		objectFile << setw(4) << "" << setw(2) << "" << "AMJ " << setw(6) << label << setw(5) << "" << endl;
 		objectFile << setw(4) << "" << setw(2) << "" << "AZJ " << setw(6) << label << setw(5) << "" << endl;
+		BoolTAF("TRUE");
 		objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(6) << "TRUE" << endl;
 		objectFile << setw(4) << "" << setw(2) << "" << "UNJ " << setw(4) << label << "+1   \n" ;
+		BoolTAF("FALSE");
 		objectFile << setw(4) << left << label << setw(2) << "" << "LDA " << setw(6) <<left << "FALS" << endl;
 		
 	}
@@ -873,7 +899,6 @@ void EmitGTOECode(string operand1, string operand2)
 		Areg = "";
 		
 	}
-	BoolTAF();
 	// if non-temp is in register then deassign it 
 	if ( !Areg.empty() && (Areg != operand1 && Areg != operand2) && Areg.at(0) != 'T')
 	{
@@ -894,8 +919,10 @@ void EmitGTOECode(string operand1, string operand2)
 		string label = get_Label();
 		objectFile << setw(4) << "" << setw(2) << "" << "ISB " << setw(6) <<left << operand1<< "      sub "<< operand1 <<"\n";
 		objectFile << setw(4) << "" << setw(2) << "" << "AMJ " << setw(6) << label << setw(5) << "" << endl;
+		BoolTAF("TRUE");
 		objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(6) << "TRUE" << endl;
 		objectFile << setw(4) << "" << setw(2) << "" << "UNJ " << setw(4) << label << "+1   \n" ;
+		BoolTAF("FALSE");
 		objectFile << setw(4) << left << label << setw(2) << "" << "LDA " << setw(6) << left << "FALS"<< endl;
 		
 	}
@@ -946,7 +973,6 @@ void EmitLTOECode(string operand1, string operand2)
 		Areg = "";
 		
 	}
-	BoolTAF();
 	// if non-temp is in register then deassign it 
 	if ( !Areg.empty() && (Areg != operand1 && Areg != operand2) && Areg.at(0) != 'T')
 	{
@@ -968,8 +994,10 @@ void EmitLTOECode(string operand1, string operand2)
 		objectFile << setw(4) << "" << setw(2) << "" << "ISB " << setw(6) <<left << operand1<< "      sub "<< operand1 <<"\n";
 		objectFile << setw(4) << "" << setw(2) << "" << "AMJ " << setw(6) << label << setw(5) << "" << endl;
 		objectFile << setw(4) << "" << setw(2) << "" << "AZJ " << setw(6) << label << setw(5) << "" << endl;
+		BoolTAF("FALSE");
 		objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(6) << "FALS" << endl;
 		objectFile << setw(4) << "" << setw(2) << "" << "UNJ " << setw(4) << label << "+1   \n" ;
+		BoolTAF("TRUE");
 		objectFile << setw(4) << left << label << setw(2) << "" << "LDA " << setw(6) <<left << "TRUE"<< endl;
 		
 	}
@@ -1007,7 +1035,6 @@ void EmitDNECode(string operand1, string operand2)
   //make sure  data types are the same
 	checkDataType("same",operand1,operand2);
 	//Allocate Temp and store it 		
-	BoolTAF();
 	if ( !Areg.empty() && (Areg != operand1 && Areg != operand2) && (Areg.at(0) == 'T' && Areg != "TRUE"))
 	{
 		auto tableValue = symbolTable.find(Areg);
@@ -1035,6 +1062,7 @@ void EmitDNECode(string operand1, string operand2)
 		objectFile << setw(5) << "" << operand2 << " <> " << operand1 << endl;
 		string label = get_Label();
 		objectFile << setw(4) << "" << setw(2) << "" << "AZJ " << setw(4) << label << "+1   \n" ;
+		BoolTAF("TRUE");
 		objectFile << setw(4) << left << label << setw(2) << "" << "LDA " << setw(6) <<left << "TRUE"<< endl;
 		
 	}
@@ -1045,8 +1073,10 @@ void EmitDNECode(string operand1, string operand2)
 		objectFile << setw(5) << "" << operand2 << " <> " << operand1 << endl;
 		string label = get_Label();
 		objectFile << setw(4) << "" << setw(2) << "" << "AZJ " << setw(4) << label  << "+1   \n" ;
+		BoolTAF("TRUE");
 		objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(6) << "TRUE     " << endl;
 		objectFile << setw(4) << "" << setw(2) << "" << "UNJ " << setw(4) << label << "+1   \n" ;
+		BoolTAF("FALSE");
 		objectFile << setw(4) << left << label << setw(2) << "" << "LDA " << setw(6) <<left << "FALS"<< endl;
 	}
 	// if register has operand2 multiply by op1
@@ -1056,8 +1086,10 @@ void EmitDNECode(string operand1, string operand2)
 		objectFile << setw(5) << "" << operand2 << " <> " << operand1 << endl;
 		string label = get_Label();
 		objectFile << setw(4) << "" << setw(2) << "" << "AZJ " << setw(4) << label  << "+1   \n" ;
+		BoolTAF("TRUE");
 		objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(6) << "TRUE     " << endl;
 		objectFile << setw(4) << "" << setw(2) << "" << "UNJ " << setw(4) << label << "+1   \n" ;
+		BoolTAF("FALSE");
 		objectFile << setw(4) << left << label << setw(2) << "" << "LDA " << setw(6) <<left << "FALS"<< endl;
 		
 	}
@@ -1082,6 +1114,162 @@ void EmitDNECode(string operand1, string operand2)
 	 
 	}
 	PushOperand(Areg);
+}
+
+void EmitThenCode(string operand1)
+{
+	/*
+	 string tempLabel;
+ assign next label to tempLabel;
+ emit instruction to set the condition code depending on the value of operand;
+ emit instruction to branch to tempLabel if the condition code indicates operand is zero
+ (false);
+ push tempLabel onto operandStk so that it can be referenced when EmitElseCode() or
+ EmitPostIfCode() is called;
+ if operand is a temp then
+ free operand's name for reuse;
+ deassign operands from all registers
+
+	*/
+	string tempLabel = get_Label();
+	if ( Areg != operand1)
+	{
+		objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(6) <<left << operand1 << endl;
+	}
+	
+	objectFile << setw(4) << "" << setw(2) << "" << "AZJ " << setw(6) <<left << tempLabel << setw(3)<< "if false jump to " << tempLabel << endl;
+	PushOperand(tempLabel);
+	
+	// if operand 1 was a temp free it
+	if ((operand1.at(0) == 'T' && operand1 != "TRUE") )
+	{
+		free_Temp();
+	}
+	Areg = "";
+	
+	
+	
+	
+	
+}
+void EmitElseCode(string operand1)
+{
+/*
+ string tempLabel;
+ assign next label to tempLabel;
+ emit instruction to branch unconditionally to tempLabel;
+ emit instruction to label this point of object code with the argument operand;
+ push tempLabel onto operandStk;
+ deassign operands from all registers
+	*/
+	string tempLabel = get_Label();
+	objectFile << setw(4) << "" << setw(2) << "" << "UNJ " << setw(6) <<left << tempLabel << endl;
+	objectFile << setw(4) << left << operand1 << setw(2) << "" << "NOP " << setw(6) << setw(3)<< "else" << endl;
+	PushOperand(tempLabel);
+	Areg = "";
+
+}
+void EmitPostIfCode(string operand1)
+{
+	/*
+ emit instruction to label this point of object code with the argument operand;
+ deassign operands from all registers
+	*/
+	objectFile << setw(4) << "" << setw(2) << "" << "UNJ " << setw(6) <<left << operand1 << endl;
+	Areg = "";
+}
+void EmitWhileCode()
+{
+/*string tempLabel;
+ assign next label to tempLabel;
+ emit instruction to label this point of object code as tempLabel;
+ push tempLabel onto operandStk;
+ deassign operands from all registers
+ */
+ 	string tempLabel = get_Label();
+	objectFile << setw(4) << left << tempLabel << setw(2) << "" << "NOP " << setw(6) << setw(3)<< "while" << endl;
+	PushOperand(tempLabel);
+	Areg = "";
+}
+void EmitDoCode(string operand1)
+{
+/*
+ string tempLabel;
+ assign next label to tempLabel;
+ emit instruction to set the condition code depending on the value of operand;
+ emit instruction to branch to tempLabel if the condition code indicates operand is zero
+ (false);
+ push tempLabel onto operandStk;
+ if operand is a temp then
+ free operand's name for reuse;
+ deassign operands from all registers
+*/	
+ 	string tempLabel = get_Label();
+	if ( Areg != operand1)
+	{
+		objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(6) <<left << operand1 << endl;
+	}
+	
+	objectFile << setw(4) << "" << setw(2) << "" << "AZJ " << setw(6) <<left << tempLabel << setw(3)<< "do " << tempLabel << endl;
+
+	PushOperand(tempLabel);
+	// if operand 1 was a temp free it
+	if ((operand1.at(0) == 'T' && operand1 != "TRUE") )
+	{
+		free_Temp();
+	}
+	Areg = "";
+}
+void EmitPostWhileCode(string operand1, string operand2)
+{
+	/*
+ emit instruction which branches unconditionally to the beginning of the loop, i.e., to the
+ value of operand2;
+ emit instruction which labels this point of the object code with the argument operand1;
+ deassign operands from all registers
+*/
+	objectFile << setw(4) << "" << setw(2) << "" << "UNJ " << setw(6) <<left << operand2 << endl;
+	objectFile << setw(4) << left << operand1 << setw(2) << "" << "NOP " << setw(6) << setw(3)<< "end while" << endl;
+	Areg = "";	
+}
+void EmitRepeatCode()
+{
+	/*
+ var string tempLabel;
+ assign next label to tempLabel;
+ emit instruction to label this point in the object code with the value of tempLabel;
+ push tempLabel onto operandStk;
+ deassign operands from all registers
+*/	
+ 	string tempLabel = get_Label();
+	objectFile << setw(4) << left << tempLabel << setw(2) << "" << "NOP " << setw(6) << setw(3)<< "repeat" << endl;
+	PushOperand(tempLabel);
+	Areg = "";
+}
+void EmitUntilCode(string operand1, string operand2)
+{
+	/*
+ emit instruction to set the condition code depending on the value of operand1;
+ emit instruction to branch to the value of operand2 if the condition code indicates operand is
+ zero (false);
+ if operand1 is a temp then
+ free operand1's name for reuse;
+ deassign operands from all registers
+
+*/	
+	if ( Areg != operand1)
+	{
+		objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(6) <<left << operand1 << endl;
+	}
+	
+	objectFile << setw(4) << "" << setw(2) << "" << "AZJ " << setw(6) <<left << operand2 << setw(3)<< "until " << endl;
+	
+	// if operand 1 was a temp free it
+	if ((operand1.at(0) == 'T' && operand1 != "TRUE") )
+	{
+		free_Temp();
+	}
+	Areg = "";
 }
 
 void code(string oprtr, string operand1, string operand2) 
