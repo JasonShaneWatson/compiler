@@ -1366,6 +1366,38 @@ void code(string oprtr, string operand1, string operand2)
     {
         EmitDNECode(operand1, operand2);
     }
+	else if (oprtr == "then") 
+	{
+		EmitThenCode(operand1);
+	}
+	else if (oprtr == "else") 
+	{
+		EmitElseCode(operand1);
+	}
+	else if (oprtr == "post_if") 
+	{
+		EmitPostIfCode(operand1);
+	}
+	else if (oprtr == "while") 
+	{
+		EmitWhileCode();
+	}
+	else if (oprtr == "do") 
+	{
+		EmitDoCode(operand1);
+	}
+	else if (oprtr == "post_while") 
+	{
+		EmitPostWhileCode(operand1, operand2);
+	}
+	else if (oprtr == "repeat") 
+	{
+		EmitRepeatCode();
+	}
+	else if (oprtr == "until") 
+	{
+		EmitUntilCode(operand1, operand2);
+	}
 	else
 	{
 		error("undefined operation");
