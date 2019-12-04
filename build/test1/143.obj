@@ -1,7 +1,0 @@
-STRT  NOP          stage1no143 - Aspen Wills, Jason Watson
-      RDI I0        read(a)
-      RDI I1        read(b)
-      RDI I2        read(c)
-      RDI I3        read(d)
-      RDI I4        read(e)
-      RDI I5        read(f)

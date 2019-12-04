@@ -1,5 +1,0 @@
-STRT  NOP          stage1no127 - Aspen Wills, Jason Watson
-      RDI I0        read(a)
-      HLT       
-I0    DEC 0005      a              
-      END STRT  

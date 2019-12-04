@@ -3,11 +3,12 @@
 make
 
 echo
-lab=135;
+lab=118;
+testDir="test";
 
-./build/stage1 test/$lab.dat my.lst my.obj 
+./build/stage1 $testDir/$lab.dagit t my.lst my.obj 
 
-tail -n +2 test/$lab.obj | cut -c1-16 > his_output.txt
+tail -n +2 $testDir/$lab.obj | cut -c1-16 > his_output.txt
 tail -n +2 my.obj | cut -c1-16 > my_output.txt
 
 echo -e "\n-- Begin listing file output -- \n~"
@@ -16,4 +17,4 @@ echo -e "~\n-- End of listing File --\n"
 
 echo -e "\n-- diff my_output.txt his_output.txt -- \n~"
 diff my_output.txt his_output.txt | cat -te
-echo -e "~\n-- End Differences -- \n"
+echo -e "~\n-- End Differences -- \n 
