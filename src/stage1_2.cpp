@@ -1137,7 +1137,7 @@ void EmitThenCode(string operand1)
 		objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(6) <<left << operand1 << endl;
 	}
 	
-	objectFile << setw(4) << "" << setw(2) << "" << "AZJ " << setw(6) <<left << tempLabel << setw(3)<< "if false jump to " << tempLabel << endl;
+	objectFile << setw(4) << "" << setw(2) << "" << "AZJ " << setw(6) <<left << tempLabel << setw(3)<< "    if false jump to " << tempLabel << endl;
 	PushOperand(tempLabel);
 	
 	// if operand 1 was a temp free it
@@ -1164,7 +1164,7 @@ void EmitElseCode(string operand1)
 	*/
 	string tempLabel = get_Label();
 	objectFile << setw(4) << "" << setw(2) << "" << "UNJ " << setw(6) <<left << tempLabel << endl;
-	objectFile << setw(4) << left << operand1 << setw(2) << "" << "NOP " << setw(6) << setw(3)<< "else" << endl;
+	objectFile << setw(4) << left << operand1 << setw(2) << "" << "NOP " << setw(8)<< "          else" << endl;
 	PushOperand(tempLabel);
 	Areg = "";
 
@@ -1175,7 +1175,7 @@ void EmitPostIfCode(string operand1)
  emit instruction to label this point of object code with the argument operand;
  deassign operands from all registers
 	*/
-	objectFile << setw(4) << "" << setw(2) << "" << "UNJ " << setw(6) <<left << operand1 << endl;
+	objectFile << setw(4) << left << operand1 << setw(2) << "" << "NOP " << setw(8)<< "          end if" << endl;
 	Areg = "";
 }
 void EmitWhileCode()

@@ -4,6 +4,10 @@ bool add_Lev_OP();
 bool mult_Lev_OP();
 bool rel_OP();
 void assignStmt();
+void ifStmt();
+void repeatStmt();
+void whileStmt();
+void nullStmt();
 void execStmt();
 void execStmts();
 void express();
@@ -12,16 +16,18 @@ void factor();
 void factors();
 void outputCode(string code, string value, string codeDescription);
 void part();
+void elsePt();
 void term();
 void terms();
 
 void execStmts() 
 {
-  //cout  << setw(14) << left << "\nexecStmts," << setw(17) << "token == " + token << setw(13) << "Areg == " + Areg  << endl;
+  cout  << setw(14) << left << "\nexecStmts," << setw(17) << "token == " + token << setw(13) << "Areg == " + Areg  << endl;
+
   nextToken();
+
   if(token == "end")
     return;
- 
   execStmt();
  
   //recurse until token == end
@@ -30,7 +36,7 @@ void execStmts()
 
 void execStmt()
 {
-  //cout  << setw(14) << left << "\nexecStmt," << setw(17) << "token == " + token << setw(13) << "Areg == " + Areg  << endl;
+  cout  << setw(14) << left << "\nexecStmt," << setw(17) << "token == " + token << setw(13) << "Areg == " + Areg  << endl;
   if(token == "read")
   {
     readStmt();
@@ -38,6 +44,22 @@ void execStmt()
   else if(token == "write")
   {
     writeStmt();
+  }
+  else if(token == "if") 
+  {
+    ifStmt();
+  }
+  else if(token == "while")
+  {
+    whileStmt();
+  }
+  else if(token == "repeat")
+  {
+    repeatStmt();
+  }
+  else if(token == "null")
+  {
+    nullStmt();
   }
   else if (non_Key_Id())
   {
@@ -47,7 +69,7 @@ void execStmt()
 
 void readStmt()
 {
-  //cout << setw(13) << left << "\nreadStmt," << setw(17) << "token == " + token << setw(13) << "Areg == " + Areg  << endl;
+  cout << setw(13) << left << "\nreadStmt," << setw(17) << "token == " + token << setw(13) << "Areg == " + Areg  << endl;
   if(token != "read")
   {
     error("expected \"read\"");
@@ -68,11 +90,12 @@ void readStmt()
     error("expected ')'");
   }
   nextToken();
-
+	cout << token;
   if(token != ";")
   {
     error("expected ';' after read statement");
   }
+  
 }
 
 void writeStmt()
@@ -106,7 +129,7 @@ void writeStmt()
 
 void assignStmt()
 {
-  //cout  << setw(14) << left << "\nassignStmt," << setw(17) << "token == " + token << setw(13) << "Areg == " + Areg  << endl;
+  cout  << setw(14) << left << "\nassignStmt," << setw(17) << "token == " + token << setw(13) << "Areg == " + Areg  << endl;
   //make sure token is valid non reserved key  
   if(non_Key_Id())
   {  
@@ -132,6 +155,49 @@ void assignStmt()
   auto temp1 = PopOperand();
   auto temp2 = PopOperand();
   code(PopOperator(), temp1, temp2);
+}
+void ifStmt()
+{
+	cout  << setw(14) << left << "\nifStmt," << setw(17) << "token == " + token << setw(13) << "Areg == " + Areg  << endl;
+	if (token != "if") 
+	{
+		error( "'if' was expected");
+	}
+	nextToken();
+	express();
+	if (token != "then") {
+		error("'then' was expected");
+	}
+	code("then", PopOperand(), "");
+	nextToken();
+	execStmt();
+	if (token == ";") 
+	{
+		nextToken();
+	}
+	elsePt();
+}
+
+void elsePt()
+{
+	if (token == "else") {
+		code("else", PopOperand(), "");
+		nextToken();
+		execStmt();
+		code("post_if", PopOperand(), "");
+	}
+}
+void repeatStmt()
+{
+	
+}
+void whileStmt()
+{
+	
+}
+void nullStmt()
+{
+	
 }
 
 //express = term -> expresses
