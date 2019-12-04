@@ -69,14 +69,14 @@ void BoolTAF(string Type)
 }
 void PushOperator(string oprtr)
 {
- ////cout << "\nPushing \"" << oprtr << "\"\n";
+ //cout << "\nPushing \"" << oprtr << "\"\n";
 	operatorStk.push(oprtr);
 }
 
 void PushOperand(string oprnd)
 {	  
 	oprnd = oprnd.substr(0,15);
-   ////cout << "\nPushing \"" << oprnd << "\"\n";
+   //cout << "\nPushing \"" << oprnd << "\"\n";
     bool oprndIsINT = true; 
 
     for (uint x = 0; x < oprnd.length(); x++)
@@ -108,10 +108,10 @@ void PushOperand(string oprnd)
 		{
 		  if(y->second.position == currentElement)
 		  {
-			 ////cout << "     " << y->second.internalName <<y->second.value <<endl;
-			if(y->second.value == whichValue(oprnd) && y->second.value != "")
+			 //////cout << "     " << y->second.internalName <<y->second.value <<endl;
+			if(y->second.value == whichValue(oprnd) && y->second.value != "" && y->second.dataType == whichType(oprnd))
 			{
-				//cout << "YVAL  " << y->second.value << "   " << y->second.internalName << "\n" << " OPRNDVAL" << whichValue(oprnd) << endl;
+				////cout << "YVAL  " << y->second.value << "   " << y->second.internalName << "\n" << " OPRNDVAL" << whichValue(oprnd) << endl;
 				operandStk.push(y->second.internalName);
 				return;
 			}
@@ -119,7 +119,7 @@ void PushOperand(string oprnd)
 		}
 		  currentElement++;
 	  }
-	 ////cout << "EERRRRRR" << endl;
+	 //////cout << "EERRRRRR" << endl;
 
 
     }
@@ -127,7 +127,7 @@ void PushOperand(string oprnd)
 	//if oprnd is ((boolean || int) && not in sybol talbe)
 	if (((oprnd == "TRUE" || oprnd == "FALSE") || oprndIsINT ) && (searchValue == symbolTable.end()))
 	{
-		//cout << "DEBUGGGGGGGGGG" << endl;
+		////cout << "DEBUGGGGGGGGGG" << endl;
 		insert(oprnd,whichType(oprnd),CONSTANT,whichValue(oprnd),YES,1);
 
 	}
@@ -149,7 +149,7 @@ string PopOperand()
 	{
 		string top = operandStk.top();
 		operandStk.pop();
-    ////cout << "\nPopping \"" << top << "\"\n";
+    //cout << "\nPopping \"" << top << "\"\n";
 		return top;
 
 	}
@@ -165,7 +165,7 @@ string PopOperator()
 	{
 		string top = operatorStk.top();
 		operatorStk.pop();
-    ////cout << "\nPopping \"" << top << "\"\n";
+    //cout << "\nPopping \"" << top << "\"\n";
 		return top;
 	}
 	return 0;
@@ -183,7 +183,7 @@ void free_Temp()
 string get_Temp()
 {
 
-  ////cout << "currentTempNo = " << currentTempNo << endl
+  //////cout << "currentTempNo = " << currentTempNo << endl
 	 currentTempNo++;
 	 string temp = "T" + to_string(currentTempNo);
 	 if (currentTempNo > maxTempNo)
@@ -466,7 +466,7 @@ void EmitAssignCode(string operand1, string operand2)
       l = y->second.value ;
       if (modesString[y->second.mode] != "VARIABLE")
       {
-       ////cout << modesString[y->second.mode];
+       //////cout << modesString[y->second.mode];
         error("symbol on the left hand side is not variable1");
       }
     }
@@ -757,7 +757,7 @@ void EmitLTCode(string operand1, string operand2)
 	}
 	// if register has neither operand1 or 2
 
-    if (Areg != operand2 )
+    if (Areg != operand1 )
 	{
 		Areg = operand2;
 		objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(6) <<left << operand2 << "\n";
@@ -831,15 +831,15 @@ void EmitGTCode(string operand1, string operand2)
 	}
 	// if register has neither operand1 or 2
 	
-    if (Areg != operand1 )
+    if (Areg != operand2 )
 	{
-		Areg = operand1;
+		Areg = operand2;
 		objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(6) <<left << operand2 << "\n";
 		
 	}
 
 	// if register has operand2
-	if (Areg == operand1)
+	if (Areg == operand2)
 	{
 		string label = get_Label();
 		objectFile << setw(4) << "" << setw(2) << "" << "ISB " << setw(6) <<left << operand1<< "      sub "<< operand1 <<"\n";
@@ -852,10 +852,7 @@ void EmitGTCode(string operand1, string operand2)
 		objectFile << setw(4) << left << label << setw(2) << "" << "LDA " << setw(6) <<left << "FALS" << endl;
 		
 	}
-	else 
-	{
-		error("you broke it in lessthan");
-	}
+
 	// if operand 1 was a temp free it
 	if ((operand1.at(0) == 'T' && operand1 != "TRUE") )
 	{
@@ -1187,7 +1184,7 @@ void EmitWhileCode()
  deassign operands from all registers
  */
  	string tempLabel = get_Label();
-	objectFile << setw(4) << left << tempLabel << setw(2) << "" << "NOP " << setw(6) << setw(3)<< "while" << endl;
+	objectFile << setw(4) << left << tempLabel << setw(2) << "" << "NOP " << setw(6) << setw(3)<< "          while" << endl;
 	PushOperand(tempLabel);
 	Areg = "";
 }
@@ -1210,7 +1207,7 @@ void EmitDoCode(string operand1)
 		objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(6) <<left << operand1 << endl;
 	}
 	
-	objectFile << setw(4) << "" << setw(2) << "" << "AZJ " << setw(6) <<left << tempLabel << setw(3)<< "do " << tempLabel << endl;
+	objectFile << setw(4) << "" << setw(2) << "" << "AZJ " << setw(6) <<left << tempLabel << setw(3)<< "          do " << tempLabel << endl;
 
 	PushOperand(tempLabel);
 	// if operand 1 was a temp free it
@@ -1228,8 +1225,8 @@ void EmitPostWhileCode(string operand1, string operand2)
  emit instruction which labels this point of the object code with the argument operand1;
  deassign operands from all registers
 */
-	objectFile << setw(4) << "" << setw(2) << "" << "UNJ " << setw(6) <<left << operand2 << endl;
-	objectFile << setw(4) << left << operand1 << setw(2) << "" << "NOP " << setw(6) << setw(3)<< "end while" << endl;
+	objectFile << setw(4) << "" << setw(2) << "" << "UNJ " << setw(6) <<left << operand1 << setw(6) << setw(3)<< "    end while" <<endl;
+	objectFile << setw(4) << left << operand2 << setw(2) << "" << "NOP       " <<  endl;
 	Areg = "";	
 }
 void EmitRepeatCode()
@@ -1242,7 +1239,7 @@ void EmitRepeatCode()
  deassign operands from all registers
 */	
  	string tempLabel = get_Label();
-	objectFile << setw(4) << left << tempLabel << setw(2) << "" << "NOP " << setw(6) << setw(3)<< "repeat" << endl;
+	objectFile << setw(4) << left << tempLabel << setw(2) << "" << "NOP " << setw(6) << setw(3)<< "          repeat" << endl;
 	PushOperand(tempLabel);
 	Areg = "";
 }
@@ -1257,12 +1254,12 @@ void EmitUntilCode(string operand1, string operand2)
  deassign operands from all registers
 
 */	
-	if ( Areg != operand1)
+	if ( Areg != operand2)
 	{
 		objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(6) <<left << operand1 << endl;
 	}
 	
-	objectFile << setw(4) << "" << setw(2) << "" << "AZJ " << setw(6) <<left << operand2 << setw(3)<< "until " << endl;
+	objectFile << setw(4) << "" << setw(2) << "" << "AZJ " << setw(6) <<left << operand1 << setw(3)<< "until " << endl;
 	
 	// if operand 1 was a temp free it
 	if ((operand1.at(0) == 'T' && operand1 != "TRUE") )
@@ -1274,7 +1271,7 @@ void EmitUntilCode(string operand1, string operand2)
 
 void code(string oprtr, string operand1, string operand2) 
 {
- ////cout  << endl << "coding: " << setw(12) << left << "oprtr = " + oprtr + ", " << setw(14) << "operand1 = " + operand1 + ", " << setw(14) << "operand2 = " + operand2 << endl;
+ //////cout  << endl << "coding: " << setw(12) << left << "oprtr = " + oprtr + ", " << setw(14) << "operand1 = " + operand1 + ", " << setw(14) << "operand2 = " + operand2 << endl;
 	operand2 = operand2.substr(0,15);
 	operand1 = operand1.substr(0,15);
 	
@@ -1435,14 +1432,14 @@ void checkDataType(string type, string operand1, string operand2)
 	else if(y->second.internalName == operand2)
 		{
 			operand2Type = y->second.dataType ; 
-			////cout << y->second.dataType << "    " << y->second.externalName << "    " << y->second.internalName << endl;
+			//////cout << y->second.dataType << "    " << y->second.externalName << "    " << y->second.internalName << endl;
 			if (storeTypeString[y->second.dataType] != (type=="int"?"INTEGER":(type=="bool"?"BOOLEAN":(storeTypeString[y->second.dataType]))))
 			{
 				error("illegal type");
 			}
 		}
 	}
-	////cout << "HELLLLOOO" << operand1Type <<  " asd  " << operand2Type << endl;
+	//////cout << "HELLLLOOO" << operand1Type <<  " asd  " << operand2Type << endl;
   if (operand1 == operand2)
   {
 	  return;
