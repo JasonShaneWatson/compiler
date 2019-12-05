@@ -3,10 +3,10 @@
 make
 
 echo
-lab=118;
-testDir="test";
+lab=201;
+testDir="test2";
 
-./build/stage1 $testDir/$lab.dagit t my.lst my.obj 
+./build/stage1 $testDir/$lab.dat my.lst my.obj 
 
 tail -n +2 $testDir/$lab.obj | cut -c1-16 > his_output.txt
 tail -n +2 my.obj | cut -c1-16 > my_output.txt
