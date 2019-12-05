@@ -1,0 +1,63 @@
+#!/usr/bin/env bash
+set -euo pipefail
+PROGDIR="../build"
+TESTDIR="."
+
+mkdir "$PROGDIR/test2" 2>/dev/null || true
+
+_test () {
+    
+    if [ "$#" -lt 1 ]; then return; fi
+    
+    local -r BLUE='\033[0;34m'
+    local -r GREEN='\033[0;32m'
+    local -r RED='\033[0;31m'
+    local -r RESET='\033[0m'
+    
+    local -ra DIFF_OPTIONS=( "--normal" "-s" )
+    
+    printf "%s\t%s\t%s\n" "        Program      " "Object" "Listing"
+    printf "" > "$PROGDIR/test.log"
+    
+    for program in "$@"; do
+            
+        printf "\\n\\n[   ${BLUE}%s${RESET}   ]\\n\\n" "$program" >> "$PROGDIR/test.log"
+        
+        # Compile $program
+        printf "%s" "Testing $program. . ."
+        "$PROGDIR/stage1" "$TESTDIR/$program"\
+                          "$PROGDIR/test2/${program%.*}.lst"\
+                          "$PROGDIR/test2/${program%.*}.obj"
+        
+       
+        # diff obj files
+        printf "\t"
+        if [ -r "$TESTDIR/${program%.*}.obj" ]; then
+            (diff "${DIFF_OPTIONS[@]}" \
+                <(tail -n +2 "$TESTDIR/${program%.*}.obj" | cut -c1-16) \
+                <(tail -n +2 "$PROGDIR/test2/${program%.*}.obj" | cut -c1-16) \
+                >>"$PROGDIR/test.log"\
+            && printf "$GREEN%s$RESET" "✔") \
+            || (printf "$RED%s$RESET" "X")
+        fi
+        
+        # diff lst files
+        printf "\t"
+        if [ -r "$TESTDIR/${program%.*}.lst" ]; then
+            (diff "${DIFF_OPTIONS[@]}" \
+                <(tail -n +2 "$TESTDIR/${program%.*}.lst")\
+                <(tail -n +2 "$PROGDIR/test2/${program%.*}.lst") \
+                >> "$PROGDIR/test.log"\
+            && printf "$GREEN%s$RESET" "✔") \
+            || (printf "$RED%s$RESET" "X")
+        fi
+
+        printf "\n"
+    done
+}
+
+if [ "$#" -lt 1 ]; then
+    _test ./*.dat
+else
+    _test -d "$@"
+fi
