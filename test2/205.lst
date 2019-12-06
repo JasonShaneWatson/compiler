@@ -1,0 +1,16 @@
+STAGE2:  YOUR NAME(S)       Thu Nov 29 16:35:21 2018
+
+LINE NO.              SOURCE STATEMENT
+
+    1|program stage2no205;
+    2|  var x,y:integer;
+    3|  begin
+    4|    read(x);
+    5|    read(y);
+    6|    while (x > y) do
+    7|      x:=x-3;
+    8|    write(x);
+    9|    write(y);
+   10|  end.
+
+COMPILATION TERMINATED      0 ERRORS ENCOUNTERED

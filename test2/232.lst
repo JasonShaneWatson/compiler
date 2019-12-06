@@ -1,0 +1,19 @@
+STAGE2:  YOUR NAME(S)       Thu Nov 29 16:35:21 2018
+
+LINE NO.              SOURCE STATEMENT
+
+    1|program stage2no232;
+    2|var
+    3|  a,b:integer;
+    4|  f:boolean;
+    5|begin    
+    6|  a := 0;
+    7|  repeat
+    8|    a := a + 1;
+    9|    write(a);
+   10|    f := a = 10;
+   11|    b := a;
+   12|  until f;
+   13|end.
+
+COMPILATION TERMINATED      0 ERRORS ENCOUNTERED

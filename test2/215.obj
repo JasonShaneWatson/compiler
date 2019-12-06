@@ -1,0 +1,23 @@
+STRT  NOP          stage2no202 - Your Names(s)
+      LDA I3       
+      STA I0       x := 24
+      LDA I4       
+      ISB I0       x > 0
+      AMJ L0       
+      LDA FALS     
+      UNJ L0  +1   
+L0    LDA TRUE     
+      AZJ L1       if false jump to L1
+      LDA I4       
+      STA I2       z := 0
+      UNJ L2       jump to end if
+L1    NOP          else
+L2    NOP          end if
+      LDA I0       
+      ISB I5       x = 3
+      AZJ L3       
+      LDA FALS     
+      UNJ L3  +1   
+L3    LDA TRUE     
+      AZJ L4       if false jump to L4
+L4    NOP          end if

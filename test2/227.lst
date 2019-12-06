@@ -1,0 +1,14 @@
+STAGE2:  YOUR NAME(S)       Thu Nov 29 16:35:21 2018
+
+LINE NO.              SOURCE STATEMENT
+
+    1|program stage2no227;
+    2|var a:integer;
+    3|begin    
+    4|  a := 0;
+    5|  if true then
+    6|    a := 1;
+    7|  write(a);
+    8|end.
+
+COMPILATION TERMINATED      0 ERRORS ENCOUNTERED

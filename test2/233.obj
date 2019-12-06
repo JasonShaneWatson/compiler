@@ -1,0 +1,7 @@
+STRT  NOP          stage2no202 - Your Names(s)
+L0    NOP          repeat
+      LDA FALS     
+      AZJ L0       until
+      HLT          
+FALS  DEC 0000     false
+      END STRT     

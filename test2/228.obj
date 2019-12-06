@@ -1,0 +1,17 @@
+STRT  NOP          stage2no202 - Your Names(s)
+      LDA I1       
+      STA I0       a := 0
+      LDA FALS     
+      AZJ L0       if false jump to L0
+      UNJ L1       jump to end if
+L0    NOP          else
+      LDA I2       
+      STA I0       a := 1
+L1    NOP          end if
+      PRI I0       write(a)
+      HLT          
+I0    BSS 0001     a
+I1    DEC 0000     0
+FALS  DEC 0000     false
+I2    DEC 0001     1
+      END STRT     

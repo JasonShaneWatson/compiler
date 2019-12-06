@@ -1,0 +1,18 @@
+STRT  NOP          stage2no202 - Your Names(s)
+      RDI I0       read(a)
+      RDI I1       read(b)
+      RDI I2       read(c)
+      RDI I3       read(d)
+      RDI I4       read(e)
+      PRI I0       write(a)
+      PRI I1       write(b)
+      PRI I2       write(c)
+      PRI I3       write(d)
+      PRI I4       write(e)
+      HLT          
+I0    BSS 0001     a
+I1    BSS 0001     b
+I2    BSS 0001     c
+I3    BSS 0001     d
+I4    BSS 0001     e
+      END STRT     

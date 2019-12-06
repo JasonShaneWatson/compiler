@@ -1,0 +1,11 @@
+STAGE2:  YOUR NAME(S)       Thu Nov 29 16:35:21 2018
+
+LINE NO.              SOURCE STATEMENT
+
+    1|program stage2no210;  {improper uses of Pascallite features.}
+    2|  var x,y,z:integer;  why:boolean;
+    3|  begin
+    4|    if x then 
+Error: Line 4: predicate of if statement must be boolean valued
+
+COMPILATION TERMINATED      1 ERRORS ENCOUNTERED

@@ -1,0 +1,14 @@
+STAGE2:  YOUR NAME(S)       Thu Nov 29 16:35:21 2018
+
+LINE NO.              SOURCE STATEMENT
+
+    1|program stage2no236;
+    2|begin    
+    3|  begin
+    4|  end;
+    5|  begin
+    6|  end.
+
+Error: Line 6: ';' expected after non-final end
+
+COMPILATION TERMINATED      1 ERRORS ENCOUNTERED

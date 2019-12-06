@@ -1,0 +1,20 @@
+STAGE2:  YOUR NAME(S)       Thu Nov 29 16:35:21 2018
+
+LINE NO.              SOURCE STATEMENT
+
+    1|program stage2no213;  {improper uses of Pascallite features.}
+    2|  var x,y,z:integer;  why:boolean;
+    3|  begin
+    4|    if why then
+    5|	   z:=0;    
+    6|	else 
+    7|	   z := -3; 
+    8|	while why do 
+    9|	  begin;
+   10|  	    x := y + 2;
+   11|  	    if x = 3 then
+   12|	  end;                        {improper nesting of if statement}
+   13|	else 
+Error: Line 13: non-keyword identifier, 'read', 'write', 'if', 'while', 'repeat', ';', or 'begin' expected
+
+COMPILATION TERMINATED      1 ERRORS ENCOUNTERED

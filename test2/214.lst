@@ -1,0 +1,13 @@
+STAGE2:  YOUR NAME(S)       Thu Nov 29 16:35:21 2018
+
+LINE NO.              SOURCE STATEMENT
+
+    1|program stage2no214;  {improper uses of Pascallite features.}
+    2|  var x,y,z:integer;  why:boolean;
+    3|  begin
+    4|    x := 24;
+    5|	if x > 0 then   {then clause may not be empty}
+    6|	else d:
+Error: Line 6: reference to undefined variable
+
+COMPILATION TERMINATED      1 ERRORS ENCOUNTERED

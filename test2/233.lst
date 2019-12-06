@@ -1,0 +1,12 @@
+STAGE2:  YOUR NAME(S)       Thu Nov 29 16:35:21 2018
+
+LINE NO.              SOURCE STATEMENT
+
+    1|program stage2no233;
+    2|begin    
+    3|  repeat
+    4|    ;
+    5|  until false;
+    6|end.
+
+COMPILATION TERMINATED      0 ERRORS ENCOUNTERED

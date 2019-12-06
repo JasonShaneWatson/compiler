@@ -1,0 +1,4 @@
+STRT  NOP          stage2no202 - Your Names(s)
+      LDA I1       
+      STA I0       a := 0
+L0    NOP          while

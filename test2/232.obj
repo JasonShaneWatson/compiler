@@ -1,0 +1,28 @@
+STRT  NOP          stage2no202 - Your Names(s)
+      LDA I2       
+      STA I0       a := 0
+L0    NOP          repeat
+      LDA I0       
+      IAD I3       a + 1
+      STA I0       a := T0
+      PRI I0       write(a)
+      ISB I4       a = 10
+      AZJ L1       
+      LDA FALS     
+      UNJ L1  +1   
+L1    LDA TRUE     
+      STA B0       f := T0
+      LDA I0       
+      STA I1       b := a
+      LDA B0       
+      AZJ L0       until
+      HLT          
+I0    BSS 0001     a
+I1    BSS 0001     b
+B0    BSS 0001     f
+I2    DEC 0000     0
+I3    DEC 0001     1
+I4    DEC 0010     10
+FALS  DEC 0000     false
+TRUE  DEC 0001     true
+      END STRT     

@@ -1,0 +1,7 @@
+STRT  NOP          stage2no202 - Your Names(s)
+      LDA I1       
+      STA I0       t := 0
+L0    NOP          repeat
+      LDA I2       
+      STA I0       t := 1
+      PRI I0       write(t)
