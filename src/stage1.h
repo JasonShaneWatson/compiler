@@ -59,6 +59,7 @@ static int currentTempNo = -1;
 static int maxTempNo = -1;
 static int currentLabelNo = -1;
 static int maxLabelNo = -1;
+static int beginNo = 0;
 string tName = "";
 /*
 * prototypes
@@ -66,6 +67,7 @@ string tName = "";
 bool Key_Id(string s);
 bool non_Key_Id();
 bool isInt();
+void beginEndStmt();
 string genInternalName(storeType);
 string ids();
 string nextToken();

@@ -90,16 +90,10 @@ void PushOperand(string oprnd)
         oprndIsINT = false;
       }
     }
-	if (oprnd == "true")
-	{
-		oprnd = "TRUE";
-	}
-	if (oprnd == "false")
-	{
-		oprnd = "FALSE";
-	}
+
+
 	auto searchValue = symbolTable.find(oprnd);
-	if (searchValue == symbolTable.end() || oprnd == "TRUE" || oprnd == "FALSE")
+	if (searchValue == symbolTable.end() || oprnd == "true" || oprnd == "false")
 	{
 	  int currentElement = 0;
 	  for (auto x = symbolTable.cbegin(); x != symbolTable.cend(); ++x) 
@@ -108,10 +102,10 @@ void PushOperand(string oprnd)
 		{
 		  if(y->second.position == currentElement)
 		  {
-			 //////cout << "     " << y->second.internalName <<y->second.value <<endl;
+			//cout << "     " << y->second.internalName <<y->second.value <<endl;
 			if(y->second.value == whichValue(oprnd) && y->second.value != "" && y->second.dataType == whichType(oprnd))
 			{
-				////cout << "YVAL  " << y->second.value << "   " << y->second.internalName << "\n" << " OPRNDVAL" << whichValue(oprnd) << endl;
+				//cout << "YVAL  " << y->second.value << "   " << y->second.internalName  << " OPRNDVAL" << whichValue(oprnd) << endl;
 				operandStk.push(y->second.internalName);
 				return;
 			}
@@ -125,7 +119,7 @@ void PushOperand(string oprnd)
     }
 	
 	//if oprnd is ((boolean || int) && not in sybol talbe)
-	if (((oprnd == "TRUE" || oprnd == "FALSE") || oprndIsINT ) && (searchValue == symbolTable.end()))
+	if (((oprnd == "true" || oprnd == "false") || oprndIsINT ) && (searchValue == symbolTable.end()))
 	{
 		////cout << "DEBUGGGGGGGGGG" << endl;
 		insert(oprnd,whichType(oprnd),CONSTANT,whichValue(oprnd),YES,1);
@@ -313,7 +307,8 @@ void EmitNegationCode(string operand1)
 					}
 				}
 			}
-	//Allocate Temp and store it 		
+	//Allocate Temp and store it 
+	//cout << Areg << endl;
 	if ( !Areg.empty() && (Areg.at(0) == 'T' && Areg != "TRUE"))
 	{
 		auto tableValue = symbolTable.find(Areg);
@@ -377,6 +372,7 @@ void EmitNotCode(string operand1)
 			
 
 	//Allocate Temp and store it 		
+	//cout << Areg << endl;
 	if ( !Areg.empty() && Areg != operand1  && (Areg.at(0) == 'T' && Areg != "TRUE"))
 	{
 		auto tableValue = symbolTable.find(Areg);
@@ -567,6 +563,7 @@ void EmitOrCode(string operand1, string operand2)
 	checkDataType("bool",operand1,operand2);
 	//Allocate Temp and store it 	
 
+	//cout << Areg << " " << operand1 << " " << operand2 <<endl;
 	if ( !Areg.empty() && (Areg != operand1 && Areg != operand2) && (Areg.at(0) == 'T' && Areg != "TRUE"))
 	{
 		auto tableValue = symbolTable.find(Areg);
@@ -737,7 +734,7 @@ void EmitLTCode(string operand1, string operand2)
 	//make sure  data types are integers
 	checkDataType("int",operand1,operand2);
 	//Allocate Temp and store it 		
-	if ( !Areg.empty() && (Areg != operand1 && Areg != operand2) && (Areg.at(0) == 'T' && Areg != "TRUE"))
+	if ( !Areg.empty() && (Areg != operand1 ) && (Areg.at(0) == 'T' && Areg != "TRUE"))
 	{
 		auto tableValue = symbolTable.find(Areg);
 		if(tableValue != symbolTable.end()) //we found an entry in the symbolTable
@@ -757,7 +754,7 @@ void EmitLTCode(string operand1, string operand2)
 	}
 	// if register has neither operand1 or 2
 
-    if (Areg != operand1 )
+    if (Areg != operand2 )
 	{
 		Areg = operand2;
 		objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(6) <<left << operand2 << "\n";
@@ -811,7 +808,7 @@ void EmitGTCode(string operand1, string operand2)
 	//make sure  data types are integers
 	checkDataType("int",operand1,operand2);
 	//Allocate Temp and store it 		
-	if ( !Areg.empty() && (Areg != operand1 && Areg != operand2) && (Areg.at(0) == 'T' && Areg != "TRUE"))
+	if ( !Areg.empty() && (Areg != operand1 ) && (Areg.at(0) == 'T' && Areg != "TRUE"))
 	{
 		auto tableValue = symbolTable.find(Areg);
 		if(tableValue != symbolTable.end()) //we found an entry in the symbolTable
@@ -883,7 +880,7 @@ void EmitGTOECode(string operand1, string operand2)
   //make sure  data types are integers
 	checkDataType("int",operand1,operand2);
 	//Allocate Temp and store it 		
-	if ( !Areg.empty() && (Areg != operand1 && Areg != operand2) && (Areg.at(0) == 'T' && Areg != "TRUE"))
+	if ( !Areg.empty() && (Areg != operand1 ) && (Areg.at(0) == 'T' && Areg != "TRUE"))
 	{
 		auto tableValue = symbolTable.find(Areg);
 		if(tableValue != symbolTable.end()) //we found an entry in the symbolTable
@@ -957,7 +954,7 @@ void EmitLTOECode(string operand1, string operand2)
   //make sure  data types are integers
 	checkDataType("int",operand1,operand2);
 	//Allocate Temp and store it 		
-	if ( !Areg.empty() && (Areg != operand1 && Areg != operand2) && (Areg.at(0) == 'T' && Areg != "TRUE"))
+	if ( !Areg.empty() && (Areg != operand1 ) && (Areg.at(0) == 'T' && Areg != "TRUE"))
 	{
 		auto tableValue = symbolTable.find(Areg);
 		if(tableValue != symbolTable.end()) //we found an entry in the symbolTable
@@ -1032,7 +1029,7 @@ void EmitDNECode(string operand1, string operand2)
   //make sure  data types are the same
 	checkDataType("same",operand1,operand2);
 	//Allocate Temp and store it 		
-	if ( !Areg.empty() && (Areg != operand1 && Areg != operand2) && (Areg.at(0) == 'T' && Areg != "TRUE"))
+	if ( !Areg.empty() && (Areg != operand1 && Areg != operand2) && (Areg.at(0) == 'T' && Areg == "TRUE"))
 	{
 		auto tableValue = symbolTable.find(Areg);
 		if(tableValue != symbolTable.end()) //we found an entry in the symbolTable
@@ -1046,7 +1043,7 @@ void EmitDNECode(string operand1, string operand2)
 		
 	}
 	// if non-temp is in register then deassign it 
-	else if ( !Areg.empty() && (Areg != operand1 && Areg != operand2) && Areg.at(0) != 'T')
+	else if ( !Areg.empty() && (Areg != operand1 && Areg != operand2) && Areg.at(0) != 'T' && Areg == "TRUE")
 	{
 		Areg = "";
 	}
@@ -1071,10 +1068,10 @@ void EmitDNECode(string operand1, string operand2)
 		string label = get_Label();
 		objectFile << setw(4) << "" << setw(2) << "" << "AZJ " << setw(4) << label  << "+1   \n" ;
 		BoolTAF("TRUE");
-		objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(6) << "TRUE     " << endl;
-		objectFile << setw(4) << "" << setw(2) << "" << "UNJ " << setw(4) << label << "+1   \n" ;
-		BoolTAF("FALSE");
-		objectFile << setw(4) << left << label << setw(2) << "" << "LDA " << setw(6) <<left << "FALS"<< endl;
+		objectFile << setw(4) << left << label << setw(2) << "" << "LDA " << setw(6) << "TRUE     " << endl;
+		//objectFile << setw(4) << "" << setw(2) << "" << "UNJ " << setw(4) << label << "+1   \n" ;
+		//BoolTAF("FALSE");
+		//objectFile << setw(4) << left << label << setw(2) << "" << "LDA " << setw(6) <<left << "FALS"<< endl;
 	}
 	// if register has operand2 multiply by op1
 	if (Areg == operand2)
@@ -1084,10 +1081,10 @@ void EmitDNECode(string operand1, string operand2)
 		string label = get_Label();
 		objectFile << setw(4) << "" << setw(2) << "" << "AZJ " << setw(4) << label  << "+1   \n" ;
 		BoolTAF("TRUE");
-		objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(6) << "TRUE     " << endl;
-		objectFile << setw(4) << "" << setw(2) << "" << "UNJ " << setw(4) << label << "+1   \n" ;
-		BoolTAF("FALSE");
-		objectFile << setw(4) << left << label << setw(2) << "" << "LDA " << setw(6) <<left << "FALS"<< endl;
+		objectFile << setw(4) << left << label << setw(2) << "" << "LDA " << setw(6) << "TRUE     " << endl;
+		//objectFile << setw(4) << "" << setw(2) << "" << "UNJ " << setw(4) << label << "+1   \n" ;
+		//BoolTAF("FALSE");
+		//objectFile << setw(4) << left << label << setw(2) << "" << "LDA " << setw(6) <<left << "FALS"<< endl;
 		
 	}
 
