@@ -25,22 +25,44 @@ void execStmts()
   //cout  << setw(14) << left << "\nexecStmts," << setw(17) << "token == " + token << setw(13) << "Areg == " + Areg  << endl;
 
   nextToken();
-
-  if(token == "end" || token == "until")
+  if (token == "else")
+  {
+	  error("non-keyword identifier, \"read\", \"write\", \"if\", \"while\", \"repeat\", \";\", or \"begin\" expected");
+  }
+  if( token == "until")
     return;
   execStmt();
  
   //recurse until token == end
-  execStmts();
+  if(token == "end")
+  {
+	beginNo -= 1;
+	return;
+  }
+  else
+  {
+	execStmts(); 
+  }
+
 }
 
 void execStmt()
 {
+	//cout << "HELLO" << token << endl;
   //cout  << setw(14) << left << "\nexecStmt," << setw(17) << "token == " + token << setw(13) << "Areg == " + Areg  << endl;
   if(token == "read")
   {
     readStmt();
   }
+  else if(token == "begin")
+  {
+    beginEndStmt();
+  }
+  else if(token == "end") 
+  {
+
+    return;
+  } 
   else if(token == "write")
   {
     writeStmt();
@@ -57,7 +79,7 @@ void execStmt()
   {
     repeatStmt();
   }
-  else if(token == "null")
+  else if(token == ";")
   {
     nullStmt();
   }
@@ -176,7 +198,15 @@ void ifStmt()
 	{
 		nextToken();
 	}
-	elsePt();
+	if (token == "else")
+	{
+		elsePt();
+	}
+	else{
+	code("post_if", PopOperand(), "");
+	//cout << token << endl;
+	execStmt();
+	}
 }
 
 void elsePt()

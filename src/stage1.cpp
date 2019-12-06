@@ -8,7 +8,6 @@
 bool isInt();
 char nextChar();
 string genInternalName(storeType);
-void beginEndStmt();
 void consts();
 void constStmts();
 void prog();
@@ -693,7 +692,8 @@ void beginEndStmt()
 	{
 		error("\"begin\" expected");
 	}
-  
+	beginNo ++;
+	//cout << beginNo << endl;
   execStmts();
   
 	if (token != "end") 
@@ -701,11 +701,16 @@ void beginEndStmt()
 	error("\"end\" expected but recieved " + token);
 	}
 
-	if (nextToken() != ".") 
+	if (nextToken() == ";") 
 	{
-		error("\".\" expected after end");
+		//nextToken();
 	}
-	nextToken();	
+	//cout << beginNo << endl;
+	else if (nextToken() == "." && beginNo == 1) 
+	{
+		code("end" , "" , "");
+	}
+		
 }
 
 string genInternalName(storeType inType){
