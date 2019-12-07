@@ -1,4 +1,8 @@
 #!/usr/bin/env bash
+cd ..
+make clean
+make
+cd test2
 set -euo pipefail
 PROGDIR="../build"
 TESTDIR="."
