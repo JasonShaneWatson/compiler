@@ -1124,7 +1124,14 @@ void EmitThenCode(string operand1)
  free operand's name for reuse;
  deassign operands from all registers
 
+	
 	*/
+	cout << operand1 << endl;
+	if (whichType(operand1) != 1)
+	{
+		error( "predicate of if statement must be boolean valued");
+	}
+	
 	string tempLabel = get_Label();
 	if ( Areg != operand1)
 	{

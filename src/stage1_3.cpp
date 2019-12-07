@@ -191,6 +191,12 @@ void ifStmt()
 	{
 		error("'then' was expected");
 	}
+/*	string operand1 = PopOperand();
+	if (whichType(operand1) != 1)
+	{
+		error( "predicate of if statement must be boolean valued");
+	}
+	*/
 	code("then", PopOperand(), "");
 	nextToken();
 	execStmt();
