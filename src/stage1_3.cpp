@@ -191,13 +191,15 @@ void ifStmt()
 	{
 		error("'then' was expected");
 	}
-/*	string operand1 = PopOperand();
+	string operand1 = getExternalName(PopOperand());
+	//cout << "HELLO" << endl;
+	//cout << operand1 << endl;
+	//cout << whichType(operand1) << "HELL" << endl;
 	if (whichType(operand1) != 1)
 	{
 		error( "predicate of if statement must be boolean valued");
 	}
-	*/
-	code("then", PopOperand(), "");
+	code("then", operand1, "");
 	nextToken();
 	execStmt();
 	if (token == ";") 

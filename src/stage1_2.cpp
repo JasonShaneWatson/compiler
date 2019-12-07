@@ -1126,12 +1126,6 @@ void EmitThenCode(string operand1)
 
 	
 	*/
-	cout << operand1 << endl;
-	if (whichType(operand1) != 1)
-	{
-		error( "predicate of if statement must be boolean valued");
-	}
-	
 	string tempLabel = get_Label();
 	if ( Areg != operand1)
 	{
