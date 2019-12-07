@@ -11,6 +11,5 @@ LINE NO.              SOURCE STATEMENT
     7|    end;
     8|  write(month);
     9|end.
-   10|
 
 COMPILATION TERMINATED      0 ERRORS ENCOUNTERED

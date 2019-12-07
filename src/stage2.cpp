@@ -81,6 +81,10 @@ void printSymbolTable()
     }
   }
   objectFile << setw(4) << "" << setw(2) << "" << "END STRT  " << endl;
+  sourceFile.close();
+  listingFile.close();
+  objectFile.close();
+  exit(0);
 }
 
 //check if string is a reserved keyword 
@@ -138,6 +142,7 @@ void prog()
  
   beginEndStmt();
   
+ // cout << token << endl;
   if (token[0] != END_OF_FILE)
   {
     error("no text may follow end");
@@ -701,14 +706,19 @@ void beginEndStmt()
 	error("\"end\" expected but recieved " + token);
 	}
 
+	//cout << beginNo << endl;
 	if (nextToken() == ";") 
 	{
 		//nextToken();
 	}
-	//cout << beginNo << endl;
-	else if (nextToken() == "." && beginNo == 1) 
+	else if (token == "." && beginNo == 0) 
 	{
 		code("end" , "" , "");
+		nextToken();
+	}
+	else if (token == "." && beginNo > 0) 
+	{
+		error("';' expected after non-final end");
 	}
 		
 }

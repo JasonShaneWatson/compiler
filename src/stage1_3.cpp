@@ -242,13 +242,18 @@ void repeatStmt()
 	execStmts();
 	if (token != "until") 
 	{
-		error("'then' was expected");
+		error("'until' was expected");
 	}
 	
 	nextToken();
+	
 	//cout << "HELLO" << token;
+	
 	express();
-	code("until", PopOperand(), PopOperand());
+	
+	string operand2 = PopOperand();
+	string operand1 = PopOperand();
+	code("until", operand1, operand2);
 
 	//nextToken();
 	

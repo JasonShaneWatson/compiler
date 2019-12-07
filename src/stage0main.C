@@ -40,8 +40,6 @@ int main(int argc, char **argv)
   createListingTrailer();
   printSymbolTable();
 
-  sourceFile.close();
-  listingFile.close();
-  objectFile.close();
+
   return 0;
 }

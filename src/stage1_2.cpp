@@ -871,11 +871,13 @@ void EmitGTCode(string operand1, string operand2)
 	}
 	//A register == Tn
 	Areg = get_Temp();
+	//cout << Areg << endl;
 	// make Tn dataType = INTEGER
 	auto tableValue1 = symbolTable.find(Areg);
 	if(tableValue1 != symbolTable.end()) //we found an entry in the symbolTable
 	{
 		tableValue1->second.dataType = BOOLEAN;
+		//cout << tableValue1->second.dataType << endl;
 	}
 	else 
 	{
@@ -1260,10 +1262,16 @@ void EmitUntilCode(string operand1, string operand2)
  free operand1's name for reuse;
  deassign operands from all registers
 
-*/	
+*/		
+
+
+	if (whichType(getExternalName(operand2)) != 1)
+	{
+		error( "predicate of until statement must be boolean valued");
+	}
 	if ( Areg != operand2)
 	{
-		objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(6) <<left << operand1 << endl;
+		objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(6) <<left << operand2 << endl;
 	}
 	
 	objectFile << setw(4) << "" << setw(2) << "" << "AZJ " << setw(6) <<left << operand1 << setw(3)<< "until " << endl;
@@ -1296,6 +1304,7 @@ void code(string oprtr, string operand1, string operand2)
 	}
 	else if (oprtr == "end")
 	{
+		createListingTrailer();
 		printSymbolTable(); // we need to change this funciton 
 	}
 	 else if (oprtr == "read")
