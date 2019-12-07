@@ -547,6 +547,15 @@ void EmitModuloCode(string operand1, string operand2)
 	//A register == Tn
 	Areg = get_Temp();
 	// make Tn dataType = INTEGER
+  
+  //alloc Temp because we are storing it out.
+  auto tableValue = symbolTable.find(Areg);
+	if(tableValue != symbolTable.end()) //we found an entry in the symbolTable
+	{
+	  tableValue->second.alloc = YES;
+	  tableValue->second.units = 1;
+	  
+	}
 	objectFile << setw(4) << "" << setw(2) << "" << "STQ " << setw(6) <<left << Areg<< "\n";
 	objectFile << setw(4) << "" << setw(2) << "" << "LDA " << setw(6) <<left << Areg<< "\n";
 	auto tableValue1 = symbolTable.find(Areg);
