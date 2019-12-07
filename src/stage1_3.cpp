@@ -191,16 +191,19 @@ void ifStmt()
 	{
 		error("'then' was expected");
 	}
-	string operand1 = getExternalName(PopOperand());
-	//cout << "HELLO" << endl;
-	//cout << operand1 << endl;
-	//cout << whichType(operand1) << "HELL" << endl;
-	if (whichType(operand1) != 1)
+	string operand1 = PopOperand();
+	string operand2 = getExternalName(operand1);
+	if (whichType(operand2) != 1)
 	{
 		error( "predicate of if statement must be boolean valued");
 	}
+	
 	code("then", operand1, "");
 	nextToken();
+	if (token == "else")
+	{
+		error("then clause may not be empty");
+	}
 	execStmt();
 	if (token == ";") 
 	{
@@ -212,7 +215,6 @@ void ifStmt()
 	}
 	else{
 	code("post_if", PopOperand(), "");
-	//cout << token << endl;
 	execStmt();
 	}
 }
@@ -264,7 +266,7 @@ void whileStmt()
 	express();
 	if (token != "do") 
 	{
-		error("'then' was expected");
+		error("'do' was expected");
 	}
 	code("do", PopOperand(), "");
 	nextToken();
