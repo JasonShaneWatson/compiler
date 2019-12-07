@@ -268,7 +268,13 @@ void whileStmt()
 	{
 		error("'do' was expected");
 	}
-	code("do", PopOperand(), "");
+		string operand1 = PopOperand();
+	string operand2 = getExternalName(operand1);
+	if (whichType(operand2) != 1)
+	{
+		error( "predicate of while statement must be boolean valued");
+	}
+	code("do", operand1, "");
 	nextToken();
 	execStmt();
 	code("post_while", PopOperand(), PopOperand());
