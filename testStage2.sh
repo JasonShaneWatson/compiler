@@ -3,8 +3,13 @@
 make
 
 echo
-lab=201;
+lab=205;
 testDir="test2";
+
+if [ $# -eq 1 ]
+  then
+    lab=$1
+fi
 
 ./build/stage2 $testDir/$lab.dat my.lst my.obj 
 
